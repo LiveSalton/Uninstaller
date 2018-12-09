@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="item_selecto_nor">#00000000</color>
+    <color name="item_selecto_pre">#ff0febff</color>
+    <color name="white">#ffffffff</color>
+    <color name="actionbar_bg">#ffeeeeee</color>
+</resources>
