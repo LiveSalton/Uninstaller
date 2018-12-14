@@ -10,11 +10,12 @@ import android.graphics.drawable.Drawable;
  * Description:
  */
 public class AppEntity {
-    public String mAppName; // 应用名
+    public String mAppName = ""; // 应用名
     public Drawable mIcon = null;// 图标
-    public String mSize;// 大小: MB
+    public String mSize = "";// 大小: MB
     public PackageInfo appInfo;
     public boolean isChecked = false;
+    public String mPath = "";
 
     public AppEntity(PackageInfo appInfo) {
         this.appInfo = appInfo;

@@ -5,7 +5,7 @@ import android.util.Base64;
 
 import com.salton123.log.XLog;
 import com.salton123.unstaller.PreloadCore;
-import com.salton123.unstaller.entity.AppInfo;
+import com.salton123.unstaller.entity.AppEntity;
 
 import java.io.File;
 import java.util.List;
@@ -23,13 +23,13 @@ public class BackupManager {
             File.separator + "backup" + File.separator;
     static int backupCount;
 
-    public static void toBackup(final List<AppInfo> toBackupData, final IBackupProgress iBackup) {
+    public static void toBackup(final List<AppEntity> toBackupData, final IBackupProgress iBackup) {
         if (toBackupData == null) {
             XLog.i(BackupManager.class, "isValidData == false");
         } else {
             backupCount = 0;
             for (int i = 0; i < toBackupData.size(); i++) {
-                final AppInfo item = toBackupData.get(i);
+                final AppEntity item = toBackupData.get(i);
                 PreloadCore.INSTANCE.mThreadPool.submit(new Callable<Boolean>() {
                     @Override
                     public Boolean call() {

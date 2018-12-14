@@ -12,8 +12,7 @@ import android.os.Process;
 import android.text.TextUtils;
 import android.util.Base64;
 
-import com.salton123.unstaller.PreloadCore;
-import com.salton123.unstaller.entity.AppInfo;
+import com.salton123.unstaller.entity.AppEntity;
 
 import java.io.Closeable;
 import java.io.File;
@@ -42,48 +41,6 @@ public class Utils {
     private static final String PASSWORD_ENC_SECRET = "1234567890123456";
     public static String KEY = "";//全局搜索的关键
 
-    public static List<AppInfo> getAppList(Context context) {
-
-        List<AppInfo> list = new ArrayList<AppInfo>();// 声明并实例化1个集合
-        PackageManager pm = context.getPackageManager();//获取包管理者
-        List<PackageInfo> pList = pm.getInstalledPackages(0);// 获取所有的应用程序集合
-        // 循环遍历
-        for (int i = 0; i < pList.size(); i++) {
-            PackageInfo packageInfo = pList.get(i);// 获取每一个应用的信息
-
-            if (isThirdPartyApp(packageInfo.applicationInfo)
-                    // 不能包含本应用(不删除自己)
-                    && !packageInfo.packageName.equals(context.getPackageName())) {
-
-                // 从右边装到左边
-                AppInfo appInfo = new AppInfo();
-                appInfo.mPackageName = packageInfo.packageName;
-                appInfo.mVersionName = packageInfo.versionName;
-                appInfo.mVersionCode = packageInfo.versionCode;
-                appInfo.mFirstInstallTime = packageInfo.firstInstallTime;
-                appInfo.mLastUpdateTime = packageInfo.lastUpdateTime;
-                // 程序名称
-                appInfo.mAppName = ((String) packageInfo.applicationInfo.loadLabel(pm)).trim();
-                // 过渡
-                appInfo.mApplicationInfo = packageInfo.applicationInfo;
-                // 这行代码在运行时解除注释
-                //appInfo.mIcon = packageInfo.mApplicationInfo.loadIcon(pm);
-                // 计算应用的空间
-                //publicSourceDir 是app的安装路径（文件夹）
-                String dir = packageInfo.applicationInfo.publicSourceDir;
-                appInfo.mPath = dir;
-                long byteSize = new File(dir).length();
-                appInfo.mByteSize = byteSize;// 1024*1024 Byte字节
-                appInfo.mSize = getSize(byteSize);// 1MB
-
-                list.add(appInfo);// 添加到集合
-            }// if
-
-        }
-
-        return list;
-    }
-
     /**
      * 字节--> Mb, 保留两位小数: 2.35M
      *
@@ -109,15 +66,15 @@ public class Utils {
     /**
      * 判断应用是否是第三方应用
      *
-     * @param appInfo
+     * @param AppEntity
      * @return
      */
-    public static boolean isThirdPartyApp(ApplicationInfo appInfo) {
+    public static boolean isThirdPartyApp(ApplicationInfo AppEntity) {
         boolean flag = false;
-        if ((appInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
+        if ((AppEntity.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
             // 可更新的系统应用
             flag = true;
-        } else if ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+        } else if ((AppEntity.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
             // 非系统应用(第三方:用户自己安装)
             flag = true;
         }
@@ -185,18 +142,16 @@ public class Utils {
         }
     }
 
-    public static List<AppInfo> getSearchResult(List<AppInfo> list, String keyword) {
+    public static List<AppEntity> getSearchResult(List<AppEntity> list, String keyword) {
         //返回实体集合
-        List<AppInfo> searchResultList = new ArrayList<AppInfo>();
+        List<AppEntity> searchResultList = new ArrayList<>();
         //循环遍历
         for (int i = 0; i < list.size(); i++) {
-            AppInfo app = list.get(i);//拿到单个的实体类
+            AppEntity app = list.get(i);//拿到单个的实体类
             //拿关键字和实体类比较
             if (app.mAppName.toLowerCase().contains(keyword.toLowerCase())) {
-
                 searchResultList.add(app);//添加到结果集
             }
-
         }
         return searchResultList;
     }

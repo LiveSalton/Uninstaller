@@ -1,96 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="#ffffff"
+    android:id="@+id/flAppList"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        />
-
-    <LinearLayout
-        android:id="@+id/search_block"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-
-        <ImageView
-            android:id="@+id/search_back"
-            android:layout_width="38dp"
-            android:layout_height="42dp"
-            android:layout_gravity="center_vertical"
-            android:padding="10dp"
-            android:src="@mipmap/back"
-            />
-
-        <EditText
-            android:id="@+id/etInput"
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:background="@null"
-            android:drawableRight="@mipmap/search"
-            android:gravity="left|center_vertical"
-            android:hint="搜索"
-            android:imeOptions="actionSearch"
-            android:paddingLeft="10dp"
-            android:singleLine="true"
-            />
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/flAppList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
-    </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/btn_container"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingTop="5.0dip"
-        android:visibility="gone"
-        android:paddingBottom="5.0dip">
-
-        <Button
-            android:id="@+id/btn_left"
-            android:layout_width="0.0dip"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10.0dip"
-            android:layout_weight="1.0"
-            android:background="@drawable/selector_btn_warning"
-            android:text="删除"
-            android:textColor="@color/white"
-            android:textSize="@dimen/dialog_button_text_size" />
-
-        <Button
-            android:id="@+id/btn_right"
-            android:layout_width="0.0dip"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10.0dip"
-            android:layout_weight="1.0"
-            android:background="@drawable/selector_btn_recommend"
-            android:text="备份"
-            android:textColor="@color/white"
-            android:textSize="@dimen/dialog_button_text_size" />
-
-        <CheckBox
-            android:id="@+id/checkbox_select_all"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10.0dip"
-            android:button="@drawable/selector_checkbox_drawable"
-            android:paddingRight="10.0dip" />
-    </LinearLayout>
 </LinearLayout>

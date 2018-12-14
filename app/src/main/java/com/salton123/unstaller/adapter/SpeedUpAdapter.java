@@ -2,6 +2,7 @@ package com.salton123.unstaller.adapter;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import com.salton123.unstaller.R;
 import com.salton123.unstaller.entity.AppEntity;
 import com.salton123.unstaller.util.Utils;
 
+import java.io.File;
+
 /**
  * User: newSalton@outlook.com
  * Date: 2018/12/8 9:23 PM
@@ -24,10 +27,11 @@ import com.salton123.unstaller.util.Utils;
 public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnClickListener {
 
     private LayoutInflater inflater;
-
+    private PackageManager packageManager;
     public SpeedUpAdapter(Context context) {
         super(context);
         this.inflater = LayoutInflater.from(context);
+        packageManager = context.getPackageManager();
     }
 
     @Override
@@ -41,6 +45,14 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
         final TextView tvSize = ViewHolder.get(convertView, R.id.size);
         CheckBox cbSelect = ViewHolder.get(convertView, R.id.chekcBox);
         final AppEntity appEntity = getItem(position);
+        String dir = appEntity.appInfo.applicationInfo.publicSourceDir;
+        long byteSize = new File(dir).length();
+
+        String sizeStr = Utils.getSize(byteSize) + "M  " + Utils.getTime(appEntity.appInfo.lastUpdateTime);
+        Drawable drawable = appEntity.appInfo.applicationInfo.loadIcon(packageManager);
+        appEntity.mIcon = drawable;
+        appEntity.mSize = sizeStr;
+        appEntity.mAppName = ((String) appEntity.appInfo.applicationInfo.loadLabel(packageManager)).trim();
         tvVersion.setText(appEntity.appInfo.versionName);
         if (!TextUtils.isEmpty(appEntity.mAppName)) {
             tvTitle.setText(appEntity.mAppName);

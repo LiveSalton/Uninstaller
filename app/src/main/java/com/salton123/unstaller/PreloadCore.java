@@ -1,5 +1,6 @@
 package com.salton123.unstaller;
 
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -30,11 +31,33 @@ public enum PreloadCore {
 
     private List<AppEntity> mPackageInfos;
 
-    public List<AppEntity> getInstalledPackages() {
+    private List<AppEntity> mInstallPackagesInfos = new ArrayList<>();
+
+    private List<AppEntity> mSystemPackagesInfos = new ArrayList<>();
+
+    public List<AppEntity> getAllPackages() {
         if (mPackageInfos == null) {
             return preloadAppList();
         }
         return mPackageInfos;
+    }
+
+    /**
+     * 判断应用是否是第三方应用
+     *
+     * @param appInfo
+     * @return
+     */
+    public static boolean isThirdPartyApp(ApplicationInfo appInfo) {
+        boolean flag = false;
+        if ((appInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
+            // 可更新的系统应用
+            flag = true;
+        } else if ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+            // 非系统应用(第三方:用户自己安装)
+            flag = true;
+        }
+        return flag;
     }
 
     public List<AppEntity> preloadAppList() {
@@ -46,7 +69,13 @@ public enum PreloadCore {
                 PackageManager pm = XApp.getInstance().getPackageManager();//获取包管理者
                 List<AppEntity> pList = new ArrayList<>();// 获取所有的应用程序集合
                 for (PackageInfo item : pm.getInstalledPackages(0)) {
-                    pList.add(new AppEntity(item));
+                    AppEntity entity = new AppEntity(item);
+                    pList.add(entity);
+                    if (isThirdPartyApp(item.applicationInfo)) {
+                        mInstallPackagesInfos.add(entity);
+                    } else {
+                        mSystemPackagesInfos.add(entity);
+                    }
                 }
                 Log.i("PreloadCore", "start call time=" + System.currentTimeMillis());
                 return pList;
@@ -67,48 +96,11 @@ public enum PreloadCore {
         }
     }
 
-    static int backupCount;
-
-    public void wrapApplist(final IWrapProgress iWrapProgress) {
-        if (mPackageInfos == null) {
-            XLog.i("PreloadCore", "isValidData == false");
-            getInstalledPackages();
-        } else {
-            backupCount = 0;
-            final PackageManager packageManager = XApp.getInstance().getPackageManager();//获取包管理者
-            for (int i = 0; i < mPackageInfos.size(); i++) {
-                final AppEntity entity = mPackageInfos.get(i);
-                PreloadCore.INSTANCE.mThreadPool.submit(new Callable<Boolean>() {
-                    @Override
-                    public Boolean call() {
-                        try {
-                            String dir = entity.appInfo.applicationInfo.publicSourceDir;
-                            long byteSize = new File(dir).length();
-
-                            String sizeStr = Utils.getSize(byteSize) + "M  " + Utils.getTime(entity.appInfo.lastUpdateTime);
-                            Drawable drawable = entity.appInfo.applicationInfo.loadIcon(packageManager);
-                            entity.mIcon = drawable;
-                            entity.mSize = sizeStr;
-                            entity.mAppName = ((String) entity.appInfo.applicationInfo.loadLabel(packageManager)).trim();
-                            XLog.i("PreloadCore", "sizeStr =" + sizeStr);
-                            return drawable != null;
-                        } catch (Exception e) {
-                            XLog.e(this, e.getMessage());
-                        } finally {
-                            backupCount++;
-                            if (iWrapProgress != null) {
-                                iWrapProgress.onProgress(backupCount, mPackageInfos.size());
-                            }
-                        }
-                        return false;
-                    }
-                });
-            }
-        }
+    public List<AppEntity> getInstalledPackages() {
+        return mInstallPackagesInfos;
     }
 
-    public interface IWrapProgress {
-        void onProgress(int current, int total);
+    public List<AppEntity> getSystemPackages() {
+        return mInstallPackagesInfos;
     }
-
 }
