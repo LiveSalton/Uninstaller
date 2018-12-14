@@ -1,6 +1,5 @@
 package com.salton123.unstaller;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,7 +7,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
-import com.salton123.unstaller.fm.InstalledFragment;
+import com.salton123.unstaller.fm.SpeedUpListFragment;
 import com.salton123.unstaller.util.FragmentUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -16,13 +15,13 @@ import org.greenrobot.eventbus.EventBus;
 public class MainActivity extends AbsImmersionAtivity {
     private EditText etInput;
     private CheckBox mCheckBox;
-    private InstalledFragment mInstalledFragment;
+    private SpeedUpListFragment mInstalledFragment;
     private Button btnDelete, btnBackup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mInstalledFragment = InstalledFragment.newInstance();
+        mInstalledFragment = SpeedUpListFragment.newInstance();
         setContentView(R.layout.activity_main);
         etInput = findViewById(R.id.etInput);
         mCheckBox = findViewById(R.id.checkbox_select_all);

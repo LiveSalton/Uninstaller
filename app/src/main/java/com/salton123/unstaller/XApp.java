@@ -2,8 +2,8 @@ package com.salton123.unstaller;
 
 import android.app.Application;
 import android.os.Environment;
+import android.util.Log;
 
-import com.salton123.log.XLogConfig;
 import com.salton123.unstaller.util.Utils;
 
 import java.io.File;
@@ -15,17 +15,17 @@ import java.io.File;
  * Description:
  */
 public class XApp extends Application {
+    private static Application mInstance;
+
+    public static Application getInstance() {
+        return mInstance;
+    }
 
     @Override
     public void onCreate() {
+        Log.e("calc","time app init ="+ System.currentTimeMillis());
         super.onCreate();
-        String path = new File(Environment.getExternalStorageDirectory(), "salton").getPath();
-        path = path + File.separator + getPackageName();
-        XLogConfig.init(new XLogConfig.Builder()
-                .whetherToSaveLog(Utils.canWriteStorage(this))
-                .setSavePath(path)
-                .build());
+        mInstance = this;
+        PreloadCore.INSTANCE.getInstalledPackages();
     }
-
-
 }

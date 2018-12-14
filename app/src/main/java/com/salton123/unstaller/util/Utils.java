@@ -12,6 +12,7 @@ import android.os.Process;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import com.salton123.unstaller.PreloadCore;
 import com.salton123.unstaller.entity.AppInfo;
 
 import java.io.Closeable;
@@ -47,7 +48,8 @@ public class Utils {
 
         List<AppInfo> list = new ArrayList<AppInfo>();// 声明并实例化1个集合
         PackageManager pm = context.getPackageManager();//获取包管理者
-        List<PackageInfo> pList = pm.getInstalledPackages(0);// 获取所有的应用程序集合
+        // List<PackageInfo> pList = pm.getInstalledPackages(0);// 获取所有的应用程序集合
+        List<PackageInfo> pList = PreloadCore.INSTANCE.preloadAppList();
         // 循环遍历
         for (int i = 0; i < pList.size(); i++) {
             PackageInfo packageInfo = pList.get(i);// 获取每一个应用的信息

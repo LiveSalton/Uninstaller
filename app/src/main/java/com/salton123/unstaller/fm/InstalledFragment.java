@@ -1,9 +1,8 @@
 package com.salton123.unstaller.fm;
 
-import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.os.AsyncTask;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,13 +11,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.salton123.log.XLog;
 import com.salton123.unstaller.ActionCode;
+import com.salton123.unstaller.PreloadCore;
 import com.salton123.unstaller.R;
 import com.salton123.unstaller.adapter.AppListAdapter;
 import com.salton123.unstaller.entity.AppInfo;
 import com.salton123.unstaller.util.BackupManager;
 import com.salton123.unstaller.util.ScheduledTask;
-import com.salton123.unstaller.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -36,8 +36,6 @@ public class InstalledFragment extends BaseFragment implements BackupManager.IBa
     private ProgressDialog mProgressDialog;
     private ListView appListView;
     private AppListAdapter mAdapter;
-    private List<AppInfo> mAppInfos;
-    private volatile boolean isStartAsyncTask = false;
 
     public static InstalledFragment newInstance() {
         return new InstalledFragment();
@@ -50,7 +48,6 @@ public class InstalledFragment extends BaseFragment implements BackupManager.IBa
             @Nullable ViewGroup container,
             Bundle savedInstanceState) {
         EventBus.getDefault().register(this);
-        asyncGetAppList();
         return inflater.inflate(R.layout.fm_installed_app, null);
     }
 
@@ -68,13 +65,49 @@ public class InstalledFragment extends BaseFragment implements BackupManager.IBa
                 mAdapter.notifyDataSetChanged();
             }
         });
-        if (!isStartAsyncTask) {
-            asyncGetAppList();
-        }
+
+        asyncGetAppList();
     }
 
     private void asyncGetAppList() {
-        new GetAppAsyncTask().execute();
+        XLog.e(this, "start = " + System.currentTimeMillis());
+        PackageManager pm = mActivity.getPackageManager();//获取包管理者
+        List<PackageInfo> pList = PreloadCore.INSTANCE.getInstalledPackages();
+        XLog.e(this, "fetch = " + System.currentTimeMillis());
+        pList = pList.subList(0, 10);
+        // 循环遍历
+        for (int i = 0; i < pList.size(); i++) {
+            PackageInfo packageInfo = pList.get(i);// 获取每一个应用的信息
+            // 不能包含本应用(不删除自己)
+            if (!packageInfo.packageName.equals(mActivity.getPackageName())) {
+                // 从右边装到左边
+                AppInfo appInfo = new AppInfo();
+                appInfo.packageName = packageInfo.packageName;
+                appInfo.versionName = packageInfo.versionName;
+                appInfo.versionCode = packageInfo.versionCode;
+                appInfo.firstInstallTime = packageInfo.firstInstallTime;
+                appInfo.lastUpdateTime = packageInfo.lastUpdateTime;
+                // 程序名称
+                appInfo.appName = ((String) packageInfo.applicationInfo.loadLabel(pm)).trim();
+                // 过渡
+                appInfo.applicationInfo = packageInfo.applicationInfo;
+                // 这行代码在运行时解除注释
+                // appInfo.icon = packageInfo.applicationInfo.loadIcon(pm);
+                //publicSourceDir 是app的安装路径（文件夹）
+                String dir = packageInfo.applicationInfo.publicSourceDir;
+                appInfo.path = dir;
+                // 计算应用的空间
+                // long byteSize = new File(dir).length();
+                // 1024*1024 Byte字节
+                // appInfo.byteSize = byteSize;
+                // 1MB
+                // appInfo.size = getSize(byteSize);
+                mAdapter.add(appInfo);
+                XLog.e(this, "add = " + System.currentTimeMillis());
+            }
+            mAdapter.notifyDataSetChanged();
+        }
+        XLog.e(this, "end = " + System.currentTimeMillis());
     }
 
     @Subscribe()
@@ -92,7 +125,7 @@ public class InstalledFragment extends BaseFragment implements BackupManager.IBa
 
     private void startBackupTask() {
         List<AppInfo> backupList = new ArrayList<>();
-        for (AppInfo item : mAppInfos) {
+        for (AppInfo item : mAdapter.getList()) {
             if (item.isChecked) {
                 backupList.add(item);
             }
@@ -105,8 +138,8 @@ public class InstalledFragment extends BaseFragment implements BackupManager.IBa
     }
 
     private void onCheckAll(boolean isChecked) {
-        if (mAppInfos != null) {
-            for (AppInfo item : mAppInfos) {
+        if (mAdapter.getList() != null) {
+            for (AppInfo item : mAdapter.getList()) {
                 item.isChecked = isChecked;
             }
             mAdapter.notifyDataSetChanged();
@@ -135,38 +168,6 @@ public class InstalledFragment extends BaseFragment implements BackupManager.IBa
             }
         }, 0);
 
-    }
-
-
-    private class GetAppAsyncTask extends AsyncTask<Void, Void, List<AppInfo>> {
-
-        @Override
-        protected List<AppInfo> doInBackground(Void... voids) {
-            return Utils.getAppList(mActivity);
-        }
-
-        @Override
-        protected void onPostExecute(List<AppInfo> appInfos) {
-            super.onPostExecute(appInfos);
-            dismissProgressDialog();
-            mAppInfos = appInfos;
-            updateListView();
-            isStartAsyncTask = false;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            showProgressDialog("系统信息", "正在加载应用列表,请耐心等待...");
-            isStartAsyncTask = true;
-        }
-    }
-
-    private void updateListView() {
-        if (mAppInfos != null) {
-            mAdapter.setList(mAppInfos);
-            mAdapter.notifyDataSetChanged();
-        }
     }
 
     // 显示一个环形进度框
