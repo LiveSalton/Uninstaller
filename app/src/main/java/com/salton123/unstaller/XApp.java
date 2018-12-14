@@ -1,12 +1,8 @@
 package com.salton123.unstaller;
 
 import android.app.Application;
-import android.os.Environment;
-import android.util.Log;
 
-import com.salton123.unstaller.util.Utils;
-
-import java.io.File;
+import com.salton123.log.XLog;
 
 /**
  * User: newSalton@outlook.com
@@ -23,7 +19,7 @@ public class XApp extends Application {
 
     @Override
     public void onCreate() {
-        Log.e("calc","time app init ="+ System.currentTimeMillis());
+        XLog.e(this, "time app init =" + System.currentTimeMillis());
         super.onCreate();
         mInstance = this;
         PreloadCore.INSTANCE.getInstalledPackages();

@@ -47,23 +47,23 @@ public class AppListAdapter extends AdapterBase<AppInfo> implements View.OnClick
         CheckBox chekcBox = ViewHolder.get(convertView, R.id.chekcBox);
         XLog.i(this,"[getView]");
         AppInfo map = getItem(position);
-        final String pkgName = map.packageName;
+        final String pkgName = map.mPackageName;
         // 拿到图标 OOM=out of Memory
-        // if (map.icon == null) {// 优化
-        //     map.icon = map.applicationInfo.loadIcon(mPackageManager);//57
+        // if (map.mIcon == null) {// 优化
+        //     map.mIcon = map.mApplicationInfo.loadIcon(mPackageManager);//57
         // }
-        // logo.setImageDrawable(map.icon);
+        // logo.setImageDrawable(map.mIcon);
         //对下面的应用名进行高亮处理
-        // title.setText((String) map.appName);
+        // title.setText((String) map.mAppName);
 
-        String w = map.appName;// 原始应用名
+        String w = map.mAppName;// 原始应用名
         String key = Utils.KEY;
         int start = w.toLowerCase().indexOf(key.toLowerCase());//高亮文字的起始位置
         if (start > -1) {// 有
             int end = start + key.length();//高亮文字的终止位置
             // 字符串样式对象
             SpannableStringBuilder style
-                    = new SpannableStringBuilder(map.appName);
+                    = new SpannableStringBuilder(map.mAppName);
             style.setSpan(// 设定样式
                     new ForegroundColorSpan(Color.BLUE),// 前景样式
                     start,// 起始坐标
@@ -74,8 +74,8 @@ public class AppListAdapter extends AdapterBase<AppInfo> implements View.OnClick
         } else {
             title.setText(w);// 将原来的文字赋值
         }
-        version.setText(map.versionName + "(" + map.versionCode + ")");
-        size.setText(map.size + "M  " + Utils.getTime(map.lastUpdateTime));
+        version.setText(map.mVersionName + "(" + map.mVersionCode + ")");
+        size.setText(map.mSize + "M  " + Utils.getTime(map.mLastUpdateTime));
         chekcBox.setChecked(map.isChecked);
         // 点击"卸载"按钮的点击事件
         return convertView;

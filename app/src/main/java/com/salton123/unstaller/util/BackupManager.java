@@ -4,13 +4,12 @@ import android.os.Environment;
 import android.util.Base64;
 
 import com.salton123.log.XLog;
+import com.salton123.unstaller.PreloadCore;
 import com.salton123.unstaller.entity.AppInfo;
 
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * User: newSalton@outlook.com
@@ -19,7 +18,6 @@ import java.util.concurrent.Executors;
  * Description:
  */
 public class BackupManager {
-    private static ExecutorService backThreadPool = Executors.newFixedThreadPool(8);
 
     private static final String backup_path = Environment.getExternalStorageDirectory() +
             File.separator + "backup" + File.separator;
@@ -32,16 +30,16 @@ public class BackupManager {
             backupCount = 0;
             for (int i = 0; i < toBackupData.size(); i++) {
                 final AppInfo item = toBackupData.get(i);
-                backThreadPool.submit(new Callable<Boolean>() {
+                PreloadCore.INSTANCE.mThreadPool.submit(new Callable<Boolean>() {
                     @Override
                     public Boolean call() {
                         try {
-                            final String fromFilePath = item.path;
+                            final String fromFilePath = item.mPath;
                             final String fileName = Base64.encodeToString(fromFilePath.getBytes(), 0);
                             String destPath = backup_path + fileName;
                             boolean result = Utils.copyFile(fromFilePath, destPath);
-                            XLog.i(BackupManager.class, "[toBackup] finish task ,dest path="
-                                    + destPath + ",from path=" + fromFilePath
+                            XLog.i(BackupManager.class, "[toBackup] finish task ,dest mPath="
+                                    + destPath + ",from mPath=" + fromFilePath
                                     + ",decrypt=" + new String(Base64.decode(fileName, 0)));
                             if (iBackup != null) {
                                 iBackup.onProgress(backupCount, toBackupData.size(), result);

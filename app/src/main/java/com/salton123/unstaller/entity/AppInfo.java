@@ -1,6 +1,7 @@
 package com.salton123.unstaller.entity;
 
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.graphics.drawable.Drawable;
 
 import com.salton123.unstaller.util.Utils;
@@ -10,33 +11,34 @@ import com.salton123.unstaller.util.Utils;
  * 实体类
  * 应用程序
  */
-public class AppInfo {
+public class AppInfo extends PackageInfo {
 
-    public String packageName;// 包名
-    public String versionName;// 版本名
-    public int versionCode;// 版本号
-    public long firstInstallTime;// 第一次安装
-    public long lastUpdateTime;// 最近一次安装
-    public String appName; // 应用名
-    public Drawable icon = null;// 图标
-    public long byteSize;// 大小:字节(单位)
-    public String size;// 大小: MB
+    public String mAppName; // 应用名
+    public Drawable mIcon = null;// 图标
+    public String mSize;// 大小: MB
+
+    public String mPackageName;// 包名
+    public String mVersionName;// 版本名
+    public int mVersionCode;// 版本号
+    public long mFirstInstallTime;// 第一次安装
+    public long mLastUpdateTime;// 最近一次安装
+    public long mByteSize;// 大小:字节(单位)
     public boolean isChecked = false;
-    public ApplicationInfo applicationInfo;
-    public String path;
+    public ApplicationInfo mApplicationInfo;
+    public String mPath;
 
     @Override
     public String toString() {
-        return ", appName='" + appName + "\n" +
-                "packageName='" + packageName + "\n" +
-                ", versionName='" + versionName + "\n" +
-                ", versionCode=" + versionCode + "\n" +
-                ", firstInstallTime=" + Utils.getTime(firstInstallTime) + "\n" +
-                ", lastUpdateTime=" + Utils.getTime(lastUpdateTime) + "\n" +
+        return ", mAppName='" + mAppName + "\n" +
+                "mPackageName='" + mPackageName + "\n" +
+                ", mVersionName='" + mVersionName + "\n" +
+                ", mVersionCode=" + mVersionCode + "\n" +
+                ", mFirstInstallTime=" + Utils.getTime(mFirstInstallTime) + "\n" +
+                ", mLastUpdateTime=" + Utils.getTime(mLastUpdateTime) + "\n" +
 
-                ", icon=" + icon + "\n" +
-                ", byteSize=" + byteSize + "\n" +
-                ", size='" + size + "\n" +
+                ", mIcon=" + mIcon + "\n" +
+                ", mByteSize=" + mByteSize + "\n" +
+                ", mSize='" + mSize + "\n" +
 
                 "}-------------------------------------------\n";
     }

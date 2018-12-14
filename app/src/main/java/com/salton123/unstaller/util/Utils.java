@@ -23,8 +23,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,8 +46,7 @@ public class Utils {
 
         List<AppInfo> list = new ArrayList<AppInfo>();// 声明并实例化1个集合
         PackageManager pm = context.getPackageManager();//获取包管理者
-        // List<PackageInfo> pList = pm.getInstalledPackages(0);// 获取所有的应用程序集合
-        List<PackageInfo> pList = PreloadCore.INSTANCE.preloadAppList();
+        List<PackageInfo> pList = pm.getInstalledPackages(0);// 获取所有的应用程序集合
         // 循环遍历
         for (int i = 0; i < pList.size(); i++) {
             PackageInfo packageInfo = pList.get(i);// 获取每一个应用的信息
@@ -60,24 +57,24 @@ public class Utils {
 
                 // 从右边装到左边
                 AppInfo appInfo = new AppInfo();
-                appInfo.packageName = packageInfo.packageName;
-                appInfo.versionName = packageInfo.versionName;
-                appInfo.versionCode = packageInfo.versionCode;
-                appInfo.firstInstallTime = packageInfo.firstInstallTime;
-                appInfo.lastUpdateTime = packageInfo.lastUpdateTime;
+                appInfo.mPackageName = packageInfo.packageName;
+                appInfo.mVersionName = packageInfo.versionName;
+                appInfo.mVersionCode = packageInfo.versionCode;
+                appInfo.mFirstInstallTime = packageInfo.firstInstallTime;
+                appInfo.mLastUpdateTime = packageInfo.lastUpdateTime;
                 // 程序名称
-                appInfo.appName = ((String) packageInfo.applicationInfo.loadLabel(pm)).trim();
+                appInfo.mAppName = ((String) packageInfo.applicationInfo.loadLabel(pm)).trim();
                 // 过渡
-                appInfo.applicationInfo = packageInfo.applicationInfo;
+                appInfo.mApplicationInfo = packageInfo.applicationInfo;
                 // 这行代码在运行时解除注释
-                //appInfo.icon = packageInfo.applicationInfo.loadIcon(pm);
+                //appInfo.mIcon = packageInfo.mApplicationInfo.loadIcon(pm);
                 // 计算应用的空间
                 //publicSourceDir 是app的安装路径（文件夹）
                 String dir = packageInfo.applicationInfo.publicSourceDir;
-                appInfo.path = dir;
+                appInfo.mPath = dir;
                 long byteSize = new File(dir).length();
-                appInfo.byteSize = byteSize;// 1024*1024 Byte字节
-                appInfo.size = getSize(byteSize);// 1MB
+                appInfo.mByteSize = byteSize;// 1024*1024 Byte字节
+                appInfo.mSize = getSize(byteSize);// 1MB
 
                 list.add(appInfo);// 添加到集合
             }// if
@@ -195,7 +192,7 @@ public class Utils {
         for (int i = 0; i < list.size(); i++) {
             AppInfo app = list.get(i);//拿到单个的实体类
             //拿关键字和实体类比较
-            if (app.appName.toLowerCase().contains(keyword.toLowerCase())) {
+            if (app.mAppName.toLowerCase().contains(keyword.toLowerCase())) {
 
                 searchResultList.add(app);//添加到结果集
             }

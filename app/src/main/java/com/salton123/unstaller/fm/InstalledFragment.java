@@ -70,44 +70,44 @@ public class InstalledFragment extends BaseFragment implements BackupManager.IBa
     }
 
     private void asyncGetAppList() {
-        XLog.e(this, "start = " + System.currentTimeMillis());
-        PackageManager pm = mActivity.getPackageManager();//获取包管理者
-        List<PackageInfo> pList = PreloadCore.INSTANCE.getInstalledPackages();
-        XLog.e(this, "fetch = " + System.currentTimeMillis());
-        pList = pList.subList(0, 10);
-        // 循环遍历
-        for (int i = 0; i < pList.size(); i++) {
-            PackageInfo packageInfo = pList.get(i);// 获取每一个应用的信息
-            // 不能包含本应用(不删除自己)
-            if (!packageInfo.packageName.equals(mActivity.getPackageName())) {
-                // 从右边装到左边
-                AppInfo appInfo = new AppInfo();
-                appInfo.packageName = packageInfo.packageName;
-                appInfo.versionName = packageInfo.versionName;
-                appInfo.versionCode = packageInfo.versionCode;
-                appInfo.firstInstallTime = packageInfo.firstInstallTime;
-                appInfo.lastUpdateTime = packageInfo.lastUpdateTime;
-                // 程序名称
-                appInfo.appName = ((String) packageInfo.applicationInfo.loadLabel(pm)).trim();
-                // 过渡
-                appInfo.applicationInfo = packageInfo.applicationInfo;
-                // 这行代码在运行时解除注释
-                // appInfo.icon = packageInfo.applicationInfo.loadIcon(pm);
-                //publicSourceDir 是app的安装路径（文件夹）
-                String dir = packageInfo.applicationInfo.publicSourceDir;
-                appInfo.path = dir;
-                // 计算应用的空间
-                // long byteSize = new File(dir).length();
-                // 1024*1024 Byte字节
-                // appInfo.byteSize = byteSize;
-                // 1MB
-                // appInfo.size = getSize(byteSize);
-                mAdapter.add(appInfo);
-                XLog.e(this, "add = " + System.currentTimeMillis());
-            }
-            mAdapter.notifyDataSetChanged();
-        }
-        XLog.e(this, "end = " + System.currentTimeMillis());
+        // XLog.e(this, "start = " + System.currentTimeMillis());
+        // PackageManager pm = mActivity.getPackageManager();//获取包管理者
+        // List<PackageInfo> pList = PreloadCore.INSTANCE.getInstalledPackages();
+        // XLog.e(this, "fetch = " + System.currentTimeMillis());
+        // pList = pList.subList(0, 10);
+        // // 循环遍历
+        // for (int i = 0; i < pList.size(); i++) {
+        //     PackageInfo packageInfo = pList.get(i);// 获取每一个应用的信息
+        //     // 不能包含本应用(不删除自己)
+        //     if (!packageInfo.packageName.equals(mActivity.getPackageName())) {
+        //         // 从右边装到左边
+        //         AppInfo appInfo = new AppInfo();
+        //         appInfo.mPackageName = packageInfo.packageName;
+        //         appInfo.mVersionName = packageInfo.versionName;
+        //         appInfo.mVersionCode = packageInfo.versionCode;
+        //         appInfo.mFirstInstallTime = packageInfo.firstInstallTime;
+        //         appInfo.mLastUpdateTime = packageInfo.lastUpdateTime;
+        //         // 程序名称
+        //         appInfo.mAppName = ((String) packageInfo.applicationInfo.loadLabel(pm)).trim();
+        //         // 过渡
+        //         appInfo.mApplicationInfo = packageInfo.applicationInfo;
+        //         // 这行代码在运行时解除注释
+        //         // appInfo.mIcon = packageInfo.mApplicationInfo.loadIcon(pm);
+        //         //publicSourceDir 是app的安装路径（文件夹）
+        //         String dir = packageInfo.applicationInfo.publicSourceDir;
+        //         appInfo.mPath = dir;
+        //         // 计算应用的空间
+        //         // long mByteSize = new File(dir).length();
+        //         // 1024*1024 Byte字节
+        //         // appInfo.mByteSize = mByteSize;
+        //         // 1MB
+        //         // appInfo.mSize = getSize(mByteSize);
+        //         mAdapter.add(appInfo);
+        //         XLog.e(this, "add = " + System.currentTimeMillis());
+        //     }
+        //     mAdapter.notifyDataSetChanged();
+        // }
+        // XLog.e(this, "end = " + System.currentTimeMillis());
     }
 
     @Subscribe()
