@@ -12,6 +12,7 @@ import android.os.Process;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import com.salton123.unstaller.XApp;
 import com.salton123.unstaller.entity.AppEntity;
 
 import java.io.Closeable;
@@ -66,15 +67,15 @@ public class Utils {
     /**
      * 判断应用是否是第三方应用
      *
-     * @param AppEntity
+     * @param applicationInfo
      * @return
      */
-    public static boolean isThirdPartyApp(ApplicationInfo AppEntity) {
+    public static boolean isThirdPartyApp(ApplicationInfo applicationInfo) {
         boolean flag = false;
-        if ((AppEntity.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
+        if ((applicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
             // 可更新的系统应用
             flag = true;
-        } else if ((AppEntity.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+        } else if ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
             // 非系统应用(第三方:用户自己安装)
             flag = true;
         }

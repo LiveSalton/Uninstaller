@@ -2,6 +2,7 @@ package com.salton123.unstaller.fm;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -111,9 +112,16 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // mAdapter.getItem(position).isChecked = !mAdapter.getItem(position).isChecked;
                 AppEntity entity = mAdapter.getItem(position);
-                Utils.uninstallApk(mActivity, entity.appInfo.packageName, 0);
+                Uri packageURI = Uri.parse("package:" + entity.appInfo.packageName);
+                Intent intent = new Intent(
+                        Intent.ACTION_DELETE,// 动作:删除
+                        packageURI // 所要删除程序的地址
+                );
+                startActivityForResult(intent, 0x101);
+                // Utils.uninstallApk(mActivity, entity.appInfo.packageName, 0);
             }
         });
+        allEntity.clear();
         allEntity.addAll(PreloadCore.INSTANCE.getInstalledPackages());
         updateSort(allEntity);//重新排序事件
 
@@ -123,13 +131,14 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // 接收窗体返回值
-        if (requestCode == 0) {
+        if (requestCode == 0x101) {
             // 刷新列表
+            allEntity.clear();
             allEntity.addAll(PreloadCore.INSTANCE.preloadAppList());
             updateSort(allEntity);//重新排序事件
         }
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 
     public void onAction(Integer actionCode) {

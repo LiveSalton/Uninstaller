@@ -38,7 +38,9 @@ public enum PreloadCore {
                 for (PackageInfo item : pm.getInstalledPackages(0)) {
                     AppEntity entity = new AppEntity(item);
                     if (Utils.isThirdPartyApp(item.applicationInfo)) {
-                        pList.add(entity);
+                        if (!item.applicationInfo.packageName.equals(XApp.getInstance().getPackageName())) {
+                            pList.add(entity);
+                        }
                     }
                 }
                 Log.i("PreloadCore", "start call time=" + System.currentTimeMillis());
