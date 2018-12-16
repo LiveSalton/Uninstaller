@@ -22,6 +22,7 @@ public class XApp extends Application {
         XLog.e(this, "time app init =" + System.currentTimeMillis());
         super.onCreate();
         mInstance = this;
-        PreloadCore.INSTANCE.getAllPackages();
+        PreloadCore.INSTANCE.getInstalledPackages();
+        PreloadCore.INSTANCE.preloadAppList();
     }
 }

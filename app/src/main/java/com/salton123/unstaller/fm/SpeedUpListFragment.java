@@ -1,5 +1,6 @@
 package com.salton123.unstaller.fm;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -39,7 +40,7 @@ import java.util.Locale;
 public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQueryTextListener {
     private Button btnDelete, btnBackup;
     private SearchView searchView;
-    private CheckBox mCheckBox;
+    // private CheckBox mCheckBox;
     public static String KEY = "";//全局搜索的关键
     private List<AppEntity> allEntity = new ArrayList<>();
     private LinearLayout rootView;
@@ -61,7 +62,7 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         appListView = view.findViewById(R.id.appListView);
-        mCheckBox = view.findViewById(R.id.checkbox_select_all);
+        // mCheckBox = view.findViewById(R.id.checkbox_select_all);
         btnDelete = view.findViewById(R.id.btn_left);
         btnBackup = view.findViewById(R.id.btn_right);
         searchView = view.findViewById(R.id.searchView);
@@ -78,16 +79,16 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
                 onAction(ActionCode.CODE_BACKUP);
             }
         });
-        mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    onAction(ActionCode.CODE_CHECK);
-                } else {
-                    onAction(ActionCode.CODE_UNCHECK);
-                }
-            }
-        });
+        // mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        //     @Override
+        //     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        //         if (isChecked) {
+        //             onAction(ActionCode.CODE_CHECK);
+        //         } else {
+        //             onAction(ActionCode.CODE_UNCHECK);
+        //         }
+        //     }
+        // });
         searchView.onActionViewExpanded();
         Class<?> c = searchView.getClass();
         try {
@@ -98,7 +99,6 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         searchView.setOnQueryTextListener(this);//关联提交事件
         loadData();
     }
@@ -109,13 +109,27 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         appListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mAdapter.getItem(position).isChecked = !mAdapter.getItem(position).isChecked;
+                // mAdapter.getItem(position).isChecked = !mAdapter.getItem(position).isChecked;
+                AppEntity entity = mAdapter.getItem(position);
+                Utils.uninstallApk(mActivity, entity.appInfo.packageName, 0);
             }
         });
-        updateSort(PreloadCore.INSTANCE.getInstalledPackages());//重新排序事件
-        allEntity.addAll(mAdapter.getList());
+        allEntity.addAll(PreloadCore.INSTANCE.getInstalledPackages());
+        updateSort(allEntity);//重新排序事件
+
         Log.e("calc", "time app load =" + System.currentTimeMillis());
         // PreloadCore.INSTANCE.wrapApplist(SpeedUpListFragment.this);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // 接收窗体返回值
+        if (requestCode == 0) {
+            // 刷新列表
+            allEntity.addAll(PreloadCore.INSTANCE.preloadAppList());
+            updateSort(allEntity);//重新排序事件
+        }
     }
 
     public void onAction(Integer actionCode) {
@@ -149,7 +163,7 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
 
     // 带排序的更新
     private void updateSort(List<AppEntity> entities) {
-        Collections.sort(entities, nameComparator);// 这里才是排序的操作
+        // Collections.sort(entities, nameComparator);// 这里才是排序的操作
         mAdapter.addAll(entities);
         mAdapter.notifyDataSetChanged();// 刷新视图
     }
