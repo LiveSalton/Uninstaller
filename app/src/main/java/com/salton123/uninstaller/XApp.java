@@ -19,10 +19,21 @@ public class XApp extends Application {
 
     @Override
     public void onCreate() {
-        XLog.e(this, "time app init =" + System.currentTimeMillis());
         super.onCreate();
+        XLog.e(this, "time app init =" + System.currentTimeMillis());
         mInstance = this;
-        PreloadCore.INSTANCE.getInstalledPackages();
-        PreloadCore.INSTANCE.preloadAppList();
+        
+        // 预加载应用列表
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    PreloadCore.INSTANCE.preloadAppList();
+                    XLog.i(XApp.this, "App list preload completed");
+                } catch (Exception e) {
+                    XLog.e(XApp.this, "App list preload failed: " + e.getMessage());
+                }
+            }
+        }).start();
     }
 }

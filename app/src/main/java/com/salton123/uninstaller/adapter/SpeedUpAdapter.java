@@ -58,7 +58,7 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
             tvTitle.setText(appEntity.mAppName);
         }
         if (!TextUtils.isEmpty(appEntity.mSize)) {
-            tvSize.setText(appEntity.mSize + "M  " + Utils.getTime(appEntity.appInfo.lastUpdateTime));
+            tvSize.setText(appEntity.mSize);
         }
         if (appEntity.mIcon != null) {
             ivLogo.setImageDrawable(appEntity.mIcon);

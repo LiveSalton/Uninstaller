@@ -22,6 +22,7 @@ import com.salton123.uninstaller.R;
 import com.salton123.uninstaller.adapter.SpeedUpAdapter;
 import com.salton123.uninstaller.entity.AppEntity;
 import com.salton123.uninstaller.util.Utils;
+import com.salton123.log.XLog;
 
 import java.lang.reflect.Field;
 import java.text.Collator;
@@ -108,23 +109,71 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         appListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // mAdapter.getItem(position).isChecked = !mAdapter.getItem(position).isChecked;
                 AppEntity entity = mAdapter.getItem(position);
-                Uri packageURI = Uri.parse("package:" + entity.appInfo.packageName);
-                Intent intent = new Intent(
-                        Intent.ACTION_DELETE,// 动作:删除
-                        packageURI // 所要删除程序的地址
-                );
-                startActivityForResult(intent, 0x101);
-                // Utils.uninstallApk(mActivity, entity.appInfo.packageName, 0);
+                // 直接卸载应用
+                uninstallApp(entity);
             }
         });
-        allEntity.clear();
-        allEntity.addAll(PreloadCore.INSTANCE.getInstalledPackages());
-        updateSort(allEntity);//重新排序事件
+        
+        // 异步加载应用列表
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                allEntity.clear();
+                allEntity.addAll(PreloadCore.INSTANCE.preloadAppList());
+                
+                // 在主线程更新UI
+                if (mActivity != null) {
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateSort(allEntity);
+                            XLog.i("SpeedUpListFragment", "Loaded " + allEntity.size() + " apps");
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
 
-        Log.e("calc", "time app load =" + System.currentTimeMillis());
-        // PreloadCore.INSTANCE.wrapApplist(SpeedUpListFragment.this);
+    /**
+     * 卸载单个应用
+     */
+    private void uninstallApp(AppEntity entity) {
+        if (entity == null || entity.appInfo == null) {
+            return;
+        }
+        
+        try {
+            Uri packageURI = Uri.parse("package:" + entity.appInfo.packageName);
+            Intent intent = new Intent(Intent.ACTION_DELETE, packageURI);
+            startActivityForResult(intent, 0x101);
+            XLog.i("SpeedUpListFragment", "Uninstalling: " + entity.mAppName);
+        } catch (Exception e) {
+            XLog.e("SpeedUpListFragment", "Error uninstalling app: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 批量卸载选中的应用
+     */
+    private void deleteSelectedApps() {
+        List<AppEntity> selectedApps = new ArrayList<>();
+        for (AppEntity app : mAdapter.getList()) {
+            if (app.isChecked) {
+                selectedApps.add(app);
+            }
+        }
+        
+        if (selectedApps.isEmpty()) {
+            XLog.w("SpeedUpListFragment", "No apps selected for deletion");
+            return;
+        }
+        
+        XLog.i("SpeedUpListFragment", "Deleting " + selectedApps.size() + " apps");
+        for (AppEntity app : selectedApps) {
+            uninstallApp(app);
+        }
     }
 
     @Override
@@ -141,13 +190,30 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
 
     public void onAction(Integer actionCode) {
         if (actionCode == ActionCode.CODE_CHECK) {
-            // onCheckAll(true);
+            // 全选
+            onCheckAll(true);
         } else if (actionCode == ActionCode.CODE_UNCHECK) {
-            // onCheckAll(false);
+            // 取消全选
+            onCheckAll(false);
         } else if (actionCode == ActionCode.CODE_BACKUP) {
-            // startBackupTask();
+            // 备份功能（暂未实现）
+            XLog.i("SpeedUpListFragment", "Backup function not implemented yet");
         } else if (actionCode == ActionCode.CODE_DELETE) {
-            // deleteAll();
+            // 批量删除
+            deleteSelectedApps();
+        }
+    }
+
+    /**
+     * 全选/取消全选
+     */
+    private void onCheckAll(boolean checked) {
+        if (mAdapter != null) {
+            for (AppEntity app : mAdapter.getList()) {
+                app.isChecked = checked;
+            }
+            mAdapter.notifyDataSetChanged();
+            XLog.i("SpeedUpListFragment", (checked ? "Selected" : "Deselected") + " all apps");
         }
     }
 

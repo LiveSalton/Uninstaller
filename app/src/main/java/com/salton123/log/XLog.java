@@ -3,26 +3,33 @@ package com.salton123.log;
 import android.util.Log;
 
 /**
- * User: newSalton@outlook.com
- * Date: 2018/12/14 3:31 PM
- * ModifyTime: 3:31 PM
- * Description:
+ * 简单的日志工具类
  */
 public class XLog {
+    private static final String TAG = "XLog";
+    private static boolean DEBUG = true;
 
-    public static void e(Object object, String msg) {
-        Log.e(objClassName(object), msg);
+    public static void e(Object obj, String msg) {
+        if (DEBUG) {
+            Log.e(TAG, obj.getClass().getSimpleName() + ": " + msg);
+        }
     }
 
-    public static void i(Object object, String msg) {
-        Log.i(objClassName(object), msg);
+    public static void d(Object obj, String msg) {
+        if (DEBUG) {
+            Log.d(TAG, obj.getClass().getSimpleName() + ": " + msg);
+        }
     }
 
-    public static String objClassName(Object obj) {
-        if (obj instanceof String) {
-            return (String) obj;
-        } else {
-            return obj.getClass().getSimpleName();
+    public static void i(Object obj, String msg) {
+        if (DEBUG) {
+            Log.i(TAG, obj.getClass().getSimpleName() + ": " + msg);
+        }
+    }
+
+    public static void w(Object obj, String msg) {
+        if (DEBUG) {
+            Log.w(TAG, obj.getClass().getSimpleName() + ": " + msg);
         }
     }
 }
