@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -141,6 +142,7 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
                         @Override
                         public void run() {
                             updateSort(allEntity);
+                            updateButtonStates(); // 初始化按钮状态
                             XLog.i("SpeedUpListFragment", "Loaded " + allEntity.size() + " apps");
                         }
                     });
@@ -157,6 +159,45 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
             entity.isChecked = !entity.isChecked;
             String status = entity.isChecked ? "选中" : "取消选中";
             XLog.i("SpeedUpListFragment", status + "应用: " + entity.mAppName);
+            
+            // 显示简短的Toast提示
+            if (mActivity != null) {
+                Toast.makeText(mActivity, status + ": " + entity.mAppName, Toast.LENGTH_SHORT).show();
+            }
+            
+            // 更新按钮状态
+            updateButtonStates();
+        }
+    }
+
+    /**
+     * 更新按钮状态和文本
+     */
+    private void updateButtonStates() {
+        if (mAdapter == null) return;
+        
+        int selectedCount = getSelectedApps().size();
+        int totalCount = mAdapter.getCount();
+        
+        // 更新按钮文本显示选中数量
+        if (btnDelete != null) {
+            if (selectedCount > 0) {
+                btnDelete.setText("删除(" + selectedCount + ")");
+                btnDelete.setEnabled(true);
+            } else {
+                btnDelete.setText("删除");
+                btnDelete.setEnabled(false);
+            }
+        }
+        
+        if (btnBackup != null) {
+            if (selectedCount > 0) {
+                btnBackup.setText("备份(" + selectedCount + ")");
+                btnBackup.setEnabled(true);
+            } else {
+                btnBackup.setText("备份");
+                btnBackup.setEnabled(false);
+            }
         }
     }
 
@@ -179,19 +220,88 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
     }
 
     /**
+     * 开始备份任务
+     */
+    private void startBackupTask() {
+        List<AppEntity> selectedApps = getSelectedApps();
+        if (selectedApps.isEmpty()) {
+            XLog.w("SpeedUpListFragment", "No apps selected for backup");
+            if (mActivity != null) {
+                Toast.makeText(mActivity, "请先选择要备份的应用", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+
+        XLog.i("SpeedUpListFragment", "Starting backup for " + selectedApps.size() + " apps");
+        
+        if (mActivity != null) {
+            Toast.makeText(mActivity, "开始备份 " + selectedApps.size() + " 个应用...", Toast.LENGTH_LONG).show();
+        }
+        
+        BackupManager.toBackup(selectedApps, new BackupManager.IBackupProgress() {
+            @Override
+            public void onProgress(int current, int total, boolean isSuccess, String appName) {
+                if (mActivity != null) {
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String status = isSuccess ? "成功" : "失败";
+                            XLog.i("SpeedUpListFragment", 
+                                "备份进度: " + current + "/" + total + " - " + appName + " " + status);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onBackupComplete(boolean success, String message) {
+                if (mActivity != null) {
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            XLog.i("SpeedUpListFragment", "备份完成: " + message);
+                            Toast.makeText(mActivity, message, Toast.LENGTH_LONG).show();
+                            
+                            // 备份完成后取消选中状态
+                            onCheckAll(false);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取选中的应用列表
+     */
+    private List<AppEntity> getSelectedApps() {
+        List<AppEntity> selectedApps = new ArrayList<>();
+        if (mAdapter != null) {
+            for (AppEntity app : mAdapter.getList()) {
+                if (app.isChecked) {
+                    selectedApps.add(app);
+                }
+            }
+        }
+        return selectedApps;
+    }
+
+    /**
      * 批量卸载选中的应用
      */
     private void deleteSelectedApps() {
-        List<AppEntity> selectedApps = new ArrayList<>();
-        for (AppEntity app : mAdapter.getList()) {
-            if (app.isChecked) {
-                selectedApps.add(app);
-            }
-        }
+        List<AppEntity> selectedApps = getSelectedApps();
         
         if (selectedApps.isEmpty()) {
             XLog.w("SpeedUpListFragment", "No apps selected for deletion");
+            if (mActivity != null) {
+                Toast.makeText(mActivity, "请先选择要删除的应用", Toast.LENGTH_SHORT).show();
+            }
             return;
+        }
+        
+        if (mActivity != null) {
+            Toast.makeText(mActivity, "开始卸载 " + selectedApps.size() + " 个应用", Toast.LENGTH_LONG).show();
         }
         
         XLog.i("SpeedUpListFragment", "Deleting " + selectedApps.size() + " apps");
@@ -237,65 +347,15 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
                 app.isChecked = checked;
             }
             mAdapter.notifyDataSetChanged();
-            XLog.i("SpeedUpListFragment", (checked ? "Selected" : "Deselected") + " all apps");
-        }
-    }
-
-    /**
-     * 开始备份任务
-     */
-    private void startBackupTask() {
-        List<AppEntity> selectedApps = getSelectedApps();
-        if (selectedApps.isEmpty()) {
-            XLog.w("SpeedUpListFragment", "No apps selected for backup");
-            return;
-        }
-
-        XLog.i("SpeedUpListFragment", "Starting backup for " + selectedApps.size() + " apps");
-        
-        BackupManager.toBackup(selectedApps, new BackupManager.IBackupProgress() {
-            @Override
-            public void onProgress(int current, int total, boolean isSuccess, String appName) {
-                if (mActivity != null) {
-                    mActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            String status = isSuccess ? "成功" : "失败";
-                            XLog.i("SpeedUpListFragment", 
-                                "备份进度: " + current + "/" + total + " - " + appName + " " + status);
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onBackupComplete(boolean success, String message) {
-                if (mActivity != null) {
-                    mActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            XLog.i("SpeedUpListFragment", "备份完成: " + message);
-                            // 可以在这里显示Toast或Dialog通知用户
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-    /**
-     * 获取选中的应用列表
-     */
-    private List<AppEntity> getSelectedApps() {
-        List<AppEntity> selectedApps = new ArrayList<>();
-        if (mAdapter != null) {
-            for (AppEntity app : mAdapter.getList()) {
-                if (app.isChecked) {
-                    selectedApps.add(app);
-                }
+            updateButtonStates();
+            
+            String message = checked ? "已全选 " + mAdapter.getCount() + " 个应用" : "已取消全选";
+            XLog.i("SpeedUpListFragment", message);
+            
+            if (mActivity != null) {
+                Toast.makeText(mActivity, message, Toast.LENGTH_SHORT).show();
             }
         }
-        return selectedApps;
     }
 
     @Override

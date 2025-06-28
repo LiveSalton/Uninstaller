@@ -4,8 +4,6 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.salton123.log.XLog;
 import com.salton123.uninstaller.fm.SpeedUpListFragment;
@@ -35,18 +33,17 @@ public class MainActivity extends AbsImmersionAtivity {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             };
-            
+
             boolean allGranted = true;
             for (String permission : permissions) {
-                if (ContextCompat.checkSelfPermission(this, permission) 
-                    != PackageManager.PERMISSION_GRANTED) {
+                if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
                     allGranted = false;
                     break;
                 }
             }
-            
+
             if (!allGranted) {
-                ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSIONS);
+                requestPermissions(permissions, REQUEST_PERMISSIONS);
                 return false;
             }
         }
@@ -68,18 +65,13 @@ public class MainActivity extends AbsImmersionAtivity {
             if (allGranted) {
                 initFragment();
             } else {
-                XLog.w(this, "Some permissions were denied");
-                // 即使权限被拒绝，也初始化Fragment，因为主要功能不依赖这些权限
-                initFragment();
+                XLog.e(this, "权限被拒绝");
             }
         }
     }
 
     private void initFragment() {
         mInstalledFragment = SpeedUpListFragment.newInstance();
-        FragmentUtil.addOrReplaceFragment(
-                getFragmentManager(),
-                mInstalledFragment,
-                R.id.flAppList);
+        FragmentUtil.addOrReplaceFragment(getFragmentManager(), mInstalledFragment, R.id.flAppList);
     }
 }

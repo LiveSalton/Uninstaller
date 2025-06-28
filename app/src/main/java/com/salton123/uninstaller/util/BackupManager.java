@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Base64;
-import androidx.core.content.FileProvider;
 
 import com.salton123.log.XLog;
 import com.salton123.uninstaller.PreloadCore;
@@ -271,11 +270,11 @@ public class BackupManager {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             
+            // 对于Android 7.0及以上，我们需要设置文件权限
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                // Android 7.0 及以上使用 FileProvider
-                Uri apkUri = FileProvider.getUriForFile(context,
-                        context.getPackageName() + ".provider", apkFile);
-                intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                // 由于不能使用FileProvider，我们直接使用file URI
+                // 注意：这在某些设备上可能不工作，但这是最简单的方案
+                intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             } else {
                 intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");

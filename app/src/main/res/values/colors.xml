@@ -2,6 +2,10 @@
 <resources>
     <color name="item_selecto_nor">#00000000</color>
     <color name="item_selecto_pre">#ff0febff</color>
-    <color name="white">#ffffffff</color>
+    <color name="white">#FFFFFF</color>
     <color name="actionbar_bg">#ffeeeeee</color>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="black">#000000</color>
 </resources>

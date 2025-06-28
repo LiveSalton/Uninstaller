@@ -1,5 +1,6 @@
 package com.salton123.uninstaller;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -14,9 +15,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.salton123.log.XLog;
 import com.salton123.uninstaller.util.BackupManager;
 import com.salton123.uninstaller.util.Utils;
@@ -30,7 +28,7 @@ import java.util.Locale;
  * 备份管理Activity
  * 显示所有备份文件，支持恢复和删除操作
  */
-public class BackupActivity extends AppCompatActivity {
+public class BackupActivity extends Activity {
 
     private ListView backupListView;
     private BackupAdapter backupAdapter;
@@ -44,12 +42,8 @@ public class BackupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_backup);
         
-        // 设置ActionBar
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle("备份管理");
-        }
+        // 设置标题
+        setTitle("备份管理");
 
         initViews();
         loadBackupList();
@@ -255,15 +249,6 @@ public class BackupActivity extends AppCompatActivity {
                 });
             }
         }).start();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**

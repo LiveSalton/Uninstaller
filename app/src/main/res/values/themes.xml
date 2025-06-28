@@ -2,4 +2,11 @@
 <resources>
 
     <style name="Theme.Uninstaller" parent="android:Theme.Material.Light.NoActionBar" />
+    
+    <!-- 备份Activity使用带ActionBar的主题 -->
+    <style name="Theme.Uninstaller.WithActionBar" parent="android:Theme.Material.Light.DarkActionBar">
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
+    </style>
 </resources>
