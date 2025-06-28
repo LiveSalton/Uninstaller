@@ -23,6 +23,8 @@ import com.salton123.uninstaller.adapter.SpeedUpAdapter;
 import com.salton123.uninstaller.entity.AppEntity;
 import com.salton123.uninstaller.util.Utils;
 import com.salton123.log.XLog;
+import com.salton123.uninstaller.util.BackupManager;
+import com.salton123.uninstaller.BackupActivity;
 
 import java.lang.reflect.Field;
 import java.text.Collator;
@@ -65,6 +67,7 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         // mCheckBox = view.findViewById(R.id.checkbox_select_all);
         btnDelete = view.findViewById(R.id.btn_left);
         btnBackup = view.findViewById(R.id.btn_right);
+        Button btnBackupManager = view.findViewById(R.id.btn_backup_manager);
         searchView = view.findViewById(R.id.searchView);
         rootView = view.findViewById(R.id.rootView);
         btnDelete.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +80,14 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
             @Override
             public void onClick(View v) {
                 onAction(ActionCode.CODE_BACKUP);
+            }
+        });
+        
+        // 备份管理按钮点击事件
+        btnBackupManager.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openBackupManager();
             }
         });
         // mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -110,8 +121,10 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 AppEntity entity = mAdapter.getItem(position);
-                // 直接卸载应用
-                uninstallApp(entity);
+                // 切换选中状态，而不是直接卸载
+                toggleAppSelection(entity);
+                // 刷新视图以更新复选框状态
+                mAdapter.notifyDataSetChanged();
             }
         });
         
@@ -134,6 +147,17 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
                 }
             }
         }).start();
+    }
+
+    /**
+     * 切换应用的选中状态
+     */
+    private void toggleAppSelection(AppEntity entity) {
+        if (entity != null) {
+            entity.isChecked = !entity.isChecked;
+            String status = entity.isChecked ? "选中" : "取消选中";
+            XLog.i("SpeedUpListFragment", status + "应用: " + entity.mAppName);
+        }
     }
 
     /**
@@ -196,8 +220,8 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
             // 取消全选
             onCheckAll(false);
         } else if (actionCode == ActionCode.CODE_BACKUP) {
-            // 备份功能（暂未实现）
-            XLog.i("SpeedUpListFragment", "Backup function not implemented yet");
+            // 备份选中的应用
+            startBackupTask();
         } else if (actionCode == ActionCode.CODE_DELETE) {
             // 批量删除
             deleteSelectedApps();
@@ -215,6 +239,63 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
             mAdapter.notifyDataSetChanged();
             XLog.i("SpeedUpListFragment", (checked ? "Selected" : "Deselected") + " all apps");
         }
+    }
+
+    /**
+     * 开始备份任务
+     */
+    private void startBackupTask() {
+        List<AppEntity> selectedApps = getSelectedApps();
+        if (selectedApps.isEmpty()) {
+            XLog.w("SpeedUpListFragment", "No apps selected for backup");
+            return;
+        }
+
+        XLog.i("SpeedUpListFragment", "Starting backup for " + selectedApps.size() + " apps");
+        
+        BackupManager.toBackup(selectedApps, new BackupManager.IBackupProgress() {
+            @Override
+            public void onProgress(int current, int total, boolean isSuccess, String appName) {
+                if (mActivity != null) {
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String status = isSuccess ? "成功" : "失败";
+                            XLog.i("SpeedUpListFragment", 
+                                "备份进度: " + current + "/" + total + " - " + appName + " " + status);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onBackupComplete(boolean success, String message) {
+                if (mActivity != null) {
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            XLog.i("SpeedUpListFragment", "备份完成: " + message);
+                            // 可以在这里显示Toast或Dialog通知用户
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取选中的应用列表
+     */
+    private List<AppEntity> getSelectedApps() {
+        List<AppEntity> selectedApps = new ArrayList<>();
+        if (mAdapter != null) {
+            for (AppEntity app : mAdapter.getList()) {
+                if (app.isChecked) {
+                    selectedApps.add(app);
+                }
+            }
+        }
+        return selectedApps;
     }
 
     @Override
@@ -262,5 +343,13 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         rootView.setFocusable(true);
         rootView.setFocusableInTouchMode(true);
         rootView.requestFocus();
+    }
+
+    /**
+     * 打开备份管理界面
+     */
+    private void openBackupManager() {
+        Intent intent = new Intent(mActivity, BackupActivity.class);
+        startActivity(intent);
     }
 }

@@ -63,12 +63,19 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
         if (appEntity.mIcon != null) {
             ivLogo.setImageDrawable(appEntity.mIcon);
         }
+        
+        // 首先设置复选框状态，避免触发监听器
+        cbSelect.setOnCheckedChangeListener(null);
+        cbSelect.setChecked(appEntity.isChecked);
+        
+        // 然后设置监听器
         cbSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 appEntity.isChecked = isChecked;
             }
         });
+        
         return convertView;
     }
 

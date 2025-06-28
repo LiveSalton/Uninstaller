@@ -24,6 +24,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uninstaller"
         tools:targetApi="31">
+        
+        <!-- FileProvider 用于安全地共享文件 -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+        
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -35,6 +47,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <!-- 备份管理Activity -->
+        <activity
+            android:name=".BackupActivity"
+            android:exported="false"
+            android:label="备份管理"
+            android:theme="@style/Theme.Uninstaller"
+            android:parentActivityName=".MainActivity"/>
+            
     </application>
 
 </manifest>

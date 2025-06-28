@@ -234,4 +234,22 @@ public class Utils {
                 Process.myUid()) == PackageManager.PERMISSION_GRANTED;
     }
 
+    public static boolean writeFile(String filePath, byte[] data) {
+        try {
+            File file = new File(filePath);
+            File parentDir = file.getParentFile();
+            if (parentDir != null && !parentDir.exists()) {
+                parentDir.mkdirs();
+            }
+            
+            java.io.FileOutputStream fos = new java.io.FileOutputStream(file);
+            fos.write(data);
+            fos.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
