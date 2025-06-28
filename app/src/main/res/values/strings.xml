@@ -1,3 +1,57 @@
 <resources>
     <string name="app_name">卸载王</string>
+    
+    <!-- 时间相关 -->
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="today">今天</string>
+    <string name="yesterday">昨天</string>
+    <string name="monday">星期一</string>
+    <string name="tuesday">星期二</string>
+    <string name="wednesday">星期三</string>
+    <string name="thursday">星期四</string>
+    <string name="friday">星期五</string>
+    <string name="saturday">星期六</string>
+    <string name="sunday">星期日</string>
+    <string name="month_prefix" translatable="false">月</string>
+    <string name="year_prefix" translatable="false">年</string>
+    
+    <!-- 应用信息显示 -->
+    <string name="time_prefix">时间:</string>
+    <string name="filename_prefix">档名:</string>
+    <string name="path_prefix">路径: </string>
+    
+    <!-- 标题栏 -->
+    <string name="app_manager_title">应用管理</string>
+    <string name="app_manager_selected">应用管理 (已选 %1$d/%2$d)</string>
+    <string name="app_manager_total">应用管理 (共 %1$d 个)</string>
+    
+    <!-- 操作提示 -->
+    <string name="start_backup_apps">开始备份 %1$d 个应用...</string>
+    <string name="start_uninstall_apps">开始卸载 %1$d 个应用</string>
+    <string name="select_all_apps">已全选 %1$d 个应用</string>
+    <string name="unselect_all_apps">已取消全选</string>
+    <string name="share_single_app_only">一次只能分享一个应用的APK文件</string>
+    
+    <!-- 备份相关 -->
+    <string name="backup_completed">备份完成，共备份 %1$d 个应用</string>
+    <string name="backup_time_label">备份时间: </string>
+    <string name="original_path_label">原始路径: </string>
+    <string name="deleted_backup_files">已删除 %1$d 个备份文件</string>
+    <string name="cannot_get_app_path">无法获取应用路径: %1$s</string>
+    
+    <!-- 设置选项 -->
+    <string name="settings_display_options">显示</string>
+    <string name="settings_show_time">显示时间</string>
+    <string name="settings_show_filename">显示档名</string>
+    <string name="settings_show_path">显示路径</string>
+    <string name="settings_show_search">显示搜索框</string>
+    <string name="settings_sort_options">排序</string>
+    <string name="settings_sort_by_name">按名称</string>
+    <string name="settings_sort_by_size">按大小</string>
+    <string name="settings_sort_by_time">按时间</string>
+    <string name="settings_sort_by_path">按路径</string>
+    <string name="settings_other_options">其他</string>
+    <string name="share_app">分享该App</string>
 </resources>

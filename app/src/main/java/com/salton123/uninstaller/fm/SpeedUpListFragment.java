@@ -1,18 +1,28 @@
 package com.salton123.uninstaller.fm;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Build;
+import androidx.core.content.FileProvider;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RadioGroup;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -26,10 +36,13 @@ import com.salton123.uninstaller.util.Utils;
 import com.salton123.log.XLog;
 import com.salton123.uninstaller.util.BackupManager;
 import com.salton123.uninstaller.BackupActivity;
+import com.salton123.uninstaller.util.SettingsManager;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -47,6 +60,11 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
     public static String KEY = "";//全局搜索的关键
     private List<AppEntity> allEntity = new ArrayList<>();
     private LinearLayout rootView;
+    private TextView titleText;
+    
+    // 设置相关
+    private SettingsManager settingsManager;
+    private PopupWindow currentPopupWindow; // 跟踪当前的PopupWindow
 
     public static SpeedUpListFragment newInstance() {
         return new SpeedUpListFragment();
@@ -64,6 +82,9 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        
+        // 初始化设置管理器
+        settingsManager = new SettingsManager(getContext());
         appListView = view.findViewById(R.id.appListView);
         // mCheckBox = view.findViewById(R.id.checkbox_select_all);
         btnDelete = view.findViewById(R.id.btn_left);
@@ -71,6 +92,10 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         Button btnBackupManager = view.findViewById(R.id.btn_backup_manager);
         searchView = view.findViewById(R.id.searchView);
         rootView = view.findViewById(R.id.rootView);
+        titleText = view.findViewById(R.id.title_text);
+        
+        // 设置按钮
+        View btnSettings = view.findViewById(R.id.btn_settings);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +116,14 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
                 openBackupManager();
             }
         });
+        
+        // 设置按钮点击事件
+        btnSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSettingsDialog();
+            }
+        });
         // mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
         //     @Override
         //     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -101,6 +134,19 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         //         }
         //     }
         // });
+        // 初始化搜索框
+        initSearchView();
+        
+        // 应用初始设置
+        applySettings();
+        
+        loadData();
+    }
+    
+    /**
+     * 初始化搜索框
+     */
+    private void initSearchView() {
         searchView.onActionViewExpanded();
         Class<?> c = searchView.getClass();
         try {
@@ -112,11 +158,21 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
             e.printStackTrace();
         }
         searchView.setOnQueryTextListener(this);//关联提交事件
-        loadData();
     }
 
     private void loadData() {
         mAdapter = new SpeedUpAdapter(mActivity);
+        
+        // 设置初始显示选项
+        if (settingsManager != null) {
+            mAdapter.setDisplayOptions(
+                settingsManager.isShowTime(),
+                settingsManager.isShowFilename(),
+                settingsManager.isShowPath()
+            );
+            XLog.i("SpeedUpListFragment", "Set initial display options on adapter");
+        }
+        
         appListView.setAdapter(mAdapter);
         appListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -179,6 +235,15 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         int selectedCount = getSelectedApps().size();
         int totalCount = mAdapter.getCount();
         
+        // 更新标题显示应用数量
+        if (titleText != null) {
+                    if (selectedCount > 0) {
+            titleText.setText(getString(R.string.app_manager_selected, selectedCount, totalCount));
+        } else {
+            titleText.setText(getString(R.string.app_manager_total, totalCount));
+        }
+        }
+        
         // 更新按钮文本显示选中数量
         if (btnDelete != null) {
             if (selectedCount > 0) {
@@ -210,9 +275,9 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         }
         
         try {
-            Uri packageURI = Uri.parse("package:" + entity.appInfo.packageName);
+                Uri packageURI = Uri.parse("package:" + entity.appInfo.packageName);
             Intent intent = new Intent(Intent.ACTION_DELETE, packageURI);
-            startActivityForResult(intent, 0x101);
+                startActivityForResult(intent, 0x101);
             XLog.i("SpeedUpListFragment", "Uninstalling: " + entity.mAppName);
         } catch (Exception e) {
             XLog.e("SpeedUpListFragment", "Error uninstalling app: " + e.getMessage());
@@ -235,7 +300,7 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         XLog.i("SpeedUpListFragment", "Starting backup for " + selectedApps.size() + " apps");
         
         if (mActivity != null) {
-            Toast.makeText(mActivity, "开始备份 " + selectedApps.size() + " 个应用...", Toast.LENGTH_LONG).show();
+                            Toast.makeText(mActivity, getString(R.string.start_backup_apps, selectedApps.size()), Toast.LENGTH_LONG).show();
         }
         
         BackupManager.toBackup(selectedApps, new BackupManager.IBackupProgress() {
@@ -301,7 +366,7 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         }
         
         if (mActivity != null) {
-            Toast.makeText(mActivity, "开始卸载 " + selectedApps.size() + " 个应用", Toast.LENGTH_LONG).show();
+                            Toast.makeText(mActivity, getString(R.string.start_uninstall_apps, selectedApps.size()), Toast.LENGTH_LONG).show();
         }
         
         XLog.i("SpeedUpListFragment", "Deleting " + selectedApps.size() + " apps");
@@ -349,7 +414,7 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
             mAdapter.notifyDataSetChanged();
             updateButtonStates();
             
-            String message = checked ? "已全选 " + mAdapter.getCount() + " 个应用" : "已取消全选";
+            String message = checked ? getString(R.string.select_all_apps, mAdapter.getCount()) : getString(R.string.unselect_all_apps);
             XLog.i("SpeedUpListFragment", message);
             
             if (mActivity != null) {
@@ -360,7 +425,14 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
 
     @Override
     public void onDestroy() {
+        // 清理PopupWindow，防止内存泄漏
+        if (currentPopupWindow != null && currentPopupWindow.isShowing()) {
+            currentPopupWindow.dismiss();
+        }
+        currentPopupWindow = null;
+        
         super.onDestroy();
+        XLog.i("SpeedUpListFragment", "Fragment destroyed, PopupWindow cleaned up");
     }
 
     int asc = 1; // 可以帮助在正序和倒序之间进行切换
@@ -412,4 +484,341 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         Intent intent = new Intent(mActivity, BackupActivity.class);
         startActivity(intent);
     }
+    
+    // ==================== 设置相关方法 ====================
+    
+    /**
+     * 显示设置弹窗
+     */
+    private void showSettingsDialog() {
+        if (getContext() == null || getActivity() == null) return;
+        
+        // 如果已有PopupWindow在显示，先关闭它
+        if (currentPopupWindow != null && currentPopupWindow.isShowing()) {
+            currentPopupWindow.dismiss();
+            currentPopupWindow = null;
+            XLog.i("SpeedUpListFragment", "Dismissed existing popup window");
+            return; // 如果正在显示，点击就关闭，不创建新的
+        }
+        
+        View popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_settings, null);
+        
+        // 获取屏幕宽度
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels;
+        
+        // 创建 PopupWindow，宽度为屏幕的2/5
+        int popupWidth = screenWidth * 2 / 5;
+        currentPopupWindow = new PopupWindow(popupView, popupWidth, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        
+        // 设置背景和动画
+        currentPopupWindow.setBackgroundDrawable(getResources().getDrawable(android.R.drawable.dialog_holo_light_frame));
+        currentPopupWindow.setOutsideTouchable(true);
+        currentPopupWindow.setFocusable(true);
+        
+        // 设置关闭监听器，清理引用
+        currentPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                currentPopupWindow = null;
+                XLog.i("SpeedUpListFragment", "PopupWindow dismissed and reference cleared");
+            }
+        });
+        
+        // 获取控件
+        CheckBox cbShowTime = popupView.findViewById(R.id.cb_show_time);
+        CheckBox cbShowFilename = popupView.findViewById(R.id.cb_show_filename);
+        CheckBox cbShowPath = popupView.findViewById(R.id.cb_show_path);
+        CheckBox cbShowSearch = popupView.findViewById(R.id.cb_show_search);
+        RadioGroup rgSortOptions = popupView.findViewById(R.id.rg_sort_options);
+        Button btnShareAppDetails = popupView.findViewById(R.id.btn_share_app_details);
+
+        
+        // 设置当前状态
+        cbShowTime.setChecked(settingsManager.isShowTime());
+        cbShowFilename.setChecked(settingsManager.isShowFilename());
+        cbShowPath.setChecked(settingsManager.isShowPath());
+        cbShowSearch.setChecked(settingsManager.isShowSearch());
+        
+        // 设置排序选项
+        SettingsManager.SortType currentSort = settingsManager.getSortType();
+        switch (currentSort) {
+            case NAME:
+                rgSortOptions.check(R.id.rb_sort_name);
+                break;
+            case SIZE:
+                rgSortOptions.check(R.id.rb_sort_size);
+                break;
+            case TIME:
+                rgSortOptions.check(R.id.rb_sort_time);
+                break;
+            case PATH:
+                rgSortOptions.check(R.id.rb_sort_path);
+                break;
+        }
+        
+        // 设置即时生效的监听器
+        cbShowTime.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            settingsManager.setShowTime(isChecked);
+            applySettings();
+            XLog.i("SpeedUpListFragment", "Show time: " + isChecked);
+        });
+        
+        cbShowFilename.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            settingsManager.setShowFilename(isChecked);
+            applySettings();
+            XLog.i("SpeedUpListFragment", "Show filename: " + isChecked);
+        });
+        
+        cbShowPath.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            settingsManager.setShowPath(isChecked);
+            applySettings();
+            XLog.i("SpeedUpListFragment", "Show path: " + isChecked);
+        });
+        
+        cbShowSearch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            settingsManager.setShowSearch(isChecked);
+            applySettings();
+            XLog.i("SpeedUpListFragment", "Show search: " + isChecked);
+        });
+        
+        // 排序选项即时生效监听器
+        rgSortOptions.setOnCheckedChangeListener((group, checkedId) -> {
+            SettingsManager.SortType newSortType = SettingsManager.SortType.NAME;
+            if (checkedId == R.id.rb_sort_name) {
+                newSortType = SettingsManager.SortType.NAME;
+            } else if (checkedId == R.id.rb_sort_size) {
+                newSortType = SettingsManager.SortType.SIZE;
+            } else if (checkedId == R.id.rb_sort_time) {
+                newSortType = SettingsManager.SortType.TIME;
+            } else if (checkedId == R.id.rb_sort_path) {
+                newSortType = SettingsManager.SortType.PATH;
+            }
+            settingsManager.setSortType(newSortType);
+            applySettings();
+            XLog.i("SpeedUpListFragment", "Sort type changed: " + newSortType.name());
+        });
+        
+        // 分享应用APK按钮点击事件
+        btnShareAppDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareSelectedAppApk();
+                if (currentPopupWindow != null) {
+                    currentPopupWindow.dismiss();
+                }
+            }
+        });
+        
+        // 找到设置按钮并在其下方显示弹窗
+        View btnSettings = getView().findViewById(R.id.btn_settings);
+        if (btnSettings != null) {
+            // 直接使用 showAsDropDown，自动计算最佳位置
+            int xOffset = btnSettings.getWidth() - popupWidth; // 右对齐
+            int yOffset = 0; // 紧贴按钮下方
+            
+            currentPopupWindow.showAsDropDown(btnSettings, xOffset, yOffset);
+            XLog.i("SpeedUpListFragment", "PopupWindow shown at position: " + xOffset + ", " + yOffset);
+        }
+    }
+    
+    /**
+     * 应用设置到界面
+     */
+    private void applySettings() {
+        if (settingsManager == null) return;
+        
+        XLog.i("SpeedUpListFragment", "Applying settings - Time: " + settingsManager.isShowTime() + 
+            ", Filename: " + settingsManager.isShowFilename() + ", Path: " + settingsManager.isShowPath() + 
+            ", Search: " + settingsManager.isShowSearch());
+        
+        // 控制搜索框的显示
+        if (searchView != null) {
+            int visibility = settingsManager.isShowSearch() ? View.VISIBLE : View.GONE;
+            searchView.setVisibility(visibility);
+        }
+        
+        // 通知适配器更新显示选项（只更新显示选项，不重新排序）
+        if (mAdapter != null) {
+            mAdapter.setDisplayOptions(
+                settingsManager.isShowTime(),
+                settingsManager.isShowFilename(),
+                settingsManager.isShowPath()
+            );
+            // 只刷新适配器显示，不重新排序
+            mAdapter.notifyDataSetChanged();
+            XLog.i("SpeedUpListFragment", "Adapter display options updated");
+        }
+    }
+    
+    /**
+     * 根据设置进行排序并更新列表
+     */
+    private void updateSortWithSettings(List<AppEntity> entities) {
+        if (entities == null || entities.isEmpty()) return;
+        
+        SettingsManager.SortType sortType = settingsManager.getSortType();
+        
+        switch (sortType) {
+            case NAME:
+                Collections.sort(entities, nameComparator);
+                break;
+            case SIZE:
+                Collections.sort(entities, sizeComparator);
+                break;
+            case TIME:
+                Collections.sort(entities, timeComparator);
+                break;
+            case PATH:
+                Collections.sort(entities, pathComparator);
+                break;
+        }
+        
+        mAdapter.addAll(entities);
+        mAdapter.notifyDataSetChanged();
+        
+        XLog.i("SpeedUpListFragment", "Sorted by " + sortType.name());
+    }
+    
+    /**
+     * 分享选中应用的APK文件
+     */
+    private void shareSelectedAppApk() {
+        List<AppEntity> selectedApps = getSelectedApps();
+        
+        XLog.i("SpeedUpListFragment", "Selected apps count: " + selectedApps.size());
+        
+        if (selectedApps.isEmpty()) {
+            Toast.makeText(getContext(), "请先选择要分享的应用", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        if (selectedApps.size() > 1) {
+            Toast.makeText(getContext(), getString(R.string.share_single_app_only), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        AppEntity app = selectedApps.get(0);
+        String packageName = app.appInfo.packageName;
+        String appName = app.mAppName;
+        String apkPath = app.appInfo.applicationInfo.sourceDir;
+        
+        XLog.i("SpeedUpListFragment", "Sharing app: " + appName + " (" + packageName + ")");
+        XLog.i("SpeedUpListFragment", "APK path: " + apkPath);
+        
+        File apkFile = new File(apkPath);
+        
+        if (!apkFile.exists()) {
+            Toast.makeText(getContext(), "APK文件不存在: " + apkPath, Toast.LENGTH_LONG).show();
+            XLog.e("SpeedUpListFragment", "APK file not found: " + apkPath);
+            return;
+        }
+        
+        try {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("application/vnd.android.package-archive");
+            
+            Uri apkUri;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                // Android 7.0+ 需要使用 FileProvider
+                apkUri = FileProvider.getUriForFile(getContext(), 
+                    getContext().getPackageName() + ".fileprovider", apkFile);
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            } else {
+                apkUri = Uri.fromFile(apkFile);
+            }
+            
+            shareIntent.putExtra(Intent.EXTRA_STREAM, apkUri);
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, appName + ".apk");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "分享应用：" + appName + 
+                " (包名：" + packageName + ", 版本：" + app.mVersionName + ")");
+            
+            startActivity(Intent.createChooser(shareIntent, "分享 " + appName));
+            XLog.i("SpeedUpListFragment", "Successfully started sharing APK for: " + appName);
+            
+            Toast.makeText(getContext(), "正在分享 " + appName, Toast.LENGTH_SHORT).show();
+            
+        } catch (Exception e) {
+            XLog.e("SpeedUpListFragment", "Error sharing APK: " + e.getMessage());
+            Toast.makeText(getContext(), "分享APK失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+    
+    /**
+     * 分享应用详情
+     */
+    private void shareAppDetails() {
+        List<AppEntity> selectedApps = getSelectedApps();
+        
+        if (selectedApps.isEmpty()) {
+            Toast.makeText(getContext(), "请先选择要分享的应用", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        StringBuilder shareText = new StringBuilder();
+        shareText.append("应用详情列表：\n\n");
+        
+        for (AppEntity app : selectedApps) {
+            shareText.append("应用名称：").append(app.mAppName).append("\n");
+            shareText.append("包名：").append(app.appInfo.packageName).append("\n");
+            shareText.append("版本：").append(app.mVersionName).append("\n");
+            
+            if (settingsManager.isShowTime()) {
+                shareText.append("安装时间：").append(app.getInstallTimeString()).append("\n");
+            }
+            
+            if (settingsManager.isShowPath()) {
+                shareText.append("路径：").append(app.appInfo.applicationInfo.sourceDir).append("\n");
+            }
+            
+            shareText.append("大小：").append(app.getSizeString()).append("\n");
+            shareText.append("\n");
+        }
+        
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareText.toString());
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "应用详情分享");
+        
+        try {
+            startActivity(Intent.createChooser(shareIntent, "分享应用详情"));
+            XLog.i("SpeedUpListFragment", "Shared details for " + selectedApps.size() + " apps");
+        } catch (Exception e) {
+            XLog.e("SpeedUpListFragment", "Error sharing app details: " + e.getMessage());
+            Toast.makeText(getContext(), "分享失败", Toast.LENGTH_SHORT).show();
+        }
+    }
+    
+    // ==================== 排序比较器 ====================
+    
+    // 大小比较器
+    private final Comparator<AppEntity> sizeComparator = new Comparator<AppEntity>() {
+        @Override
+        public int compare(AppEntity lhs, AppEntity rhs) {
+            long leftSize = lhs.getSize();
+            long rightSize = rhs.getSize();
+            return (asc == 1) ? Long.compare(leftSize, rightSize) : Long.compare(rightSize, leftSize);
+        }
+    };
+    
+    // 时间比较器
+    private final Comparator<AppEntity> timeComparator = new Comparator<AppEntity>() {
+        @Override
+        public int compare(AppEntity lhs, AppEntity rhs) {
+            long leftTime = lhs.getInstallTime();
+            long rightTime = rhs.getInstallTime();
+            return (asc == 1) ? Long.compare(leftTime, rightTime) : Long.compare(rightTime, leftTime);
+        }
+    };
+    
+    // 路径比较器
+    private final Comparator<AppEntity> pathComparator = new Comparator<AppEntity>() {
+        @Override
+        public int compare(AppEntity lhs, AppEntity rhs) {
+            String leftPath = lhs.appInfo.applicationInfo.sourceDir;
+            String rightPath = rhs.appInfo.applicationInfo.sourceDir;
+            return (asc == 1) ? leftPath.compareTo(rightPath) : rightPath.compareTo(leftPath);
+        }
+    };
 }

@@ -28,7 +28,7 @@
         android:focusableInTouchMode="false"
         android:textColor="#fff"
         android:textSize="11sp"
-        android:visibility="gone"
+        android:visibility="visible"
         />
 
     <!--文字说明的部分-->

@@ -291,6 +291,7 @@ public class ImmersionBar {
      * @return the immersion bar
      * @deprecated 请使用ImmersionBar with(@NonNull Fragment fragment)
      */
+    @Deprecated
     public static ImmersionBar with(@NonNull Activity activity, @NonNull Fragment fragment) {
         ImmersionBar immersionBar = mImmersionBarMap.get(activity.toString() + fragment.toString());
         if (immersionBar == null) {

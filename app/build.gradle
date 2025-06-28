@@ -35,4 +35,6 @@ android {
 dependencies {    
     // 只保留必要的annotation依赖
     implementation 'androidx.annotation:annotation:1.7.0'
+    // 添加core依赖用于FileProvider
+    implementation 'androidx.core:core:1.12.0'
 }

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:background="@color/surface">
+
+    <!-- 显示选项 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_display_options"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:layout_marginBottom="6dp" />
+
+    <CheckBox
+        android:id="@+id/cb_show_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_show_time"
+        android:textColor="@color/text_primary"
+        android:textSize="12sp"
+        android:layout_marginBottom="4dp" />
+
+    <CheckBox
+        android:id="@+id/cb_show_filename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_show_filename"
+        android:textColor="@color/text_primary"
+        android:textSize="12sp"
+        android:layout_marginBottom="4dp" />
+
+    <CheckBox
+        android:id="@+id/cb_show_path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_show_path"
+        android:textColor="@color/text_primary"
+        android:textSize="12sp"
+        android:layout_marginBottom="10dp" />
+
+    <!-- 排序选项 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_sort_options"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:layout_marginBottom="6dp" />
+
+    <RadioGroup
+        android:id="@+id/rg_sort_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+
+        <RadioButton
+            android:id="@+id/rb_sort_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_sort_by_name"
+            android:textColor="@color/text_primary"
+            android:textSize="12sp"
+            android:checked="true"
+            android:layout_marginBottom="2dp" />
+
+        <RadioButton
+            android:id="@+id/rb_sort_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_sort_by_size"
+            android:textColor="@color/text_primary"
+            android:textSize="12sp"
+            android:layout_marginBottom="2dp" />
+
+        <RadioButton
+            android:id="@+id/rb_sort_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_sort_by_time"
+            android:textColor="@color/text_primary"
+            android:textSize="12sp"
+            android:layout_marginBottom="2dp" />
+
+        <RadioButton
+            android:id="@+id/rb_sort_path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_sort_by_path"
+            android:textColor="@color/text_primary"
+            android:textSize="12sp" />
+
+    </RadioGroup>
+
+    <!-- 其他选项 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_other_options"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:layout_marginBottom="6dp" />
+
+    <CheckBox
+        android:id="@+id/cb_show_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_show_search"
+        android:textColor="@color/text_primary"
+        android:textSize="12sp"
+        android:checked="true"
+        android:layout_marginBottom="10dp" />
+
+    <!-- 分享按钮 -->
+            <Button
+            android:id="@+id/btn_share_app_details"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:text="@string/share_app"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:background="@color/success"
+            android:layout_marginTop="4dp" />
+
+</LinearLayout> 

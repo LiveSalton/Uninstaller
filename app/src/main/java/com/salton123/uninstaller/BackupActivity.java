@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +34,7 @@ public class BackupActivity extends Activity {
     private ListView backupListView;
     private BackupAdapter backupAdapter;
     private List<BackupManager.BackupInfo> backupList;
-    private TextView emptyView;
+    private LinearLayout emptyView;
     private Button btnRefresh;
     private Button btnClearAll;
 
@@ -244,7 +245,7 @@ public class BackupActivity extends Activity {
                     public void run() {
                         loadBackupList(); // 重新加载列表
                         Toast.makeText(BackupActivity.this, 
-                            "已删除 " + finalDeletedCount + " 个备份文件", Toast.LENGTH_SHORT).show();
+                            getString(R.string.deleted_backup_files, finalDeletedCount), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -310,7 +311,7 @@ public class BackupActivity extends Activity {
             
             // 备份时间
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-            holder.backupTimeText.setText("备份时间: " + sdf.format(backupInfo.backupTime));
+            holder.backupTimeText.setText(getString(R.string.backup_time_label) + sdf.format(backupInfo.backupTime));
             
             // 文件大小
             holder.fileSizeText.setText("大小: " + Utils.getSize2(backupInfo.fileSize));

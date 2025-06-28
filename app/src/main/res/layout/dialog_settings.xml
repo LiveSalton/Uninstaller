@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <!-- 显示选项 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="显示"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="8dp" />
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginBottom="12dp" />
+
+    <CheckBox
+        android:id="@+id/cb_show_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="显示时间"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="8dp" />
+
+    <CheckBox
+        android:id="@+id/cb_show_filename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="显示档名"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="8dp" />
+
+    <CheckBox
+        android:id="@+id/cb_show_path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="显示路径"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="16dp" />
+
+    <!-- 排序选项 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="排序"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="8dp" />
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginBottom="12dp" />
+
+    <RadioGroup
+        android:id="@+id/rg_sort_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <RadioButton
+            android:id="@+id/rb_sort_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="依名称排序"
+            android:textColor="@android:color/black"
+            android:checked="true"
+            android:layout_marginBottom="4dp" />
+
+        <RadioButton
+            android:id="@+id/rb_sort_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="依大小排序"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="4dp" />
+
+        <RadioButton
+            android:id="@+id/rb_sort_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="依时间排序"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="4dp" />
+
+        <RadioButton
+            android:id="@+id/rb_sort_path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="依路径排序"
+            android:textColor="@android:color/black" />
+
+    </RadioGroup>
+
+    <!-- 其他选项 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="其他"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="8dp" />
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginBottom="12dp" />
+
+    <CheckBox
+        android:id="@+id/cb_show_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="显示搜寻框"
+        android:textColor="@android:color/black"
+        android:checked="true"
+        android:layout_marginBottom="16dp" />
+
+    <!-- 操作选项 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="操作"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="8dp" />
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginBottom="12dp" />
+
+    <Button
+        android:id="@+id/btn_share_app_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="分享应用详情"
+        android:textColor="@android:color/white"
+        android:background="#4CAF50"
+        android:layout_marginBottom="8dp" />
+
+</LinearLayout> 
