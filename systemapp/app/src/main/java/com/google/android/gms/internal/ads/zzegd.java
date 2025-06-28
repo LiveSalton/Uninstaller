@@ -1,0 +1,61 @@
+package com.google.android.gms.internal.ads;
+
+/* compiled from: source */
+/* loaded from: classes.dex */
+public enum zzegd implements zzekj {
+    UNKNOWN_PREFIX(0),
+    TINK(1),
+    LEGACY(2),
+    RAW(3),
+    CRUNCHY(4),
+    UNRECOGNIZED(-1);
+
+    private static final zzekm<zzegd> g = new zzekm<zzegd>() { // from class: com.google.android.gms.internal.ads.arp
+    };
+    private final int h;
+
+    @Override // com.google.android.gms.internal.ads.zzekj
+    public final int a() {
+        if (this == UNRECOGNIZED) {
+            throw new IllegalArgumentException("Can't get the number of an unknown enum value.");
+        }
+        return this.h;
+    }
+
+    public static zzegd a(int i2) {
+        switch (i2) {
+            case 0:
+                return UNKNOWN_PREFIX;
+            case 1:
+                return TINK;
+            case 2:
+                return LEGACY;
+            case 3:
+                return RAW;
+            case 4:
+                return CRUNCHY;
+            default:
+                return null;
+        }
+    }
+
+    @Override // java.lang.Enum
+    public final String toString() {
+        StringBuilder sb = new StringBuilder("<");
+        sb.append(getClass().getName());
+        sb.append('@');
+        sb.append(Integer.toHexString(System.identityHashCode(this)));
+        if (this != UNRECOGNIZED) {
+            sb.append(" number=");
+            sb.append(a());
+        }
+        sb.append(" name=");
+        sb.append(name());
+        sb.append('>');
+        return sb.toString();
+    }
+
+    zzegd(int i2) {
+        this.h = i2;
+    }
+}

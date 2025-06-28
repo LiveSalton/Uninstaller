@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/fragment_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.jumobile.manager.systemapp.ui.widget.ActionBar xmlns:ab="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ab:abLeftIcon="@drawable/ic_action_back"
+        ab:abTitle="@string/move_app_title_to_phone"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <TextView
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/dark"
+            android:gravity="center"
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/move_app_empty_view_below_not_support_content"
+            android:layout_centerInParent="true"/>
+        <TextView
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/grey"
+            android:gravity="center"
+            android:id="@+id/hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/move_app_empty_view_below_not_support_hint"
+            android:layout_below="@+id/content"/>
+    </RelativeLayout>
+    <FrameLayout
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/ads_container"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

@@ -1,10 +1,11 @@
 package com.gyf.barlibrary;
 
 import android.graphics.Color;
-import android.support.annotation.ColorInt;
-import android.support.annotation.FloatRange;
 import android.view.View;
 import android.view.WindowManager;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.FloatRange;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class BarParams implements Cloneable {
      * 隐藏Bar
      * The Bar hide.
      */
-    com.gyf.barlibrary.BarHide barHide = BarHide.FLAG_SHOW_BAR;
+    BarHide barHide = BarHide.FLAG_SHOW_BAR;
     /**
      * 状态栏字体深色与亮色标志位
      * The Dark font.

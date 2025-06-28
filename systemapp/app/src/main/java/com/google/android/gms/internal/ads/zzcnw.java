@@ -1,0 +1,56 @@
+package com.google.android.gms.internal.ads;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.os.RemoteException;
+import com.google.android.gms.ads.internal.zzp;
+import java.io.InputStream;
+
+/* compiled from: source */
+/* loaded from: classes.dex */
+public final class zzcnw extends zzcnu {
+    public zzcnw(Context context) {
+        this.f = new zzast(context, zzp.q().a(), this, this);
+    }
+
+    public final zzdyz<InputStream> a(zzatl zzatlVar) {
+        synchronized (this.b) {
+            if (this.c) {
+                return this.a;
+            }
+            this.c = true;
+            this.e = zzatlVar;
+            this.f.f();
+            this.a.a(new Runnable(this) { // from class: com.google.android.gms.internal.ads.vx
+                private final zzcnw a;
+
+                {
+                    this.a = this;
+                }
+
+                @Override // java.lang.Runnable
+                public final void run() {
+                    this.a.a();
+                }
+            }, zzazj.f);
+            return this.a;
+        }
+    }
+
+    @Override // com.google.android.gms.common.internal.BaseGmsClient.BaseConnectionCallbacks
+    public final void a(Bundle bundle) {
+        synchronized (this.b) {
+            if (!this.d) {
+                this.d = true;
+                try {
+                    this.f.w().b(this.e, new zzcnt(this));
+                } catch (RemoteException | IllegalArgumentException unused) {
+                    this.a.a(new zzcoh(zzdok.INTERNAL_ERROR));
+                } catch (Throwable th) {
+                    zzp.g().a(th, "RemoteSignalsClientTask.onConnected");
+                    this.a.a(new zzcoh(zzdok.INTERNAL_ERROR));
+                }
+            }
+        }
+    }
+}

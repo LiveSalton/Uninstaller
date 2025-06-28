@@ -42,7 +42,7 @@ public class FitsKeyboard implements ViewTreeObserver.OnGlobalLayoutListener {
             mPaddingBottom = mChildView.getPaddingBottom();
         }
         mContentView = mChildView != null ? mChildView : frameLayout;
-        com.gyf.barlibrary.BarConfig barConfig = new com.gyf.barlibrary.BarConfig(mActivity);
+        BarConfig barConfig = new BarConfig(mActivity);
         mStatusBarHeight = barConfig.getStatusBarHeight();
         mActionBarHeight = barConfig.getActionBarHeight();
     }

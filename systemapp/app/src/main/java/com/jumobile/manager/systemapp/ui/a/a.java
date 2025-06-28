@@ -1,0 +1,104 @@
+package com.jumobile.manager.systemapp.ui.a;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.text.ClipboardManager;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.jumobile.manager.systemapp.R;
+import java.io.File;
+
+/* compiled from: source */
+/* loaded from: classes.dex */
+public class a extends Dialog implements DialogInterface.OnKeyListener, View.OnClickListener {
+    private static final String a = "a";
+    private final Context b;
+    private final com.jumobile.manager.systemapp.d.a c;
+
+    public a(Context context, com.jumobile.manager.systemapp.d.a aVar) {
+        super(context, R.style.BaseDialog);
+        this.b = context;
+        this.c = aVar;
+        setContentView(R.layout.dialog_apk_file);
+        setCancelable(false);
+        setCanceledOnTouchOutside(false);
+        setOnKeyListener(this);
+        a();
+    }
+
+    private void a() {
+        ((ImageView) findViewById(R.id.app_icon)).setImageDrawable(this.c.b(this.b));
+        ((TextView) findViewById(R.id.app_name)).setText(this.c.f);
+        ((TextView) findViewById(R.id.app_size)).setText(com.jumobile.manager.systemapp.util.f.a(this.c.h));
+        ((TextView) findViewById(R.id.app_package)).setText(this.c.e);
+        ((TextView) findViewById(R.id.source_dir)).setText(this.c.a);
+        findViewById(R.id.action_install_manually).setOnClickListener(this);
+        findViewById(R.id.action_search_in_market).setOnClickListener(this);
+        findViewById(R.id.action_search_in_website).setOnClickListener(this);
+        findViewById(R.id.btn_copy_package).setOnClickListener(this);
+        findViewById(R.id.btn_copy_source_dir).setOnClickListener(this);
+    }
+
+    @Override // android.app.Dialog
+    public void show() {
+        try {
+            super.show();
+        } catch (Exception unused) {
+        }
+    }
+
+    @Override // android.app.Dialog, android.content.DialogInterface
+    public void dismiss() {
+        try {
+            super.dismiss();
+        } catch (Exception unused) {
+        }
+    }
+
+    @Override // android.view.View.OnClickListener
+    public void onClick(View view) {
+        if (view == null) {
+        }
+        switch (view.getId()) {
+            case R.id.action_install_manually /* 2131230788 */:
+                com.jumobile.manager.systemapp.util.f.b(this.b, this.c.a);
+                dismiss();
+                break;
+            case R.id.action_search_in_market /* 2131230796 */:
+                com.jumobile.manager.systemapp.util.f.g(this.b, this.c.e);
+                dismiss();
+                break;
+            case R.id.action_search_in_website /* 2131230797 */:
+                g gVar = new g(this.b, new File(this.c.a).getName(), this.c.e, this.c.f);
+                if (!((Activity) this.b).isFinishing()) {
+                    gVar.show();
+                }
+                dismiss();
+                break;
+            case R.id.btn_copy_package /* 2131230845 */:
+                ((ClipboardManager) this.b.getSystemService("clipboard")).setText(this.c.e);
+                com.jumobile.manager.systemapp.util.f.a(this.b, R.string.common_copyed_to_clipboard);
+                break;
+            case R.id.btn_copy_source_dir /* 2131230846 */:
+                ((ClipboardManager) this.b.getSystemService("clipboard")).setText(this.c.a);
+                com.jumobile.manager.systemapp.util.f.a(this.b, R.string.common_copyed_to_clipboard);
+                break;
+        }
+    }
+
+    @Override // android.content.DialogInterface.OnKeyListener
+    public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
+        if (keyEvent.getAction() != 1) {
+            return true;
+        }
+        if (i != 4) {
+            return false;
+        }
+        dismiss();
+        return true;
+    }
+}

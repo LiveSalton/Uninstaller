@@ -1,26 +1,39 @@
-apply plugin: 'com.android.application'
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+}
 
 android {
-    compileSdkVersion 28
+    namespace 'com.salton123.uninstaller'
+    compileSdk 35
+
     defaultConfig {
-        applicationId "com.salton123.unstaller"
-        minSdkVersion 18
-        targetSdkVersion 28
+        applicationId "com.salton123.uninstaller"
+        minSdk 24
+        targetSdk 35
         versionCode 1
         versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-//    api 'com.gyf.barlibrary:barlibrary:2.3.0'
-    api "com.android.support:support-annotations:28.0.0"
-//    api 'org.greenrobot:eventbus:3.1.1'
-//    api "com.salton123:xlog:0.0.0.5"
+    implementation libs.androidx.annotation.jvm
+
+//    api "com.android.support:support-annotations:28.0.0"
 }

@@ -1,0 +1,11 @@
+package com.google.android.gms.internal.ads;
+
+/* compiled from: source */
+/* loaded from: classes.dex */
+public final class zzdne {
+    public final zzdnn a;
+
+    public zzdne(zzdnn zzdnnVar) {
+        this.a = zzdnnVar;
+    }
+}

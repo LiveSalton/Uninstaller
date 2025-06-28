@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <cache-path
+        name="apk_file"
+        path="apk_file"/>
+    <external-path
+        name="backup"
+        path="/jumobile/backup/"/>
+</paths>

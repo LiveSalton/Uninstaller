@@ -12,12 +12,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.FloatRange;
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +19,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.salton123.unstaller.R;
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.FloatRange;
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+
+import com.salton123.uninstaller.R;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -70,11 +71,11 @@ public class ImmersionBar {
     /**
      * 用户配置的bar参数
      */
-    private com.gyf.barlibrary.BarParams mBarParams;
+    private BarParams mBarParams;
     /**
      * 系统bar相关信息
      */
-    private com.gyf.barlibrary.BarConfig mBarConfig;
+    private BarConfig mBarConfig;
     /**
      * 沉浸式名字
      */
@@ -99,7 +100,7 @@ public class ImmersionBar {
     /**
      * 用户使用tag增加的bar参数的集合
      */
-    private Map<String, com.gyf.barlibrary.BarParams> mTagMap = new HashMap<>();
+    private Map<String, BarParams> mTagMap = new HashMap<>();
     /**
      * 是否适配过布局与导航栏重叠了
      */
@@ -134,7 +135,7 @@ public class ImmersionBar {
 
         mImmersionBarName = mActivity.toString();
 
-        mBarParams = new com.gyf.barlibrary.BarParams();
+        mBarParams = new BarParams();
 
         mDecorView = (ViewGroup) mWindow.getDecorView();
         mContentView = mDecorView.findViewById(android.R.id.content);
@@ -165,7 +166,7 @@ public class ImmersionBar {
 
         mImmersionBarName = activity.toString() + fragment.toString();
 
-        mBarParams = new com.gyf.barlibrary.BarParams();
+        mBarParams = new BarParams();
 
         mDecorView = (ViewGroup) mWindow.getDecorView();
         mContentView = mDecorView.findViewById(android.R.id.content);
@@ -200,7 +201,7 @@ public class ImmersionBar {
 
         mImmersionBarName = mActivity.toString() + dialogFragment.toString();
 
-        mBarParams = new com.gyf.barlibrary.BarParams();
+        mBarParams = new BarParams();
 
         mDecorView = (ViewGroup) mWindow.getDecorView();
         mContentView = mDecorView.findViewById(android.R.id.content);
@@ -241,7 +242,7 @@ public class ImmersionBar {
         mWindow = mDialog.getWindow();
         mImmersionBarName = activity.toString() + dialog.toString() + dialogTag;
 
-        mBarParams = new com.gyf.barlibrary.BarParams();
+        mBarParams = new BarParams();
 
         mDecorView = (ViewGroup) mWindow.getDecorView();
         mContentView = mDecorView.findViewById(android.R.id.content);
@@ -1155,10 +1156,10 @@ public class ImmersionBar {
      * @param barHide the bar hide
      * @return the immersion bar
      */
-    public ImmersionBar hideBar(com.gyf.barlibrary.BarHide barHide) {
+    public ImmersionBar hideBar(BarHide barHide) {
         mBarParams.barHide = barHide;
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT || com.gyf.barlibrary.OSUtils.isEMUI3_1()) {
-            if ((mBarParams.barHide == com.gyf.barlibrary.BarHide.FLAG_HIDE_NAVIGATION_BAR) ||
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT || OSUtils.isEMUI3_1()) {
+            if ((mBarParams.barHide == BarHide.FLAG_HIDE_NAVIGATION_BAR) ||
                     (mBarParams.barHide == BarHide.FLAG_HIDE_BAR)) {
                 mBarParams.hideNavigationBar = true;
             } else {
@@ -1460,7 +1461,7 @@ public class ImmersionBar {
      * @return the immersion bar
      */
     public ImmersionBar reset() {
-        mBarParams = new com.gyf.barlibrary.BarParams();
+        mBarParams = new BarParams();
         mFitsStatusBarType = FLAG_FITS_DEFAULT;
         return this;
     }
@@ -1476,7 +1477,7 @@ public class ImmersionBar {
         if (isEmpty(tag)) {
             throw new IllegalArgumentException("tag不能为空");
         }
-        com.gyf.barlibrary.BarParams barParams = mBarParams.clone();
+        BarParams barParams = mBarParams.clone();
         mTagMap.put(tag, barParams);
         return this;
     }
@@ -1492,7 +1493,7 @@ public class ImmersionBar {
         if (isEmpty(tag)) {
             throw new IllegalArgumentException("tag不能为空");
         }
-        com.gyf.barlibrary.BarParams barParams = mTagMap.get(tag);
+        BarParams barParams = mTagMap.get(tag);
         if (barParams != null) {
             mBarParams = barParams.clone();
         }
@@ -1626,7 +1627,7 @@ public class ImmersionBar {
     private void updateBarParams() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //获得Bar相关信息
-            mBarConfig = new com.gyf.barlibrary.BarConfig(mActivity);
+            mBarConfig = new BarConfig(mActivity);
             //如果在Fragment中使用，让Activity同步Fragment的BarParams参数
             if (mIsFragment) {
                 ImmersionBar immersionBar = mImmersionBarMap.get(mActivity.toString());
@@ -1644,7 +1645,7 @@ public class ImmersionBar {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //防止系统栏隐藏时内容区域大小发生变化
             int uiFlags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !com.gyf.barlibrary.OSUtils.isEMUI3_1()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !OSUtils.isEMUI3_1()) {
                 //适配刘海屏
                 fitsNotchScreen();
                 //初始化5.0以上，包含5.0
@@ -1663,14 +1664,14 @@ public class ImmersionBar {
             fitsWindows();
             mDecorView.setSystemUiVisibility(uiFlags);
         }
-        if (com.gyf.barlibrary.OSUtils.isMIUI6Later()) {
+        if (OSUtils.isMIUI6Later()) {
             //修改miui状态栏字体颜色
             setMIUIBarDark(mWindow, MIUI_STATUS_BAR_DARK, mBarParams.statusBarDarkFont);
             //修改miui导航栏图标为黑色
             setMIUIBarDark(mWindow, MIUI_NAVIGATION_BAR_DARK, mBarParams.navigationBarDarkIcon);
         }
         // 修改Flyme OS状态栏字体颜色
-        if (com.gyf.barlibrary.OSUtils.isFlymeOS4Later()) {
+        if (OSUtils.isFlymeOS4Later()) {
             if (mBarParams.flymeOSStatusBarFontColor != 0) {
                 FlymeOSStatusBarFontUtils.setStatusBarDarkIcon(mActivity, mBarParams.flymeOSStatusBarFontColor);
             } else {
@@ -1745,7 +1746,7 @@ public class ImmersionBar {
         //创建一个假的状态栏
         setupStatusBarView();
         //判断是否存在导航栏，是否禁止设置导航栏
-        if (mBarConfig.hasNavigationBar() || com.gyf.barlibrary.OSUtils.isEMUI3_1() || com.gyf.barlibrary.OSUtils.isEMUI3_0()) {
+        if (mBarConfig.hasNavigationBar() || OSUtils.isEMUI3_1() || OSUtils.isEMUI3_0()) {
             if (mBarParams.navigationBarEnable && mBarParams.navigationBarWithKitkatEnable) {
                 //透明导航栏，设置这个，如果有导航栏，底部布局会被导航栏遮住
                 mWindow.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -1853,14 +1854,14 @@ public class ImmersionBar {
      * 修正界面显示
      */
     private void fitsWindows() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !com.gyf.barlibrary.OSUtils.isEMUI3_1()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !OSUtils.isEMUI3_1()) {
             //android 5.0以上解决状态栏和布局重叠问题
             fitsWindowsAboveLOLLIPOP();
         } else {
             //解决android4.4有导航栏的情况下，activity底部被导航栏遮挡的问题和android 5.0以下解决状态栏和布局重叠问题
             fitsWindowsBelowLOLLIPOP();
             //解决华为emui3.1或者3.0导航栏手动隐藏的问题
-            if (!mIsFragment && com.gyf.barlibrary.OSUtils.isEMUI3_x()) {
+            if (!mIsFragment && OSUtils.isEMUI3_x()) {
                 fitsWindowsEMUI();
             }
         }
@@ -1940,7 +1941,7 @@ public class ImmersionBar {
                 @Override
                 public void onChange(boolean selfChange) {
                     if (mBarParams.navigationBarEnable && mBarParams.navigationBarWithKitkatEnable) {
-                        mBarConfig = new com.gyf.barlibrary.BarConfig(mActivity);
+                        mBarConfig = new BarConfig(mActivity);
                         int bottom = mContentView.getPaddingBottom(), right = mContentView.getPaddingRight();
                         if (mActivity != null && mActivity.getContentResolver() != null) {
                             int navigationBarIsMin = Settings.System.getInt(mActivity.getContentResolver(),
@@ -2186,7 +2187,7 @@ public class ImmersionBar {
      * @return the boolean
      */
     public static boolean isSupportStatusBarDarkFont() {
-        return com.gyf.barlibrary.OSUtils.isMIUI6Later() || com.gyf.barlibrary.OSUtils.isFlymeOS4Later()
+        return OSUtils.isMIUI6Later() || OSUtils.isFlymeOS4Later()
                 || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
     }
 
@@ -2340,7 +2341,7 @@ public class ImmersionBar {
      */
     @TargetApi(14)
     public static boolean hasNavigationBar(@NonNull Activity activity) {
-        com.gyf.barlibrary.BarConfig config = new com.gyf.barlibrary.BarConfig(activity);
+        BarConfig config = new BarConfig(activity);
         return config.hasNavigationBar();
     }
 
@@ -2353,7 +2354,7 @@ public class ImmersionBar {
      */
     @TargetApi(14)
     public static int getNavigationBarHeight(@NonNull Activity activity) {
-        com.gyf.barlibrary.BarConfig config = new com.gyf.barlibrary.BarConfig(activity);
+        BarConfig config = new BarConfig(activity);
         return config.getNavigationBarHeight();
     }
 
@@ -2366,7 +2367,7 @@ public class ImmersionBar {
      */
     @TargetApi(14)
     public static int getNavigationBarWidth(@NonNull Activity activity) {
-        com.gyf.barlibrary.BarConfig config = new com.gyf.barlibrary.BarConfig(activity);
+        BarConfig config = new BarConfig(activity);
         return config.getNavigationBarWidth();
     }
 
@@ -2379,7 +2380,7 @@ public class ImmersionBar {
      */
     @TargetApi(14)
     public static boolean isNavigationAtBottom(@NonNull Activity activity) {
-        com.gyf.barlibrary.BarConfig config = new com.gyf.barlibrary.BarConfig(activity);
+        BarConfig config = new BarConfig(activity);
         return config.isNavigationAtBottom();
     }
 
@@ -2392,7 +2393,7 @@ public class ImmersionBar {
      */
     @TargetApi(14)
     public static int getStatusBarHeight(@NonNull Activity activity) {
-        com.gyf.barlibrary.BarConfig config = new com.gyf.barlibrary.BarConfig(activity);
+        BarConfig config = new BarConfig(activity);
         return config.getStatusBarHeight();
     }
 
@@ -2405,7 +2406,7 @@ public class ImmersionBar {
      */
     @TargetApi(14)
     public static int getActionBarHeight(@NonNull Activity activity) {
-        com.gyf.barlibrary.BarConfig config = new com.gyf.barlibrary.BarConfig(activity);
+        BarConfig config = new BarConfig(activity);
         return config.getActionBarHeight();
     }
 
@@ -2417,7 +2418,7 @@ public class ImmersionBar {
      * @return the boolean
      */
     public static boolean hasNotchScreen(@NonNull Activity activity) {
-        com.gyf.barlibrary.BarConfig config = new com.gyf.barlibrary.BarConfig(activity);
+        BarConfig config = new BarConfig(activity);
         return config.hasNotchScreen();
     }
 

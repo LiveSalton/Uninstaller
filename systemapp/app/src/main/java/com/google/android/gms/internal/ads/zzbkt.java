@@ -1,0 +1,16 @@
+package com.google.android.gms.internal.ads;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+/* compiled from: source */
+/* loaded from: classes.dex */
+public final class zzbkt {
+    public static JSONObject a(zzdmu zzdmuVar) {
+        try {
+            return new JSONObject(zzdmuVar.y);
+        } catch (JSONException unused) {
+            return null;
+        }
+    }
+}
