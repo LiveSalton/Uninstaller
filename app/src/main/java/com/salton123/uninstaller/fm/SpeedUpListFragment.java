@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -56,11 +57,15 @@ import java.util.Locale;
 public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQueryTextListener {
     private Button btnDelete, btnBackup;
     private SearchView searchView;
-    // private CheckBox mCheckBox;
+    private CheckBox checkboxSelectAll;
     public static String KEY = "";//全局搜索的关键
     private List<AppEntity> allEntity = new ArrayList<>();
     private LinearLayout rootView;
     private TextView titleText;
+    
+    // 统计信息显示
+    private TextView summaryTotalText;
+    private TextView summarySelectedText;
     
     // 设置相关
     private SettingsManager settingsManager;
@@ -94,6 +99,13 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         rootView = view.findViewById(R.id.rootView);
         titleText = view.findViewById(R.id.title_text);
         
+        // 初始化统计信息显示控件
+        summaryTotalText = view.findViewById(R.id.summary_total);
+        summarySelectedText = view.findViewById(R.id.summary_selected);
+        
+        // 初始化全选复选框
+        checkboxSelectAll = view.findViewById(R.id.checkbox_select_all);
+        
         // 设置按钮
         View btnSettings = view.findViewById(R.id.btn_settings);
         btnDelete.setOnClickListener(new View.OnClickListener() {
@@ -124,16 +136,14 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
                 showSettingsDialog();
             }
         });
-        // mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-        //     @Override
-        //     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        //         if (isChecked) {
-        //             onAction(ActionCode.CODE_CHECK);
-        //         } else {
-        //             onAction(ActionCode.CODE_UNCHECK);
-        //         }
-        //     }
-        // });
+        
+        // 设置全选复选框监听器
+        checkboxSelectAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                onCheckAll(isChecked);
+            }
+        });
         // 初始化搜索框
         initSearchView();
         
@@ -174,6 +184,15 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         }
         
         appListView.setAdapter(mAdapter);
+        
+        // 设置选择状态变化监听器
+        mAdapter.setOnSelectionChangeListener(new SpeedUpAdapter.OnSelectionChangeListener() {
+            @Override
+            public void onSelectionChanged() {
+                updateButtonStates();
+            }
+        });
+        
         appListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -221,7 +240,7 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
                 Toast.makeText(mActivity, status + ": " + entity.mAppName, Toast.LENGTH_SHORT).show();
             }
             
-            // 更新按钮状态
+            // 手动更新按钮状态（因为这个操作不会触发适配器的监听器）
             updateButtonStates();
         }
     }
@@ -235,14 +254,13 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         int selectedCount = getSelectedApps().size();
         int totalCount = mAdapter.getCount();
         
-        // 更新标题显示应用数量
+        // 保持标题为固定文本
         if (titleText != null) {
-                    if (selectedCount > 0) {
-            titleText.setText(getString(R.string.app_manager_selected, selectedCount, totalCount));
-        } else {
-            titleText.setText(getString(R.string.app_manager_total, totalCount));
+            titleText.setText("应用管理");
         }
-        }
+        
+        // 更新统计信息显示
+        updateSummaryInfo(totalCount, selectedCount);
         
         // 更新按钮文本显示选中数量
         if (btnDelete != null) {
@@ -264,6 +282,55 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
                 btnBackup.setEnabled(false);
             }
         }
+    }
+    
+    /**
+     * 更新统计信息显示
+     */
+    private void updateSummaryInfo(int totalCount, int selectedCount) {
+        XLog.i("SpeedUpListFragment", "updateSummaryInfo - 总数: " + totalCount + ", 已选择: " + selectedCount);
+        
+        if (summaryTotalText != null) {
+            summaryTotalText.setText("总数: " + totalCount + "个");
+        } else {
+            XLog.w("SpeedUpListFragment", "summaryTotalText is null");
+        }
+        
+        if (summarySelectedText != null) {
+            if (selectedCount > 0) {
+                summarySelectedText.setText("已选择: " + selectedCount + "个");
+                summarySelectedText.setTextColor(getResources().getColor(R.color.colorPrimary));
+            } else {
+                summarySelectedText.setText("已选择: 0个");
+                summarySelectedText.setTextColor(getResources().getColor(R.color.text_secondary));
+            }
+        } else {
+            XLog.w("SpeedUpListFragment", "summarySelectedText is null");
+        }
+        
+        // 更新全选复选框状态
+        if (checkboxSelectAll != null) {
+            // 暂时移除监听器以避免递归调用
+            checkboxSelectAll.setOnCheckedChangeListener(null);
+            
+            if (totalCount > 0 && selectedCount == totalCount) {
+                // 全部选中
+                checkboxSelectAll.setChecked(true);
+            } else {
+                // 部分选中或未选中
+                checkboxSelectAll.setChecked(false);
+            }
+            
+            // 重新设置监听器
+            checkboxSelectAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    onCheckAll(isChecked);
+                }
+            });
+        }
+        
+        XLog.i("SpeedUpListFragment", "统计信息更新完成");
     }
 
     /**
@@ -345,9 +412,11 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
             for (AppEntity app : mAdapter.getList()) {
                 if (app.isChecked) {
                     selectedApps.add(app);
+                    XLog.d("SpeedUpListFragment", "选中的应用: " + app.mAppName);
                 }
             }
         }
+        XLog.i("SpeedUpListFragment", "总共选中 " + selectedApps.size() + " 个应用");
         return selectedApps;
     }
 
@@ -452,6 +521,7 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         // Collections.sort(entities, nameComparator);// 这里才是排序的操作
         mAdapter.addAll(entities);
         mAdapter.notifyDataSetChanged();// 刷新视图
+        updateButtonStates(); // 更新统计信息和按钮状态
     }
 
 

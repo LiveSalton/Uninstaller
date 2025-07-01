@@ -44,6 +44,41 @@
 
     </RelativeLayout>
 
+    <!-- 统计信息区域 -->
+    <LinearLayout
+        android:id="@+id/summary_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/background_secondary"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:layout_marginTop="1dp">
+
+        <TextView
+            android:id="@+id/summary_total"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="总数: 0个"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:gravity="left|center_vertical" />
+
+        <TextView
+            android:id="@+id/summary_selected"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="已选择: 0个"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:gravity="right|center_vertical" />
+
+    </LinearLayout>
+
     <!-- 搜索区域 -->
     <SearchView
         android:id="@+id/searchView"

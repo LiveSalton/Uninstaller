@@ -36,6 +36,13 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
     private boolean showTime = false;
     private boolean showFilename = false;
     private boolean showPath = false;
+    
+    // 选择状态变化回调接口
+    public interface OnSelectionChangeListener {
+        void onSelectionChanged();
+    }
+    
+    private OnSelectionChangeListener selectionChangeListener;
     public SpeedUpAdapter(Context context) {
         super(context);
         this.inflater = LayoutInflater.from(context);
@@ -87,6 +94,11 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 appEntity.isChecked = isChecked;
+                // 通知选择状态变化
+                if (selectionChangeListener != null) {
+                    selectionChangeListener.onSelectionChanged();
+                }
+                XLog.i("SpeedUpAdapter", "应用选择状态变化: " + appEntity.mAppName + " -> " + isChecked);
             }
         });
         
@@ -107,6 +119,13 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
         this.showTime = showTime;
         this.showFilename = showFilename;
         this.showPath = showPath;
+    }
+    
+    /**
+     * 设置选择状态变化监听器
+     */
+    public void setOnSelectionChangeListener(OnSelectionChangeListener listener) {
+        this.selectionChangeListener = listener;
     }
     
     /**
