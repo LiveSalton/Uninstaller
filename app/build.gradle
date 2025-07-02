@@ -92,7 +92,7 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.7.0'
     
     // FileProvider 需要的核心库
-    implementation 'androidx.core:core:1.12.0'
+//    implementation 'androidx.core:core:1.12.0'
 }
 
 // 分析APK大小的任务
