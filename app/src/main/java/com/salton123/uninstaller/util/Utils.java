@@ -57,21 +57,15 @@ public class Utils {
     }
 
     /**
-     * 判断应用是否是第三方应用
+     * 判断应用是否是第三方应用（用户主动安装的应用）
      *
      * @param applicationInfo
      * @return
      */
     public static boolean isThirdPartyApp(ApplicationInfo applicationInfo) {
-        boolean flag = false;
-        if ((applicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
-            // 可更新的系统应用
-            flag = true;
-        } else if ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-            // 非系统应用(第三方:用户自己安装)
-            flag = true;
-        }
-        return flag;
+        // 只返回非系统应用，排除可更新的系统应用
+        // FLAG_SYSTEM == 0 表示用户安装的第三方应用
+        return (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
     }
 
     /**

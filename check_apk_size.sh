@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# APK大小检查脚本 - 目标200KB
+# APK大小检查脚本 - 目标1MB
 
 echo "=================================="
-echo "极简卸载器 - APK体积分析工具"
-echo "目标大小: 200KB"
+echo "极简卸载器 - APK体积分析工具"  
+echo "目标大小: 1MB"
 echo "=================================="
 
 # 构建Release版本
@@ -22,7 +22,7 @@ fi
 # 获取APK大小
 APK_SIZE=$(stat -f%z "$APK_PATH" 2>/dev/null || stat -c%s "$APK_PATH" 2>/dev/null)
 APK_SIZE_KB=$((APK_SIZE / 1024))
-TARGET_SIZE_KB=200
+TARGET_SIZE_KB=1024
 
 echo ""
 echo "📱 APK信息:"

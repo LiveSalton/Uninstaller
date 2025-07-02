@@ -39,7 +39,7 @@
     <color name="item_hover">#F5F5F5</color>
     
     <!-- 标题栏 -->
-    <color name="title_bar_background">#000000</color>
+    <color name="title_bar_background">#121712</color>
     <color name="title_bar_text">#FFFFFF</color>
     
     <!-- 按钮颜色 -->

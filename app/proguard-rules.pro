@@ -103,7 +103,6 @@
 -dontwarn **CompatCreatorHoneycombMR2
 
 # 激进的资源压缩
--keepresources
 -printusage unused.txt
 -printmapping mapping.txt
 
