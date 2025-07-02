@@ -3,6 +3,7 @@ package com.salton123.uninstaller;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -25,8 +26,8 @@ public abstract class AbsImmersionAtivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mImmersionBar = ImmersionBar.with(this)
-                .statusBarDarkFont(true)
-                .transparentBar().transparentNavigationBar();
+                .statusBarDarkFont(false)
+                .statusBarColor(R.color.title_bar_background).transparentNavigationBar();
         mImmersionBar.init();
         super.onCreate(savedInstanceState);
         
