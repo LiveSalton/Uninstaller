@@ -1,199 +1,217 @@
-# Android 应用卸载器
+# 极简卸载器 - 200KB挑战
 
-一个简单而强大的Android应用卸载工具，支持应用列表显示、搜索、卸载、备份和恢复功能。
+一款追求极致轻量化的Android应用管理工具，目标体积**200KB以内**。
 
-## 功能特性
+## ✨ 特性
 
-### 🎯 核心功能
-- **应用列表显示**: 显示所有已安装的第三方应用
-- **搜索功能**: 支持按应用名称搜索
-- **单个卸载**: 点击应用即可卸载
-- **批量卸载**: 支持选择多个应用进行批量卸载
+- 🎯 **极致轻量**: 目标APK体积200KB以内
+- 🖤 **黑白美学**: 纯黑白配色，永不过时的极简设计
+- ⚡ **核心功能**: 专注应用卸载和备份，去除一切冗余
+- 🔒 **无广告**: 纯净体验，无任何广告干扰
+- 📱 **兼容性**: 支持Android 7.0+ (API 24+)
+
+## 🏗️ 核心功能
+
+### 主要功能
+- **应用管理**: 查看、搜索、筛选已安装应用
+- **批量卸载**: 支持多选批量卸载操作
 - **应用备份**: 备份APK文件到本地存储
-- **应用恢复**: 从备份文件恢复已删除的应用
-- **备份管理**: 完整的备份文件管理界面
-- **应用信息**: 显示应用图标、名称、版本、大小和更新时间
+- **备份管理**: 恢复、删除备份文件
+- **个性化设置**: 显示选项、排序方式自定义
 
-### 🔧 技术实现
+### 界面设计
+- **主界面**: 应用列表 + 搜索 + 批量操作
+- **备份管理**: 备份文件列表 + 恢复/删除操作
+- **设置界面**: 显示选项 + 排序方式配置
 
-#### 权限配置
-```xml
-<!-- 卸载应用权限 -->
-<uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
-<!-- 安装应用权限 -->
-<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-<!-- 查询已安装应用权限 -->
-<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
-<!-- 存储权限 -->
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+## 🚀 快速开始
+
+### 环境要求
+- Android Studio Hedgehog | 2023.1.1+
+- JDK 11+
+- Android SDK API 35
+- Gradle 8.11.1+
+
+### 构建项目
+```bash
+# 克隆项目
+git clone [repository-url]
+cd Unstaller
+
+# 构建调试版本
+./gradlew assembleDebug
+
+# 构建发布版本（启用混淆压缩）
+./gradlew assembleRelease
+
+# 检查APK大小
+chmod +x check_apk_size.sh
+./check_apk_size.sh
 ```
 
-#### 核心组件
+## 📏 体积优化策略
 
-1. **MainActivity**: 主活动，负责权限检查和Fragment初始化
-2. **SpeedUpListFragment**: 应用列表Fragment，实现列表显示和卸载功能
-3. **BackupActivity**: 备份管理Activity，显示和管理备份文件
-4. **SpeedUpAdapter**: 列表适配器，负责应用项的UI展示
-5. **BackupManager**: 备份和恢复管理器
-6. **PreloadCore**: 应用数据预加载核心类
-7. **AppManager**: 应用管理工具类
-8. **Utils**: 通用工具类
+### 代码层面
+- ✅ **R8混淆**: 启用最激进的代码混淆和压缩
+- ✅ **移除日志**: 生产版本移除所有Log输出
+- ✅ **最小依赖**: 仅保留必要的androidx库
+- ✅ **本地API**: 优先使用Android原生API
 
-## 使用方法
+### 资源层面
+- ✅ **矢量图标**: 所有图标使用Vector Drawable
+- ✅ **资源压缩**: 移除未使用的资源文件
+- ✅ **单语言**: 仅保留中文资源
+- ✅ **极简设计**: 黑白配色，减少颜色资源
 
-### 基本使用
+### 架构层面
+- ✅ **无第三方**: 最小化外部依赖
+- ✅ **单Activity**: 减少组件数量
+- ✅ **Fragment轻量**: 简化Fragment结构
 
-1. **启动应用**: 应用启动后会自动加载已安装的第三方应用列表
-2. **浏览应用**: 在列表中浏览所有已安装的应用
-3. **搜索应用**: 使用顶部搜索框按名称搜索应用
-4. **选择应用**: 点击应用项或复选框来选择/取消选择应用
+## 📊 当前状态
 
-### 应用选择和操作
+### 目标进度
+- 🎯 **目标大小**: 200KB
+- 📱 **当前功能**: 100%完成
+- ⚙️ **优化程度**: 激进压缩已启用
 
-1. **选择应用**: 
-   - 点击应用项切换选中状态
-   - 使用复选框直接选择/取消选择
-   - 点击全选复选框快速全选/取消全选
+### 功能完成度
+- ✅ 应用列表展示
+- ✅ 搜索过滤功能
+- ✅ 批量选择操作
+- ✅ 应用卸载功能
+- ✅ APK备份功能
+- ✅ 备份文件管理
+- ✅ 个性化设置
+- ✅ 黑白主题设计
 
-2. **操作按钮**: 
-   - 按钮会显示选中的应用数量，如"删除(3)"、"备份(5)"
-   - 未选择应用时按钮会被禁用
+## 🛠️ 技术栈
 
-### 卸载功能
+### 核心技术
+- **语言**: Java
+- **UI框架**: Android原生View系统
+- **状态栏**: ImmersionBar (3.2.2)
+- **权限管理**: Android 6.0+ 动态权限
+- **文件操作**: 原生Java IO
 
-1. **选择应用**: 使用复选框或点击应用项选择要卸载的应用
-2. **批量卸载**: 点击"删除"按钮对选中的应用进行批量卸载
-3. **系统确认**: 每个应用卸载时都会弹出系统确认对话框
+### 架构模式
+- **MVVM轻量版**: Fragment + Adapter + Entity
+- **单例模式**: 数据预加载和缓存
+- **观察者模式**: UI状态更新
+
+## 📁 项目结构
+
+```
+app/src/main/
+├── java/com/salton123/uninstaller/
+│   ├── MainActivity.java           # 主Activity
+│   ├── BackupActivity.java         # 备份管理
+│   ├── XApp.java                   # Application类
+│   ├── fm/
+│   │   ├── SpeedUpListFragment.java # 主Fragment
+│   │   └── BaseFragment.java        # Fragment基类
+│   ├── adapter/
+│   │   ├── SpeedUpAdapter.java      # 应用列表适配器
+│   │   └── AdapterBase.java         # 适配器基类
+│   ├── entity/
+│   │   └── AppEntity.java           # 应用实体
+│   └── util/
+│       ├── BackupManager.java       # 备份管理
+│       ├── SettingsManager.java     # 设置管理
+│       ├── Utils.java               # 工具类
+│       └── DateUtils.java           # 时间工具
+└── res/
+    ├── layout/                      # 布局文件
+    ├── drawable/                    # 图标资源
+    ├── values/                      # 配置资源
+    └── xml/                         # 权限配置
+```
+
+## 🔧 开发指南
+
+### 添加新功能
+1. **评估体积影响**: 每个新功能都要考虑对APK大小的影响
+2. **优先原生API**: 避免引入新的第三方依赖
+3. **资源复用**: 尽量复用现有的颜色、样式资源
+4. **代码简洁**: 保持函数简短，避免复杂的嵌套
+
+### 代码规范
+- 所有文件、类、方法使用中文注释
+- 变量和方法名使用英文，遵循camelCase
+- 每个类控制在200行以内
+- 每个方法控制在20行以内
+
+### 性能优化
+- ListView使用ViewHolder模式
+- 异步加载应用列表
+- 及时释放资源和监听器
+- 避免内存泄漏
+
+## 📱 使用说明
+
+### 基本操作
+1. **查看应用**: 启动后自动显示已安装的第三方应用
+2. **搜索应用**: 使用顶部搜索框快速查找
+3. **选择应用**: 点击复选框或应用项选择
+4. **批量操作**: 选择多个应用后点击底部按钮
+
+### 卸载应用
+1. 选择要卸载的应用
+2. 点击"删除"按钮
+3. 在系统卸载界面确认操作
 
 ### 备份功能
+1. 选择要备份的应用
+2. 点击"备份"按钮等待完成
+3. 点击"备份管理"查看备份文件
+4. 在备份列表中点击恢复，长按删除
 
-1. **选择应用**: 使用复选框选择要备份的应用
-2. **开始备份**: 点击"备份"按钮开始备份选中的应用
-3. **备份进度**: 实时显示备份进度和状态
-4. **备份完成**: 备份完成后会自动取消选中状态并显示完成消息
+### 个性化设置
+1. 点击右上角设置图标
+2. 配置显示选项（时间、文件名、路径）
+3. 选择排序方式（名称、大小、时间、路径）
+4. 设置搜索框显示状态
 
-### 恢复功能
+## 🎯 200KB挑战
 
-1. **进入备份管理**: 点击"备份管理"按钮进入备份管理界面
-2. **查看备份**: 浏览所有已备份的应用文件
-3. **恢复应用**: 点击备份项即可恢复应用
-4. **删除备份**: 长按备份项可以删除备份文件
+### 优化检查清单
+- [ ] 移除所有未使用的资源
+- [ ] 压缩所有图片资源
+- [ ] 删除调试代码和日志
+- [ ] 最小化字符串资源
+- [ ] 检查ProGuard规则
+- [ ] 验证APK内容
 
-### 备份管理
+### 监控工具
+```bash
+# 运行体积检查脚本
+./check_apk_size.sh
 
-1. **备份列表**: 显示所有备份文件的详细信息
-2. **刷新列表**: 点击"刷新"按钮更新备份列表
-3. **清空备份**: 点击"清空全部"删除所有备份文件
-4. **文件信息**: 显示应用名称、版本、备份时间、文件大小等
+# 手动分析APK内容
+aapt list -v app/build/outputs/apk/release/app-release.apk
 
-## 代码架构
-
-### 应用实体类
-```java
-public class AppEntity {
-    public String mAppName;      // 应用名
-    public Drawable mIcon;       // 图标
-    public String mSize;         // 大小
-    public PackageInfo appInfo;  // 包信息
-    public boolean isChecked;    // 是否选中
-    public String mPath;         // APK路径
-}
+# 查看混淆映射
+cat app/build/outputs/mapping/release/mapping.txt
 ```
 
-### 备份信息类
-```java
-public static class BackupInfo {
-    public File backupFile;      // 备份文件
-    public String packageName;   // 包名
-    public String appName;       // 应用名
-    public String versionName;   // 版本名
-    public Date backupTime;      // 备份时间
-    public long fileSize;        // 文件大小
-}
-```
+## 🤝 贡献指南
 
-### 卸载方法
-```java
-private void uninstallApp(AppEntity entity) {
-    Uri packageURI = Uri.parse("package:" + entity.appInfo.packageName);
-    Intent intent = new Intent(Intent.ACTION_DELETE, packageURI);
-    startActivityForResult(intent, 0x101);
-}
-```
+欢迎提交Issue和Pull Request！
 
-### 备份方法
-```java
-public static void toBackup(List<AppEntity> apps, IBackupProgress callback) {
-    // 异步备份应用APK文件
-    // 支持进度回调和完成通知
-}
-```
+### 贡献原则
+1. **体积优先**: 所有改动必须考虑对APK大小的影响
+2. **功能精简**: 只添加核心必要功能
+3. **代码质量**: 保持代码简洁和可维护性
+4. **测试充分**: 确保功能正常工作
 
-### 恢复方法
-```java
-public static void restoreApp(Context context, BackupInfo backupInfo) {
-    // 从备份文件恢复应用
-    // 使用系统安装界面进行安装
-}
-```
+## 📄 许可证
 
-## 安装和配置
+本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
 
-1. **克隆项目**:
-   ```bash
-   git clone <repository-url>
-   ```
+## 🏆 致谢
 
-2. **导入Android Studio**: 使用Android Studio打开项目
+感谢所有为极致轻量化目标贡献力量的开发者！
 
-3. **构建项目**: 确保所有依赖正确配置后构建项目
+---
 
-4. **运行应用**: 在Android设备或模拟器上运行
-
-## 系统要求
-
-- **最低Android版本**: Android 7.0 (API Level 24)
-- **目标Android版本**: Android 14 (API Level 35)
-- **权限**: 需要查询应用包权限、删除应用权限、安装应用权限和存储权限
-
-## 备份存储
-
-- **备份目录**: `/sdcard/UninstallerBackup/`
-- **文件格式**: `{包名}_v{版本}_{时间戳}.apk.backup`
-- **信息文件**: 每个备份都有对应的`.info`信息文件
-- **安全性**: 使用FileProvider安全地共享文件
-
-## 注意事项
-
-1. **权限说明**: 应用需要多项系统权限来实现完整功能
-2. **系统限制**: 只能卸载用户安装的第三方应用，无法卸载系统应用
-3. **安全性**: 每次卸载和恢复都会弹出系统确认对话框
-4. **存储空间**: 备份功能需要足够的存储空间
-5. **兼容性**: 恢复功能需要Android 7.0及以上版本的FileProvider支持
-
-## 扩展功能
-
-可以基于现有架构扩展以下功能：
-- 应用数据备份（需要Root权限）
-- 应用移动到SD卡
-- 应用使用统计
-- 应用权限管理
-- 应用分类（系统应用/用户应用）
-- 云端备份同步
-- 定时自动备份
-
-## 技术亮点
-
-- **异步处理**: 备份和恢复操作在后台线程执行
-- **进度回调**: 实时显示操作进度和状态
-- **错误处理**: 完善的异常处理和用户提示
-- **界面友好**: 现代化的Material Design界面
-- **文件安全**: 使用FileProvider确保文件访问安全
-- **智能交互**: 点击选择模式，避免误操作
-- **状态反馈**: 实时显示选中数量和操作状态
-- **用户引导**: Toast提示和按钮状态变化提供清晰反馈
-
-## 参考文档
-
-参考 `systemapp` 目录下的完整实现案例，了解更多高级功能的实现方式。 
+**极简卸载器** - 在200KB内实现完整的应用管理功能 🚀 

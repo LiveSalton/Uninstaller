@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>应用管理 - 极简卸载器</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FFFFFF;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 状态栏 */
+        .status-bar {
+            height: 44px;
+            background: #000000;
+            color: #FFFFFF;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* 标题栏 */
+        .title-bar {
+            height: 60px;
+            background: #000000;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .title-text {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .settings-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            color: #FFFFFF;
+            cursor: pointer;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        .settings-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* 统计信息 */
+        .summary-bar {
+            height: 40px;
+            background: #F8F8F8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 14px;
+            color: #666666;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .summary-selected {
+            color: #000000;
+            font-weight: 600;
+        }
+
+        /* 搜索栏 */
+        .search-container {
+            padding: 12px 20px;
+            background: #F8F8F8;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 36px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 0 40px 0 12px;
+            font-size: 16px;
+            background: #FFFFFF;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #000000;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999999;
+        }
+
+        /* 应用列表 */
+        .app-list {
+            flex: 1;
+            overflow-y: auto;
+            background: #FFFFFF;
+        }
+
+        .app-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border-bottom: 1px solid #F0F0F0;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .app-item:hover {
+            background: #F8F8F8;
+        }
+
+        .app-item.selected {
+            background: #F0F0F0;
+        }
+
+        .app-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+
+        .app-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .app-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .app-details {
+            font-size: 12px;
+            color: #666666;
+            line-height: 1.3;
+        }
+
+        .app-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #CCCCCC;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .app-checkbox.checked {
+            background: #000000;
+            border-color: #000000;
+        }
+
+        .app-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* 底部操作栏 */
+        .bottom-bar {
+            height: 80px;
+            background: #FFFFFF;
+            border-top: 1px solid #E0E0E0;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            height: 44px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-delete {
+            background: #FFFFFF;
+            color: #000000;
+            border: 2px solid #000000;
+        }
+
+        .btn-delete:hover {
+            background: #F0F0F0;
+        }
+
+        .btn-delete:disabled {
+            background: #F8F8F8;
+            color: #CCCCCC;
+            border-color: #E0E0E0;
+            cursor: not-allowed;
+        }
+
+        .btn-backup {
+            background: #000000;
+            color: #FFFFFF;
+            border: 2px solid #000000;
+        }
+
+        .btn-backup:hover {
+            background: #333333;
+        }
+
+        .btn-backup:disabled {
+            background: #CCCCCC;
+            border-color: #CCCCCC;
+            cursor: not-allowed;
+        }
+
+        .btn-backup-manager {
+            background: #000000;
+            color: #FFFFFF;
+            border: 2px solid #000000;
+        }
+
+        .btn-backup-manager:hover {
+            background: #333333;
+        }
+
+        .select-all-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #CCCCCC;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .select-all-checkbox.checked {
+            background: #000000;
+            border-color: #000000;
+        }
+
+        .select-all-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* 滚动条样式 */
+        .app-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .app-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .app-list::-webkit-scrollbar-thumb {
+            background: #E0E0E0;
+            border-radius: 2px;
+        }
+
+        .app-list::-webkit-scrollbar-thumb:hover {
+            background: #CCCCCC;
+        }
+    </style>
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <div class="status-left">
+            <span>9:41</span>
+        </div>
+        <div class="status-right">
+            <i data-lucide="signal" style="width:16px;height:16px"></i>
+            <i data-lucide="wifi" style="width:16px;height:16px"></i>
+            <span>100%</span>
+            <i data-lucide="battery" style="width:16px;height:16px"></i>
+        </div>
+    </div>
+
+    <!-- 标题栏 -->
+    <div class="title-bar">
+        <div class="title-text">应用管理</div>
+        <button class="settings-btn" onclick="showSettings()">
+            <i data-lucide="settings" style="width:20px;height:20px"></i>
+        </button>
+    </div>
+
+    <!-- 统计信息 -->
+    <div class="summary-bar">
+        <div>总数: <span id="total-count">42</span>个</div>
+        <div class="summary-selected">已选择: <span id="selected-count">0</span>个</div>
+    </div>
+
+    <!-- 搜索栏 -->
+    <div class="search-container">
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="搜你想搜的" oninput="searchApps(this.value)">
+            <i data-lucide="search" class="search-icon" style="width:16px;height:16px"></i>
+        </div>
+    </div>
+
+    <!-- 应用列表 -->
+    <div class="app-list" id="app-list">
+        <!-- 应用项将通过JavaScript动态生成 -->
+    </div>
+
+    <!-- 底部操作栏 -->
+    <div class="bottom-bar">
+        <button class="action-btn btn-delete" id="delete-btn" onclick="deleteApps()" disabled>
+            <i data-lucide="trash-2" style="width:18px;height:18px"></i>
+            删除
+        </button>
+        <button class="action-btn btn-backup" id="backup-btn" onclick="backupApps()" disabled>
+            <i data-lucide="download" style="width:18px;height:18px"></i>
+            备份
+        </button>
+        <button class="action-btn btn-backup-manager" onclick="openBackupManager()">
+            <i data-lucide="folder" style="width:18px;height:18px"></i>
+            备份管理
+        </button>
+        <div class="select-all-checkbox" id="select-all" onclick="toggleSelectAll()"></div>
+    </div>
+
+    <script>
+        // 模拟应用数据
+        const appData = [
+            { name: '微信', package: 'com.tencent.mm', version: '8.0.35', size: '245.6MB', installTime: '今天', icon: '微' },
+            { name: 'QQ', package: 'com.tencent.mobileqq', version: '8.9.50', size: '186.2MB', installTime: '昨天', icon: 'Q' },
+            { name: '支付宝', package: 'com.eg.android.AlipayGphone', version: '10.3.20', size: '134.8MB', installTime: '3天前', icon: '支' },
+            { name: '淘宝', package: 'com.taobao.taobao', version: '10.18.10', size: '298.4MB', installTime: '1周前', icon: '淘' },
+            { name: '京东', package: 'com.jingdong.app.mall', version: '11.4.2', size: '167.3MB', installTime: '2周前', icon: '京' },
+            { name: '美团', package: 'com.sankuai.meituan', version: '12.14.205', size: '89.7MB', installTime: '3周前', icon: '美' },
+            { name: '抖音', package: 'com.ss.android.ugc.aweme', version: '23.7.0', size: '156.9MB', installTime: '1个月前', icon: '抖' },
+            { name: '快手', package: 'com.smile.gifmaker', version: '11.2.40', size: '178.5MB', installTime: '1个月前', icon: '快' },
+            { name: '哔哩哔哩', package: 'tv.danmaku.bili', version: '7.32.0', size: '124.2MB', installTime: '2个月前', icon: 'B' },
+            { name: '网易云音乐', package: 'com.netease.cloudmusic', version: '8.8.45', size: '156.7MB', installTime: '2个月前', icon: '网' },
+            { name: '高德地图', package: 'com.autonavi.minimap', version: '12.0.2', size: '189.3MB', installTime: '3个月前', icon: '高' },
+            { name: '百度地图', package: 'com.baidu.BaiduMap', version: '17.4.0', size: '145.6MB', installTime: '3个月前', icon: '百' }
+        ];
+
+        let selectedApps = new Set();
+        let filteredApps = [...appData];
+
+        function renderAppList() {
+            const appList = document.getElementById('app-list');
+            appList.innerHTML = '';
+
+            filteredApps.forEach((app, index) => {
+                const appItem = document.createElement('div');
+                appItem.className = `app-item ${selectedApps.has(app.package) ? 'selected' : ''}`;
+                appItem.onclick = () => toggleAppSelection(app.package);
+
+                appItem.innerHTML = `
+                    <div class="app-icon">${app.icon}</div>
+                    <div class="app-info">
+                        <div class="app-name">${app.name}</div>
+                        <div class="app-details">
+                            版本: ${app.version} | 大小: ${app.size}<br>
+                            安装时间: ${app.installTime}
+                        </div>
+                    </div>
+                    <div class="app-checkbox ${selectedApps.has(app.package) ? 'checked' : ''}" onclick="event.stopPropagation(); toggleAppSelection('${app.package}')"></div>
+                `;
+
+                appList.appendChild(appItem);
+            });
+
+            updateCounts();
+        }
+
+        function toggleAppSelection(packageName) {
+            if (selectedApps.has(packageName)) {
+                selectedApps.delete(packageName);
+            } else {
+                selectedApps.add(packageName);
+            }
+            renderAppList();
+        }
+
+        function updateCounts() {
+            document.getElementById('total-count').textContent = filteredApps.length;
+            document.getElementById('selected-count').textContent = selectedApps.size;
+
+            const deleteBtn = document.getElementById('delete-btn');
+            const backupBtn = document.getElementById('backup-btn');
+            const selectAllCheckbox = document.getElementById('select-all');
+
+            if (selectedApps.size > 0) {
+                deleteBtn.disabled = false;
+                backupBtn.disabled = false;
+                deleteBtn.innerHTML = `<i data-lucide="trash-2" style="width:18px;height:18px"></i> 删除(${selectedApps.size})`;
+                backupBtn.innerHTML = `<i data-lucide="download" style="width:18px;height:18px"></i> 备份(${selectedApps.size})`;
+            } else {
+                deleteBtn.disabled = true;
+                backupBtn.disabled = true;
+                deleteBtn.innerHTML = `<i data-lucide="trash-2" style="width:18px;height:18px"></i> 删除`;
+                backupBtn.innerHTML = `<i data-lucide="download" style="width:18px;height:18px"></i> 备份`;
+            }
+
+            // 更新全选状态
+            const allSelected = filteredApps.length > 0 && selectedApps.size === filteredApps.length;
+            selectAllCheckbox.className = `select-all-checkbox ${allSelected ? 'checked' : ''}`;
+
+            // 重新初始化Lucide图标
+            lucide.createIcons();
+        }
+
+        function toggleSelectAll() {
+            const allSelected = filteredApps.length > 0 && selectedApps.size === filteredApps.length;
+            
+            if (allSelected) {
+                selectedApps.clear();
+            } else {
+                filteredApps.forEach(app => selectedApps.add(app.package));
+            }
+            
+            renderAppList();
+        }
+
+        function searchApps(query) {
+            if (!query.trim()) {
+                filteredApps = [...appData];
+            } else {
+                filteredApps = appData.filter(app => 
+                    app.name.toLowerCase().includes(query.toLowerCase())
+                );
+            }
+            
+            // 清除不在过滤结果中的选择
+            const filteredPackages = new Set(filteredApps.map(app => app.package));
+            selectedApps = new Set([...selectedApps].filter(pkg => filteredPackages.has(pkg)));
+            
+            renderAppList();
+        }
+
+        function deleteApps() {
+            if (selectedApps.size === 0) return;
+            
+            const count = selectedApps.size;
+            if (confirm(`确定要卸载 ${count} 个应用吗？`)) {
+                alert(`开始卸载 ${count} 个应用，请在系统界面确认`);
+                selectedApps.clear();
+                renderAppList();
+            }
+        }
+
+        function backupApps() {
+            if (selectedApps.size === 0) return;
+            
+            const count = selectedApps.size;
+            alert(`开始备份 ${count} 个应用，请稍候...`);
+            
+            // 模拟备份进度
+            setTimeout(() => {
+                alert(`备份完成，共备份 ${count} 个应用`);
+                selectedApps.clear();
+                renderAppList();
+            }, 2000);
+        }
+
+        function openBackupManager() {
+            window.location.href = 'backup-manager.html';
+        }
+
+        function showSettings() {
+            window.location.href = 'settings.html';
+        }
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            renderAppList();
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html> 

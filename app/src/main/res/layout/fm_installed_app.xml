@@ -117,7 +117,7 @@
             android:layout_weight="1.0"
             android:background="@drawable/selector_btn_warning"
             android:text="删除"
-            android:textColor="@color/white"
+            android:textColor="@color/button_text_secondary"
             android:textSize="@dimen/dialog_button_text_size" />
 
         <Button
@@ -128,7 +128,7 @@
             android:layout_weight="1.0"
             android:background="@drawable/selector_btn_recommend"
             android:text="备份"
-            android:textColor="@color/white"
+            android:textColor="@color/button_text_primary"
             android:textSize="@dimen/dialog_button_text_size" />
 
         <Button
@@ -139,7 +139,7 @@
             android:layout_weight="1.0"
             android:background="@drawable/selector_btn_recommend"
             android:text="备份管理"
-            android:textColor="@color/white"
+            android:textColor="@color/button_text_primary"
             android:textSize="@dimen/dialog_button_text_size" />
 
         <CheckBox

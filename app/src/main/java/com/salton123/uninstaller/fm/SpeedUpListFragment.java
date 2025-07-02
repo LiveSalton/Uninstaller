@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Build;
-import androidx.core.content.FileProvider;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -27,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 
 import com.salton123.uninstaller.ActionCode;
 import com.salton123.uninstaller.PreloadCore;
@@ -760,7 +760,7 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         XLog.i("SpeedUpListFragment", "Selected apps count: " + selectedApps.size());
         
         if (selectedApps.isEmpty()) {
-            Toast.makeText(getContext(), "请先选择要分享的应用", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.select_apps_first), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -780,7 +780,7 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         File apkFile = new File(apkPath);
         
         if (!apkFile.exists()) {
-            Toast.makeText(getContext(), "APK文件不存在: " + apkPath, Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getString(R.string.apk_file_not_found) + ": " + apkPath, Toast.LENGTH_LONG).show();
             XLog.e("SpeedUpListFragment", "APK file not found: " + apkPath);
             return;
         }
@@ -807,11 +807,11 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
             startActivity(Intent.createChooser(shareIntent, "分享 " + appName));
             XLog.i("SpeedUpListFragment", "Successfully started sharing APK for: " + appName);
             
-            Toast.makeText(getContext(), "正在分享 " + appName, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.sharing_app, appName), Toast.LENGTH_SHORT).show();
             
         } catch (Exception e) {
             XLog.e("SpeedUpListFragment", "Error sharing APK: " + e.getMessage());
-            Toast.makeText(getContext(), "分享APK失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getString(R.string.share_failed) + "：" + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
     
@@ -822,7 +822,7 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
         List<AppEntity> selectedApps = getSelectedApps();
         
         if (selectedApps.isEmpty()) {
-            Toast.makeText(getContext(), "请先选择要分享的应用", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.select_apps_first), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -856,7 +856,7 @@ public class SpeedUpListFragment extends BaseFragment implements SearchView.OnQu
             XLog.i("SpeedUpListFragment", "Shared details for " + selectedApps.size() + " apps");
         } catch (Exception e) {
             XLog.e("SpeedUpListFragment", "Error sharing app details: " + e.getMessage());
-            Toast.makeText(getContext(), "分享失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.share_failed), Toast.LENGTH_SHORT).show();
         }
     }
     

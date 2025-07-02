@@ -20,7 +20,7 @@
             android:layout_marginEnd="8dp"
             android:text="刷新"
             android:background="@drawable/selector_btn_recommend"
-            android:textColor="@color/white" />
+            android:textColor="@color/button_text_primary" />
 
         <Button
             android:id="@+id/btn_clear_all"
@@ -30,7 +30,7 @@
             android:layout_marginStart="8dp"
             android:text="清空全部"
             android:background="@drawable/selector_btn_warning"
-            android:textColor="@color/white" />
+            android:textColor="@color/button_text_secondary" />
 
     </LinearLayout>
 
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:text="暂无备份文件"
                 android:textSize="18sp"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@color/text_secondary"
                 android:layout_marginBottom="8dp" />
 
             <TextView
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:text="在应用列表中选择应用进行备份"
                 android:textSize="14sp"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@color/text_secondary" />
 
         </LinearLayout>
 
@@ -83,9 +83,9 @@
         android:layout_marginTop="16dp"
         android:text="提示：点击恢复应用，长按删除备份"
         android:textSize="12sp"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@color/text_secondary"
         android:gravity="center"
-        android:background="#F5F5F5"
+        android:background="@color/background_secondary"
         android:padding="8dp" />
 
 </LinearLayout> 

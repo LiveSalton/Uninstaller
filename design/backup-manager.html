@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>备份管理 - 极简卸载器</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #FFFFFF; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        .status-bar { height: 44px; background: #000000; color: #FFFFFF; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; font-size: 14px; font-weight: 600; }
+        .status-left, .status-right { display: flex; align-items: center; gap: 4px; }
+        .title-bar { height: 60px; background: #000000; color: #FFFFFF; display: flex; align-items: center; padding: 0 20px; }
+        .back-btn { width: 32px; height: 32px; border: none; background: transparent; color: #FFFFFF; cursor: pointer; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px; transition: background-color 0.2s; }
+        .back-btn:hover { background: rgba(255,255,255,0.1); }
+        .title-text { font-size: 18px; font-weight: 700; }
+        .action-bar { padding: 16px 20px; background: #FFFFFF; border-bottom: 1px solid #E0E0E0; display: flex; gap: 12px; }
+        .action-button { flex: 1; height: 44px; border: 2px solid #000000; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-refresh { background: #000000; color: #FFFFFF; }
+        .btn-refresh:hover { background: #333333; }
+        .btn-clear-all { background: #FFFFFF; color: #000000; }
+        .btn-clear-all:hover { background: #F0F0F0; }
+        .backup-list { flex: 1; overflow-y: auto; background: #FFFFFF; }
+        .backup-item { display: flex; flex-direction: column; padding: 16px 20px; border-bottom: 1px solid #F0F0F0; cursor: pointer; transition: background-color 0.2s; position: relative; }
+        .backup-item:hover { background: #F8F8F8; }
+        .backup-item-header { display: flex; align-items: center; margin-bottom: 8px; }
+        .backup-app-icon { width: 44px; height: 44px; border-radius: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; margin-right: 12px; font-size: 14px; }
+        .backup-app-info { flex: 1; }
+        .backup-app-name { font-size: 16px; font-weight: 600; color: #000000; margin-bottom: 2px; }
+        .backup-package-name { font-size: 12px; color: #666666; }
+        .backup-item-details { display: flex; justify-content: space-between; margin-top: 4px; }
+        .backup-version, .backup-size { font-size: 12px; color: #666666; }
+        .backup-time { font-size: 12px; color: #999999; text-align: right; }
+        .empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; text-align: center; }
+        .empty-icon { width: 80px; height: 80px; margin-bottom: 20px; color: #CCCCCC; }
+        .empty-title { font-size: 18px; color: #666666; margin-bottom: 8px; font-weight: 600; }
+        .empty-subtitle { font-size: 14px; color: #999999; line-height: 1.4; }
+        .bottom-hint { padding: 12px 20px; background: #F8F8F8; text-align: center; font-size: 12px; color: #666666; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="status-bar">
+        <div class="status-left"><span>9:41</span></div>
+        <div class="status-right">
+            <i data-lucide="signal" style="width:16px;height:16px"></i>
+            <i data-lucide="wifi" style="width:16px;height:16px"></i>
+            <span>100%</span>
+            <i data-lucide="battery" style="width:16px;height:16px"></i>
+        </div>
+    </div>
+    
+    <div class="title-bar">
+        <button class="back-btn" onclick="goBack()">
+            <i data-lucide="chevron-left" style="width:20px;height:20px"></i>
+        </button>
+        <div class="title-text">备份管理</div>
+    </div>
+    
+    <div class="action-bar">
+        <button class="action-button btn-refresh" onclick="refreshBackups()">
+            <i data-lucide="refresh-cw" style="width:18px;height:18px"></i>
+            刷新
+        </button>
+        <button class="action-button btn-clear-all" id="clear-all-btn" onclick="clearAllBackups()">
+            <i data-lucide="trash-2" style="width:18px;height:18px"></i>
+            清空全部
+        </button>
+    </div>
+    
+    <div class="backup-list" id="backup-list"></div>
+    
+    <div class="empty-state" id="empty-state" style="display: none;">
+        <i data-lucide="folder-open" class="empty-icon"></i>
+        <div class="empty-title">暂无备份文件</div>
+        <div class="empty-subtitle">在应用列表中选择应用进行备份</div>
+    </div>
+    
+    <div class="bottom-hint">提示：点击恢复应用，长按删除备份</div>
+
+    <script>
+        const backupData = [
+            { appName: '微信', packageName: 'com.tencent.mm', versionName: '8.0.35', backupTime: '2024-01-15 14:30', fileSize: '245.6MB', icon: '微' },
+            { appName: 'QQ', packageName: 'com.tencent.mobileqq', versionName: '8.9.50', backupTime: '2024-01-14 16:22', fileSize: '186.2MB', icon: 'Q' },
+            { appName: '支付宝', packageName: 'com.eg.android.AlipayGphone', versionName: '10.3.20', backupTime: '2024-01-13 09:15', fileSize: '134.8MB', icon: '支' },
+            { appName: '淘宝', packageName: 'com.taobao.taobao', versionName: '10.18.10', backupTime: '2024-01-12 20:08', fileSize: '298.4MB', icon: '淘' },
+            { appName: '美团', packageName: 'com.sankuai.meituan', versionName: '12.14.205', backupTime: '2024-01-10 11:45', fileSize: '89.7MB', icon: '美' }
+        ];
+
+        function renderBackupList() {
+            const backupList = document.getElementById('backup-list');
+            const emptyState = document.getElementById('empty-state');
+            
+            if (backupData.length === 0) {
+                backupList.style.display = 'none';
+                emptyState.style.display = 'flex';
+                return;
+            }
+            
+            backupList.style.display = 'block';
+            emptyState.style.display = 'none';
+            backupList.innerHTML = '';
+            
+            backupData.forEach((backup, index) => {
+                const item = document.createElement('div');
+                item.className = 'backup-item';
+                item.onclick = () => restoreBackup(backup);
+                item.innerHTML = `
+                    <div class="backup-item-header">
+                        <div class="backup-app-icon">${backup.icon}</div>
+                        <div class="backup-app-info">
+                            <div class="backup-app-name">${backup.appName}</div>
+                            <div class="backup-package-name">${backup.packageName}</div>
+                        </div>
+                    </div>
+                    <div class="backup-item-details">
+                        <div>
+                            <div class="backup-version">版本: ${backup.versionName}</div>
+                            <div class="backup-size">大小: ${backup.fileSize}</div>
+                        </div>
+                        <div class="backup-time">${backup.backupTime}</div>
+                    </div>
+                `;
+                backupList.appendChild(item);
+            });
+        }
+
+        function restoreBackup(backup) {
+            alert(`开始恢复应用 "${backup.appName}"，请在安装界面确认`);
+        }
+
+        function refreshBackups() {
+            const btn = document.querySelector('.btn-refresh i');
+            btn.style.animation = 'spin 1s ease';
+            setTimeout(() => {
+                btn.style.animation = '';
+                renderBackupList();
+            }, 1000);
+        }
+
+        function clearAllBackups() {
+            if (confirm('确定要删除所有备份文件吗？此操作不可恢复！')) {
+                backupData.length = 0;
+                renderBackupList();
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'app-manager.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderBackupList();
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

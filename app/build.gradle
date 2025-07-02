@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -13,28 +12,93 @@ android {
         targetSdk 35
         versionCode 1
         versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        
+        // 移除测试运行器以减小体积
+        // testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        
+        // 移除未使用的资源
+        resConfigs "zh"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            // 启用代码混淆和压缩
+            minifyEnabled true
+            // 启用资源压缩
+            shrinkResources true
+            // 使用R8进行更激进的优化
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            
+            // 移除调试信息
+            debuggable false
+            
+            // ZIP对齐优化
+            zipAlignEnabled true
+            
+            // 启用APK分割（如果需要）
+            // splits {
+            //     abi {
+            //         enable true
+            //         reset()
+            //         include "arm64-v8a", "armeabi-v7a"
+            //         universalApk false
+            //     }
+            // }
+        }
+        
+        debug {
+            // 调试版本也启用基本优化
+            minifyEnabled false
+            shrinkResources false
         }
     }
+    
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = '11'
+    
+    // 优化APK打包
+    packagingOptions {
+        pickFirst '**/libc++_shared.so'
+        pickFirst '**/libjsc.so'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/*.kotlin_module'
+    }
+    
+    // 移除unused code
+    bundle {
+        language {
+            enableSplit = false
+        }
+        density {
+            enableSplit = false
+        }
+        abi {
+            enableSplit = false
+        }
     }
 }
 
 dependencies {    
-    // 只保留必要的annotation依赖
+    // 最小化依赖 - 只保留绝对必要的
     implementation 'androidx.annotation:annotation:1.7.0'
-    // 添加core依赖用于FileProvider
+    
+    // FileProvider 需要的核心库
     implementation 'androidx.core:core:1.12.0'
+}
+
+// 分析APK大小的任务
+task analyzeApk {
+    doLast {
+        println "APK analysis complete. Check build/outputs/apk/ for the generated APK."
+        println "Use 'aapt dump badging app-release.apk' to analyze the APK."
+    }
 }

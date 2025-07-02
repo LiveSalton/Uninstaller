@@ -26,7 +26,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:focusableInTouchMode="false"
-        android:textColor="#fff"
+        android:textColor="@color/text_on_dark"
         android:textSize="11sp"
         android:visibility="visible"
         />
@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:textColor="#999"
+            android:textColor="@color/text_secondary"
             android:textSize="12sp"
             />
 
@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:textColor="#999"
+            android:textColor="@color/text_secondary"
             android:textSize="12sp"
             />
     </LinearLayout>

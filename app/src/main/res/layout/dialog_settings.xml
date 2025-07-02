@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@android:color/white">
+    android:background="@color/background_primary">
 
     <!-- 显示选项 -->
     <TextView
@@ -13,13 +13,13 @@
         android:text="显示"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="@android:color/black"
+        android:textColor="@color/text_primary"
         android:layout_marginBottom="8dp" />
     
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#E0E0E0"
+        android:background="@color/divider"
         android:layout_marginBottom="12dp" />
 
     <CheckBox
@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="显示时间"
-        android:textColor="@android:color/black"
+        android:textColor="@color/text_primary"
         android:layout_marginBottom="8dp" />
 
     <CheckBox
@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="显示档名"
-        android:textColor="@android:color/black"
+        android:textColor="@color/text_primary"
         android:layout_marginBottom="8dp" />
 
     <CheckBox
@@ -43,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="显示路径"
-        android:textColor="@android:color/black"
+        android:textColor="@color/text_primary"
         android:layout_marginBottom="16dp" />
 
     <!-- 排序选项 -->
@@ -53,13 +53,13 @@
         android:text="排序"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="@android:color/black"
+        android:textColor="@color/text_primary"
         android:layout_marginBottom="8dp" />
     
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#E0E0E0"
+        android:background="@color/divider"
         android:layout_marginBottom="12dp" />
 
     <RadioGroup
@@ -73,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="依名称排序"
-            android:textColor="@android:color/black"
+            android:textColor="@color/text_primary"
             android:checked="true"
             android:layout_marginBottom="4dp" />
 
@@ -82,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="依大小排序"
-            android:textColor="@android:color/black"
+            android:textColor="@color/text_primary"
             android:layout_marginBottom="4dp" />
 
         <RadioButton
@@ -90,7 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="依时间排序"
-            android:textColor="@android:color/black"
+            android:textColor="@color/text_primary"
             android:layout_marginBottom="4dp" />
 
         <RadioButton
@@ -98,7 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="依路径排序"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/text_primary" />
 
     </RadioGroup>
 
@@ -109,13 +109,13 @@
         android:text="其他"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="@android:color/black"
+        android:textColor="@color/text_primary"
         android:layout_marginBottom="8dp" />
     
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#E0E0E0"
+        android:background="@color/divider"
         android:layout_marginBottom="12dp" />
 
     <CheckBox
@@ -123,7 +123,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="显示搜寻框"
-        android:textColor="@android:color/black"
+        android:textColor="@color/text_primary"
         android:checked="true"
         android:layout_marginBottom="16dp" />
 
@@ -134,13 +134,13 @@
         android:text="操作"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="@android:color/black"
+        android:textColor="@color/text_primary"
         android:layout_marginBottom="8dp" />
     
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#E0E0E0"
+        android:background="@color/divider"
         android:layout_marginBottom="12dp" />
 
     <Button
@@ -148,8 +148,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="分享应用详情"
-        android:textColor="@android:color/white"
-        android:background="#4CAF50"
+        android:textColor="@color/button_text_primary"
+        android:background="@drawable/selector_btn_primary"
         android:layout_marginBottom="8dp" />
 
 </LinearLayout> 

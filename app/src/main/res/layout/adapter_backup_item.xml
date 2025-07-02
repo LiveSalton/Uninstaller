@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
-    android:background="@android:color/white"
+    android:background="@color/surface"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -15,7 +15,7 @@
         android:text="应用名称"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="@android:color/black"
+        android:textColor="@color/text_primary"
         android:layout_marginBottom="4dp" />
 
     <!-- 包名 -->
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:text="com.example.app"
         android:textSize="12sp"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@color/text_secondary"
         android:layout_marginBottom="8dp" />
 
     <!-- 详细信息区域 -->
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:text="版本: 1.0.0"
                 android:textSize="12sp"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@color/text_secondary"
                 android:layout_marginBottom="2dp" />
 
             <TextView
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:text="大小: 10.5MB"
                 android:textSize="12sp"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@color/text_secondary" />
 
         </LinearLayout>
 
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:text="2024-01-01 12:00:00"
                 android:textSize="11sp"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@color/text_secondary" />
 
         </LinearLayout>
 
@@ -86,9 +86,9 @@
         android:layout_marginTop="8dp"
         android:text="点击恢复 | 长按删除"
         android:textSize="10sp"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@color/text_hint"
         android:gravity="center"
-        android:background="#F9F9F9"
+        android:background="@color/background_secondary"
         android:padding="4dp" />
 
 </LinearLayout> 

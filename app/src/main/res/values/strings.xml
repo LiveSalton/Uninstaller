@@ -1,57 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">卸载王</string>
+    <string name="app_name">极简卸载器</string>
     
-    <!-- 时间相关 -->
-    <string name="year">年</string>
-    <string name="month">月</string>
-    <string name="day">日</string>
+    <!-- 通用 -->
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="delete">删除</string>
+    <string name="backup">备份</string>
+    <string name="loading">加载中...</string>
+    <string name="complete">完成</string>
+    <string name="success">成功</string>
+    <string name="failed">失败</string>
+    
+    <!-- 主界面 -->
+    <string name="app_manager">应用管理</string>
+    <string name="backup_manager">备份管理</string>
+    <string name="settings">设置</string>
+    <string name="search_hint">搜你想搜的</string>
+    <string name="total_apps">总数: %d个</string>
+    <string name="selected_apps">已选择: %d个</string>
+    
+    <!-- 操作相关 -->
+    <string name="select_all_apps">已全选 %d 个应用</string>
+    <string name="unselect_all_apps">已取消全选</string>
+    <string name="start_uninstall_apps">开始卸载 %d 个应用</string>
+    <string name="start_backup_apps">开始备份 %d 个应用，请稍候</string>
+    <string name="backup_complete_apps">备份完成，共备份 %d 个应用</string>
+    <string name="deleted_backup_files">已删除 %d 个备份文件</string>
+    
+    <!-- 设置相关 -->
+    <string name="settings_display_options">显示选项</string>
+    <string name="settings_show_time">显示时间</string>
+    <string name="settings_show_filename">显示文件名</string>
+    <string name="settings_show_path">显示路径</string>
+    
+    <string name="settings_sort_options">排序选项</string>
+    <string name="settings_sort_by_name">按名称排序</string>
+    <string name="settings_sort_by_size">按大小排序</string>
+    <string name="settings_sort_by_time">按时间排序</string>
+    <string name="settings_sort_by_path">按路径排序</string>
+    
+    <string name="settings_other_options">其他选项</string>
+    <string name="settings_show_search">显示搜索框</string>
+    
+    <string name="share_app">分享应用详情</string>
+    
+    <!-- 备份管理 -->
+    <string name="backup_time_label">备份时间: </string>
+    <string name="no_backup_files">暂无备份文件</string>
+    <string name="backup_hint">在应用列表中选择应用进行备份</string>
+    <string name="backup_operations_hint">提示：点击恢复应用，长按删除备份</string>
+    <string name="refresh">刷新</string>
+    <string name="clear_all">清空全部</string>
+    <string name="restore">恢复</string>
+    <string name="restore_app_confirm">确定要恢复应用 "%s" 吗？</string>
+    <string name="delete_backup_confirm">确定要删除备份文件 "%s" 吗？</string>
+    <string name="clear_all_backup_confirm">确定要删除所有备份文件吗？此操作不可恢复！</string>
+    <string name="restore_started">开始恢复应用，请在安装界面确认</string>
+    <string name="restore_failed">恢复失败: %s</string>
+    <string name="delete_backup_success">删除成功</string>
+    <string name="delete_backup_failed">删除失败</string>
+    
+    <!-- 时间格式化 -->
+    <string name="time_prefix">安装: </string>
+    <string name="filename_prefix">包名: </string>
+    <string name="path_prefix">路径: </string>
+    <string name="year_prefix">年</string>
+    <string name="month_prefix">月</string>
     <string name="today">今天</string>
     <string name="yesterday">昨天</string>
-    <string name="monday">星期一</string>
-    <string name="tuesday">星期二</string>
-    <string name="wednesday">星期三</string>
-    <string name="thursday">星期四</string>
-    <string name="friday">星期五</string>
-    <string name="saturday">星期六</string>
-    <string name="sunday">星期日</string>
-    <string name="month_prefix" translatable="false">月</string>
-    <string name="year_prefix" translatable="false">年</string>
+    <string name="monday">周一</string>
+    <string name="tuesday">周二</string>
+    <string name="wednesday">周三</string>
+    <string name="thursday">周四</string>
+    <string name="friday">周五</string>
+    <string name="saturday">周六</string>
+    <string name="sunday">周日</string>
     
-    <!-- 应用信息显示 -->
-    <string name="time_prefix">时间:</string>
-    <string name="filename_prefix">档名:</string>
-    <string name="path_prefix">路径: </string>
+    <!-- 权限相关 -->
+    <string name="permission_storage_required">需要存储权限才能正常使用应用功能</string>
+    <string name="permission_granted">权限授予成功</string>
     
-    <!-- 标题栏 -->
-    <string name="app_manager_title">应用管理</string>
-    <string name="app_manager_selected">应用管理 (已选 %1$d/%2$d)</string>
-    <string name="app_manager_total">应用管理 (共 %1$d 个)</string>
+    <!-- 错误信息 -->
+    <string name="error_no_apps_selected">请先选择要操作的应用</string>
+    <string name="error_load_apps_failed">加载应用列表失败</string>
+    <string name="error_backup_failed">备份失败</string>
+    <string name="error_restore_failed">恢复失败</string>
     
-    <!-- 操作提示 -->
-    <string name="start_backup_apps">开始备份 %1$d 个应用...</string>
-    <string name="start_uninstall_apps">开始卸载 %1$d 个应用</string>
-    <string name="select_all_apps">已全选 %1$d 个应用</string>
-    <string name="unselect_all_apps">已取消全选</string>
-    <string name="share_single_app_only">一次只能分享一个应用的APK文件</string>
+    <!-- 按钮状态 -->
+    <string name="delete_with_count">删除(%d)</string>
+    <string name="backup_with_count">备份(%d)</string>
     
-    <!-- 备份相关 -->
-    <string name="backup_completed">备份完成，共备份 %1$d 个应用</string>
-    <string name="backup_time_label">备份时间: </string>
-    <string name="original_path_label">原始路径: </string>
-    <string name="deleted_backup_files">已删除 %1$d 个备份文件</string>
-    <string name="cannot_get_app_path">无法获取应用路径: %1$s</string>
-    
-    <!-- 设置选项 -->
-    <string name="settings_display_options">显示</string>
-    <string name="settings_show_time">显示时间</string>
-    <string name="settings_show_filename">显示档名</string>
-    <string name="settings_show_path">显示路径</string>
-    <string name="settings_show_search">显示搜索框</string>
-    <string name="settings_sort_options">排序</string>
-    <string name="settings_sort_by_name">按名称</string>
-    <string name="settings_sort_by_size">按大小</string>
-    <string name="settings_sort_by_time">按时间</string>
-    <string name="settings_sort_by_path">按路径</string>
-    <string name="settings_other_options">其他</string>
-    <string name="share_app">分享该App</string>
+    <!-- 分享功能 -->
+    <string name="share_single_app_only">一次只能分享一个应用</string>
+    <string name="share_app_details">分享应用详情</string>
+    <string name="sharing_app">正在分享 %s</string>
+    <string name="share_failed">分享失败</string>
+    <string name="apk_file_not_found">APK文件不存在</string>
+    <string name="select_apps_first">请先选择要分享的应用</string>
 </resources>
