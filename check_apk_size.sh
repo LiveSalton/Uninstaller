@@ -12,7 +12,7 @@ echo "正在构建Release版本..."
 ./gradlew assembleRelease
 
 # 查找APK文件
-APK_PATH="app/build/outputs/apk/release/app-release.apk"
+APK_PATH="app/build/outputs/apk/release/app-release-unsigned.apk"
 
 if [ ! -f "$APK_PATH" ]; then
     echo "❌ APK文件未找到: $APK_PATH"
