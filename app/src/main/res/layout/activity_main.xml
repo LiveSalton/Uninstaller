@@ -174,29 +174,30 @@
 
         <Button
             android:id="@+id/btn_left"
-            android:layout_width="0.0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:background="@drawable/selector_btn_recommend"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_primary_background"
             android:text="卸载"
             android:textColor="@color/button_text_primary"
-            android:textSize="@dimen/dialog_button_text_size" />
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/btn_right"
-            android:layout_width="0.0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10.0dp"
-            android:layout_weight="1.0"
-            android:background="@drawable/selector_btn_recommend"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_secondary_background"
             android:text="备份"
-            android:textColor="@color/button_text_primary"
-            android:textSize="@dimen/dialog_button_text_size" />
+            android:textColor="@color/accent_color"
+            android:textSize="16sp" />
 
         <CheckBox
             android:id="@+id/checkbox_select_all"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_marginStart="12dp"
             android:button="@drawable/checkbox_selector"
             android:focusableInTouchMode="false"
             android:textColor="@color/text_primary"

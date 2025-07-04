@@ -39,4 +39,6 @@
     <color name="button_secondary_pressed">#2E332E</color>
     <color name="button_text_primary">#FFFFFF</color>
     <color name="button_text_secondary">#99FFFFFF</color>
+
+    <color name="accent_color">#FF4081</color>
 </resources>
