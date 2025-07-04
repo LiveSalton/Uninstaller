@@ -35,15 +35,15 @@
     <string name="apk_file_btn_delete_all_duplicate_none">tidak ada APK duplikasi.</string>
     <string name="apk_file_btn_install">Pasang</string>
     <string name="apk_file_btn_move_to_directory">Pindahkan ke direktori</string>
-    <string name="apk_file_delete_confirm_message">Hapus %s apk yang dipilih ?</string>
+    <string name="apk_file_delete_confirm_message">Hapus %s apk yang dpilih ?</string>
     <string name="apk_file_delete_entry">Cadangan：%s</string>
     <string name="apk_file_delete_no_target">Mohon pilih salah satu</string>
     <string name="apk_file_delete_task_done">dihapus</string>
     <string name="apk_file_install_entry">Memasang：%s</string>
     <string name="apk_file_install_no_target">Mohon pilih salah satu</string>
-    <string name="apk_file_install_result_failed_count">%d gagal dipasang!</string>
+    <string name="apk_file_install_result_failed_count">%d gagal dpasang!</string>
     <string name="apk_file_install_result_none_success">Pemasangan otomatis gagal, pasang secara manual ?</string>
-    <string name="apk_file_install_result_success_count">%d berhasil dipasang.</string>
+    <string name="apk_file_install_result_success_count">%d berhasil dpasang.</string>
     <string name="apk_file_install_user_canceled">Dibatalkan</string>
     <string name="apk_file_intall_state_installed">[Terpasang]</string>
     <string name="apk_file_intall_state_new_version">[Lebih baru]</string>
@@ -51,7 +51,7 @@
     <string name="apk_file_move_to_directory_confirm_message">Pindahkan %1$s APK ke direktori:\n%2$s ?</string>
     <string name="apk_file_move_to_directory_delete_duplicate">Hapus duplikasi apk.</string>
     <string name="apk_file_move_to_directory_result_deleted">%s duplikasi APK telah dihapus.</string>
-    <string name="apk_file_move_to_directory_result_moved">%s APK telah dipindahkan ke direktori:</string>
+    <string name="apk_file_move_to_directory_result_moved">%s APK telah dpindahkan ke direktori:</string>
     <string name="apk_file_title">Pengelola Apk</string>
     <string name="apk_name_config_app_name">Nama App</string>
     <string name="apk_name_config_format">Format: %s</string>
@@ -154,7 +154,7 @@
     <string name="move_app_btn_move_to_sdcard">Pindahkan</string>
     <string name="move_app_empty_view_below_not_support_content">Tidak mendukung.</string>
     <string name="move_app_empty_view_below_not_support_hint">Hanya mendukung Os Android versi2.2 keatas</string>
-    <string name="move_app_empty_view_below_sdcard_emulate_content">Tidak perlu dipindahkan.</string>
+    <string name="move_app_empty_view_below_sdcard_emulate_content">Tidak perlu dpindahkan.</string>
     <string name="move_app_empty_view_below_sdcard_emulate_hint">Kartu memori berada di disk yang sama dengan os.</string>
     <string name="move_app_failed_insufficient_storage">Memori penuh, tidak dapat memindahkan.</string>
     <string name="move_app_move_entry">Memindahkan: %s</string>
@@ -162,9 +162,9 @@
     <string name="move_app_title_to_phone">Pindahkan ke memori ponsel</string>
     <string name="move_app_title_to_sdcard">Pindahkan ke kartu memori</string>
     <string name="move_app_toast_click_move_button">Tekan \"%s\" tombol.</string>
-    <string name="move_app_toast_move_result">%d aplikasi berhasil dipindahkan</string>
+    <string name="move_app_toast_move_result">%d aplikasi berhasil dpindahkan</string>
     <string name="move_app_toast_need_root_permission">Memerlukan izin root untuk memindahkan aplikasi jenis ini.</string>
-    <string name="move_file_done_toast">%d File telah dipindahkan ke direktori yang baru.</string>
+    <string name="move_file_done_toast">%d File telah dpindahkan ke direktori yang baru.</string>
     <string name="nav_app_bar_navigate_up_description">Kembali ke atas</string>
     <string name="nav_app_bar_open_drawer_description">Buka panel navigasi</string>
     <string name="offline_notification_text">Ketuk untuk membuka iklan</string>
@@ -183,8 +183,8 @@
     <string name="recycle_bin_btn_restore_selected">Memulihkan (%s)</string>
     <string name="recycle_bin_delete_confirm_btn_back">Tidak</string>
     <string name="recycle_bin_delete_confirm_btn_ok">Ya</string>
-    <string name="recycle_bin_delete_confirm_content">Hapus %s aplikasi yg dipilih ?</string>
-    <string name="recycle_bin_delete_confirm_hint">Aplikasi yang dihapus dari Recycle bin tidak dapat dipulihkan.</string>
+    <string name="recycle_bin_delete_confirm_content">Hapus %s aplikasi yg dpilih ?</string>
+    <string name="recycle_bin_delete_confirm_hint">Aplikasi yang dihapus dari Recycle bin tidak dapat dpulihkan.</string>
     <string name="recycle_bin_delete_confirm_title">Petunjuk</string>
     <string name="recycle_bin_delete_no_target">Silahkan pilih aplikasinya terlebih dahulu.</string>
     <string name="recycle_bin_delete_progress_title">Menghapus:%s</string>
@@ -192,7 +192,7 @@
     <string name="recycle_bin_empty_view_hint">Tidak ada aplikasi yang terpasang</string>
     <string name="recycle_bin_restore_confirm_btn_back">Tidak</string>
     <string name="recycle_bin_restore_confirm_btn_ok">Ya</string>
-    <string name="recycle_bin_restore_confirm_content">Pulihkan %s aplikasi yang dipilih ?</string>
+    <string name="recycle_bin_restore_confirm_content">Pulihkan %s aplikasi yang dpilih ?</string>
     <string name="recycle_bin_restore_confirm_hint">Ulangi lagi bila ada kegagalan.</string>
     <string name="recycle_bin_restore_confirm_title">Petunjuk</string>
     <string name="recycle_bin_restore_no_target">Silahkan pilih aplikasinya terlebih dahulu.</string>
@@ -231,7 +231,7 @@
     <string name="system_app_btn_uninstall_selected">Cabut pemasangan (%s)</string>
     <string name="system_app_confirm_dialog_btn_left">Ya</string>
     <string name="system_app_confirm_dialog_btn_right">Tidak</string>
-    <string name="system_app_confirm_dialog_content">Menghapus beberapa aplikasi sistem utama dapat menyebabkan os anda menjadi tidak stabil, lanjutkan dengan %s aplikasi sistem yang dipilih ?</string>
+    <string name="system_app_confirm_dialog_content">Menghapus beberapa aplikasi sistem utama dapat menyebabkan os anda menjadi tidak stabil, lanjutkan dengan %s aplikasi sistem yang dpilih ?</string>
     <string name="system_app_confirm_dialog_hint">Anda dapat memulihkannya lagi di Recycle bin.</string>
     <string name="system_app_confirm_no_enough_space">Kartu memori terlalu penuh untuk melakukan pencadangan data, anda tidak dapat melakukan pemulihan nantinya, tetap lanjutkan ?</string>
     <string name="system_app_confirm_no_sdcard">Tidak menemukan kartu memori untuk melakukan pencadangan data, anda tidak dapat melakukan pemulihan nantinya , tetap lanjutkan ?</string>
@@ -244,7 +244,7 @@
     <string name="system_app_title">Aplikasi Sistem</string>
     <string name="system_app_type_core_app">[Aplikasi inti]</string>
     <string name="system_app_type_could_delete">[Bisa dihapus]</string>
-    <string name="system_app_type_just_restored">[Baru saja dipulihkan]</string>
+    <string name="system_app_type_just_restored">[Baru saja dpulihkan]</string>
     <string name="system_app_type_key_signature">[Key module]</string>
     <string name="system_app_type_never_delete">[Jangan pernah dihapus]</string>
     <string name="system_app_type_should_keep">[Harus tetap ada]</string>
@@ -275,7 +275,7 @@
     <string name="user_app_backup_write_error">pencadangan data gagal, mohon pastikan kartu memori anda tidak penuh.</string>
     <string name="user_app_btn_backup">Buat cadangan data</string>
     <string name="user_app_btn_delete">Cabut pemasangan</string>
-    <string name="user_app_dialog_uninstall_confirm_content">Cabut pemasangan %s aplikasi yang dipilih ?</string>
+    <string name="user_app_dialog_uninstall_confirm_content">Cabut pemasangan %s aplikasi yang dpilih ?</string>
     <string name="user_app_state_backuped">[Dicadangkan]</string>
     <string name="user_app_title">Aplikasi pengguna</string>
     <string name="user_app_uninstall_fail_active_admin">[%s]\n pencabutan aplikasi gagal karena diaktifkan sebagai admin perangkat, mohon nonaktifkan dan coba lagi</string>

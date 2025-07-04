@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="12dp"
-    android:background="@color/surface">
+    android:background="@color/colorPrimaryDark">
 
     <!-- 显示选项 -->
     <TextView

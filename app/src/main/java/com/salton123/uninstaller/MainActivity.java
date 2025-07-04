@@ -46,7 +46,7 @@ public class MainActivity extends AbsImmersionAtivity implements SearchView.OnQu
 
     private static final int REQUEST_PERMISSIONS = 1001;
     // UI控件
-    private Button btnDelete, btnBackup, btnBackupManager;
+    private Button btnDelete, btnBackup;
     private ImageButton btnSettings;
     private EditText etSearch;
     private CheckBox checkboxSelectAll;
@@ -66,9 +66,9 @@ public class MainActivity extends AbsImmersionAtivity implements SearchView.OnQu
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
         XLog.i(this, "MainActivity onCreate");
-        
+
         // 初始化控件
         rootView = findViewById(R.id.rootView);
         titleText = findViewById(R.id.title_text);
@@ -78,7 +78,6 @@ public class MainActivity extends AbsImmersionAtivity implements SearchView.OnQu
         appListView = findViewById(R.id.appListView);
         btnDelete = findViewById(R.id.btn_left);
         btnBackup = findViewById(R.id.btn_right);
-        btnBackupManager = findViewById(R.id.btn_backup_manager);
         btnSettings = findViewById(R.id.btn_settings);
         checkboxSelectAll = findViewById(R.id.checkbox_select_all);
         // 初始化设置管理器
@@ -92,8 +91,8 @@ public class MainActivity extends AbsImmersionAtivity implements SearchView.OnQu
     private boolean checkAndRequestPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String[] permissions = {
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
             };
 
             boolean allGranted = true;
@@ -123,7 +122,7 @@ public class MainActivity extends AbsImmersionAtivity implements SearchView.OnQu
                     break;
                 }
             }
-            
+
             if (allGranted) {
                 initUIAndData();
             } else {
@@ -144,12 +143,6 @@ public class MainActivity extends AbsImmersionAtivity implements SearchView.OnQu
             @Override
             public void onClick(View v) {
                 onAction(ActionCode.CODE_BACKUP);
-            }
-        });
-        btnBackupManager.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openBackupManager();
             }
         });
         btnSettings.setOnClickListener(new View.OnClickListener() {

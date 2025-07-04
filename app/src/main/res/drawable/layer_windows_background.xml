@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:opacity="translucent">
     <!-- 纯白背景 -->
-    <item android:drawable="@color/background_primary" />
+    <item android:drawable="@color/colorPrimary" />
     <!-- 底部图片元素，保持居中显示 -->
     <item>
         <bitmap

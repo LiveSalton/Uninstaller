@@ -1,48 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 黑白主题配色 - 完整版本 -->
-    
+
     <!-- 主色调 -->
-    <color name="colorPrimary">#000000</color>
-    <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#000000</color>
-    
-    <!-- 背景色 -->
-    <color name="background_primary">#121712</color>
-    <color name="background_secondary">#1A1F1A</color>
-    <color name="surface">#121712</color>
-    
+    <color name="colorPrimary">#121712</color>
+    <color name="colorPrimaryDark">#0A0D0A</color>
+    <color name="colorAccent">#FFFFFF</color>
     <!-- 文字颜色 -->
     <color name="text_primary">#FFFFFF</color>
     <color name="text_secondary">#99FFFFFF</color>
-    <color name="text_hint">#999999</color>
+    <color name="text_hint">#66FFFFFF</color>
     <color name="text_on_dark">#FFFFFF</color>
-    
+
     <!-- 基本颜色 -->
-    <color name="black">#000000</color>
+    <color name="black">#121712</color>
     <color name="white">#FFFFFF</color>
-    <color name="gray_dark">#666666</color>
-    <color name="gray_medium">#CCCCCC</color>
-    <color name="gray_light">#F8F8F8</color>
-    
+    <color name="gray_dark">#1A1F1A</color>
+    <color name="gray_medium">#242924</color>
+    <color name="gray_light">#2E332E</color>
+
     <!-- 分割线和边框 -->
-    <color name="divider">#E0E0E0</color>
-    <color name="border_light">#F0F0F0</color>
-    <color name="border_medium">#E0E0E0</color>
-    <color name="border_dark">#CCCCCC</color>
-    
+    <color name="divider">#1A1F1A</color>
+    <color name="border_light">#242924</color>
+    <color name="border_medium">#1A1F1A</color>
+    <color name="border_dark">#121712</color>
+
     <!-- 状态颜色 -->
-    <color name="warning">#666666</color>
-    
+    <color name="warning">#99FFFFFF</color>
+
     <!-- 标题栏 -->
     <color name="title_bar_background">#121712</color>
     <color name="title_bar_text">#FFFFFF</color>
-    
+
     <!-- 按钮颜色 -->
-    <color name="button_primary">#000000</color>
-    <color name="button_primary_pressed">#333333</color>
-    <color name="button_secondary">#FFFFFF</color>
-    <color name="button_secondary_pressed">#F0F0F0</color>
+    <color name="button_primary">#1A1F1A</color>
+    <color name="button_primary_pressed">#242924</color>
+    <color name="button_secondary">#242924</color>
+    <color name="button_secondary_pressed">#2E332E</color>
     <color name="button_text_primary">#FFFFFF</color>
-    <color name="button_text_secondary">#000000</color>
+    <color name="button_text_secondary">#99FFFFFF</color>
 </resources>

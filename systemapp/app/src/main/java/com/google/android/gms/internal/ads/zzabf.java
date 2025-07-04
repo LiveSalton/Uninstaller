@@ -468,7 +468,7 @@ public final class zzabf {
         cp = zzaaq.a(1, "gad:interstitial_for_multi_window", (Boolean) false);
         cq = zzaaq.a(1, "gad:interstitial_ad_stay_active_in_multi_window", (Boolean) false);
         cr = zzaaq.a(1, "gad:interstitial_multi_window_method", (Boolean) false);
-        cs = zzaaq.a(1, "gad:interstitial:close_button_padding_dip", 0);
+        cs = zzaaq.a(1, "gad:interstitial:close_button_padding_dp", 0);
         ct = zzaaq.a(1, "gads:clearcut_logging:enabled", (Boolean) false);
         cu = zzaaq.a(1, "gads:clearcut_logging:write_to_file", (Boolean) false);
         cv = zzaaq.a(1, "gad:publisher_testing:force_local_request:enabled", (Boolean) true);
