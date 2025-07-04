@@ -65,9 +65,9 @@ public class MainActivity extends AbsImmersionAtivity implements SearchView.OnQu
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        
         XLog.i(this, "MainActivity onCreate");
-
+        
         // 初始化控件
         rootView = findViewById(R.id.rootView);
         titleText = findViewById(R.id.title_text);
@@ -91,8 +91,8 @@ public class MainActivity extends AbsImmersionAtivity implements SearchView.OnQu
     private boolean checkAndRequestPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String[] permissions = {
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             };
 
             boolean allGranted = true;
@@ -122,7 +122,7 @@ public class MainActivity extends AbsImmersionAtivity implements SearchView.OnQu
                     break;
                 }
             }
-
+            
             if (allGranted) {
                 initUIAndData();
             } else {

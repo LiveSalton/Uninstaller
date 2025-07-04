@@ -139,9 +139,9 @@
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_marginTop="1dp"
-        android:background="@color/background_secondary"
+        android:background="@drawable/search_background"
         android:queryHint="搜你想搜的"
-        android:searchHintIcon="@mipmap/search" />
+        android:searchHintIcon="@drawable/ic_search" />
 
     <ListView
         android:id="@+id/appListView"
@@ -166,7 +166,7 @@
             android:id="@+id/btn_left"
             android:layout_width="0.0dip"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10.0dip"
+            android:layout_marginStart="10.0dip"
             android:layout_weight="1.0"
             android:background="@drawable/selector_btn_warning"
             android:text="删除"
@@ -177,7 +177,7 @@
             android:id="@+id/btn_right"
             android:layout_width="0.0dip"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10.0dip"
+            android:layout_marginStart="10.0dip"
             android:layout_weight="1.0"
             android:background="@drawable/selector_btn_recommend"
             android:text="备份"
@@ -188,7 +188,7 @@
             android:id="@+id/btn_backup_manager"
             android:layout_width="0.0dip"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10.0dip"
+            android:layout_marginStart="10.0dip"
             android:layout_weight="1.0"
             android:background="@drawable/selector_btn_recommend"
             android:text="备份管理"
@@ -199,8 +199,8 @@
             android:id="@+id/checkbox_select_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10.0dip"
+            android:layout_marginStart="10.0dip"
             android:button="@drawable/selector_checkbox_drawable"
-            android:paddingRight="10.0dip" />
+            android:paddingEnd="10.0dip" />
     </LinearLayout>
 </LinearLayout>

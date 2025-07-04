@@ -8,13 +8,13 @@
     <color name="colorAccent">#000000</color>
     
     <!-- 背景色 -->
-    <color name="background_primary">#FFFFFF</color>
-    <color name="background_secondary">#F8F8F8</color>
-    <color name="surface">#FFFFFF</color>
+    <color name="background_primary">#121712</color>
+    <color name="background_secondary">#1A1F1A</color>
+    <color name="surface">#121712</color>
     
     <!-- 文字颜色 -->
-    <color name="text_primary">#000000</color>
-    <color name="text_secondary">#666666</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#99FFFFFF</color>
     <color name="text_hint">#999999</color>
     <color name="text_on_dark">#FFFFFF</color>
     
