@@ -130,7 +130,7 @@
             android:layout_weight="1"
             android:gravity="right|center_vertical"
             android:text="已选择: 0个"
-            android:textColor="@color/text_secondary"
+            android:textColor="@color/text_primary"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -154,7 +154,12 @@
             android:hint="Search apps"
             android:paddingHorizontal="16dp"
             android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_secondary" />
+            android:textColorHint="@color/text_secondary"
+            android:textCursorDrawable="@drawable/edit_text_cursor"
+            android:singleLine="true"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:cursorVisible="false" />
     </LinearLayout>
 
     <ListView
@@ -200,8 +205,9 @@
             android:id="@+id/checkbox_select_all"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:button="@drawable/checkbox_selector"
             android:focusableInTouchMode="false"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/text_primary"
             android:textSize="11sp"
             android:visibility="visible" />
     </LinearLayout>

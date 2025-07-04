@@ -42,7 +42,10 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AbsImmersionAtivity implements SearchView.OnQueryTextListener {
+import android.text.Editable;
+import android.text.TextWatcher;
+
+public class MainActivity extends AbsImmersionAtivity {
 
     private static final int REQUEST_PERMISSIONS = 1001;
     // UI控件
@@ -159,6 +162,32 @@ public class MainActivity extends AbsImmersionAtivity implements SearchView.OnQu
         });
         applySettings();
         loadData();
+
+        // 搜索框监听
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String query = s.toString().trim();
+                Utils.KEY = query;
+                updateSort(Utils.getSearchResult(allEntity, query));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        // 添加焦点监听
+        etSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                etSearch.setCursorVisible(hasFocus);
+            }
+        });
     }
 
     private void loadData() {
@@ -222,22 +251,16 @@ public class MainActivity extends AbsImmersionAtivity implements SearchView.OnQu
         }
         updateSummaryInfo(totalCount, selectedCount);
         if (btnDelete != null) {
-            if (selectedCount > 0) {
-                btnDelete.setText("删除(" + selectedCount + ")");
-                btnDelete.setEnabled(true);
-            } else {
-                btnDelete.setText("删除");
-                btnDelete.setEnabled(false);
-            }
+            btnDelete.setEnabled(selectedCount > 0);
+            btnDelete.setText(selectedCount > 0 ? "删除(" + selectedCount + ")" : "删除");
         }
         if (btnBackup != null) {
-            if (selectedCount > 0) {
-                btnBackup.setText("备份(" + selectedCount + ")");
-                btnBackup.setEnabled(true);
-            } else {
-                btnBackup.setText("备份");
-                btnBackup.setEnabled(false);
-            }
+            btnBackup.setEnabled(selectedCount > 0);
+            btnBackup.setText(selectedCount > 0 ? "备份(" + selectedCount + ")" : "备份");
+        }
+        if (summarySelectedText != null) {
+            summarySelectedText.setText("已选择: " + selectedCount + "个");
+            summarySelectedText.setTextColor(getResources().getColor(selectedCount > 0 ? R.color.text_primary : R.color.text_secondary));
         }
     }
 
@@ -428,21 +451,6 @@ public class MainActivity extends AbsImmersionAtivity implements SearchView.OnQu
         mAdapter.notifyDataSetChanged();
         updateButtonStates();
     }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        Utils.KEY = query.trim();
-        updateSort(Utils.getSearchResult(mAdapter.getList(), query));
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        Utils.KEY = newText.trim();
-        updateSort(Utils.getSearchResult(allEntity, newText.trim()));
-        return true;
-    }
-
     private void onAction(Integer actionCode) {
         switch (actionCode) {
             case ActionCode.CODE_DELETE:
