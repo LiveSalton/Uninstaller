@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -47,7 +48,7 @@ public class MainActivity extends AbsImmersionAtivity implements SearchView.OnQu
     // UI控件
     private Button btnDelete, btnBackup, btnBackupManager;
     private ImageButton btnSettings;
-    private SearchView searchView;
+    private EditText etSearch;
     private CheckBox checkboxSelectAll;
     private LinearLayout rootView;
     private TextView titleText;
@@ -73,7 +74,7 @@ public class MainActivity extends AbsImmersionAtivity implements SearchView.OnQu
         titleText = findViewById(R.id.title_text);
         summaryTotalText = findViewById(R.id.summary_total);
         summarySelectedText = findViewById(R.id.summary_selected);
-        searchView = findViewById(R.id.searchView);
+        etSearch = findViewById(R.id.etSearch);
         appListView = findViewById(R.id.appListView);
         btnDelete = findViewById(R.id.btn_left);
         btnBackup = findViewById(R.id.btn_right);
@@ -163,23 +164,8 @@ public class MainActivity extends AbsImmersionAtivity implements SearchView.OnQu
                 onCheckAll(isChecked);
             }
         });
-        initSearchView();
         applySettings();
         loadData();
-    }
-
-    private void initSearchView() {
-        searchView.onActionViewExpanded();
-        Class<?> c = searchView.getClass();
-        try {
-            Field f = c.getDeclaredField("mSearchPlate");
-            f.setAccessible(true);
-            View v = (View) f.get(searchView);
-            v.setBackgroundColor(Color.WHITE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        searchView.setOnQueryTextListener(this);
     }
 
     private void loadData() {
@@ -431,10 +417,8 @@ public class MainActivity extends AbsImmersionAtivity implements SearchView.OnQu
         XLog.i("MainActivity", "Applying settings - Time: " + settingsManager.isShowTime() +
                 ", Filename: " + settingsManager.isShowFilename() + ", Path: " + settingsManager.isShowPath() +
                 ", Search: " + settingsManager.isShowSearch());
-        if (searchView != null) {
-            int visibility = settingsManager.isShowSearch() ? View.VISIBLE : View.GONE;
-            searchView.setVisibility(visibility);
-        }
+        int visibility = settingsManager.isShowSearch() ? View.VISIBLE : View.GONE;
+        etSearch.setVisibility(visibility);
         if (mAdapter != null) {
             mAdapter.setDisplayOptions(
                     settingsManager.isShowTime(),
