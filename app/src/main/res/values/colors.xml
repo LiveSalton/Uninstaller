@@ -3,9 +3,9 @@
     <!-- 黑白主题配色 - 完整版本 -->
 
     <!-- 主色调 -->
-    <color name="colorPrimary">#121712</color>
+    <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#0A0D0A</color>
-    <color name="colorAccent">#FFFFFF</color>
+    <color name="colorAccent">#99FFFFFF</color>
     <!-- 文字颜色 -->
     <color name="text_primary">#FFFFFF</color>
     <color name="text_secondary">#99FFFFFF</color>
@@ -13,7 +13,7 @@
     <color name="text_on_dark">#FFFFFF</color>
 
     <!-- 基本颜色 -->
-    <color name="black">#121712</color>
+    <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="gray_dark">#1A1F1A</color>
     <color name="gray_medium">#242924</color>
@@ -23,13 +23,13 @@
     <color name="divider">#1A1F1A</color>
     <color name="border_light">#242924</color>
     <color name="border_medium">#1A1F1A</color>
-    <color name="border_dark">#121712</color>
+    <color name="border_dark">#000000</color>
 
     <!-- 状态颜色 -->
     <color name="warning">#99FFFFFF</color>
 
     <!-- 标题栏 -->
-    <color name="title_bar_background">#121712</color>
+    <color name="title_bar_background">#000000</color>
     <color name="title_bar_text">#FFFFFF</color>
 
     <!-- 按钮颜色 -->
