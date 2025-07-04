@@ -27,7 +27,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_back" />
+                android:src="@mipmap/ic_launcher" />
         </FrameLayout>
 
         <!-- 标题 -->
@@ -133,7 +133,7 @@
         android:textSize="18sp" />
 
     <!-- 应用列表 -->
-    <androidx.recyclerview.widget.RecyclerView
+    <ListView
         android:id="@+id/rv_apps"
         android:layout_width="match_parent"
         android:layout_height="0dp"

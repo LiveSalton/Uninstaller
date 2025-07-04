@@ -54,10 +54,10 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.adapter_app_item, null);
         }
-        final ImageView ivLogo = ViewHolder.get(convertView, R.id.logo);
-        TextView tvTitle = ViewHolder.get(convertView, R.id.title);
+        final ImageView ivLogo = ViewHolder.get(convertView, R.id.app_icon);
+        TextView tvTitle = ViewHolder.get(convertView, R.id.app_name);
         TextView tvVersion = ViewHolder.get(convertView, R.id.version);
-        final TextView tvSize = ViewHolder.get(convertView, R.id.size);
+        final TextView tvSize = ViewHolder.get(convertView, R.id.app_size);
         CheckBox cbSelect = ViewHolder.get(convertView, R.id.chekcBox);
         final AppEntity appEntity = getItem(position);
         
