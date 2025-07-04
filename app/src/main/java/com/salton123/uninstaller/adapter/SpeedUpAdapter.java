@@ -58,7 +58,7 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
         TextView tvTitle = ViewHolder.get(convertView, R.id.app_name);
         TextView tvVersion = ViewHolder.get(convertView, R.id.version);
         final TextView tvSize = ViewHolder.get(convertView, R.id.app_size);
-        CheckBox cbSelect = ViewHolder.get(convertView, R.id.chekcBox);
+        CheckBox cbSelect = ViewHolder.get(convertView, R.id.checkbox_select);
         final AppEntity appEntity = getItem(position);
         
         // 加载应用信息（只在第一次加载时设置）
