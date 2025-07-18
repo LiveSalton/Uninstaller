@@ -65,7 +65,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="center"
-        android:button="null"
+        android:button="@null"
         android:drawableEnd="@drawable/checkbox_selector"
         android:focusableInTouchMode="false"
         android:gravity="center"
