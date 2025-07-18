@@ -12,13 +12,16 @@
     <string name="success">成功</string>
     <string name="failed">失败</string>
     
-    <!-- 主界面 -->
-    <string name="app_manager">应用管理</string>
-    <string name="backup_manager">备份管理</string>
-    <string name="settings">设置</string>
-    <string name="search_hint">搜你想搜的</string>
-    <string name="total_apps">总数: %d个</string>
-    <string name="selected_apps">已选择: %d个</string>
+    <!-- 主界面硬编码迁移 -->
+    <string name="main_title">应用管理</string>
+    <string name="main_app_description">app_description</string>
+    <string name="main_total_count">总数: %1$d个</string>
+    <string name="main_selected_count">已选择: %1$d个</string>
+    <string name="main_uninstall">卸载</string>
+    <string name="main_backup">备份</string>
+    <string name="main_select">选择</string>
+    <string name="main_selected">选中</string>
+    <string name="main_unselected">取消选中</string>
     
     <!-- 操作相关 -->
     <string name="select_all_apps">已全选 %d 个应用</string>
@@ -45,21 +48,25 @@
     
     <string name="share_app">分享应用详情</string>
     
-    <!-- 备份管理 -->
-    <string name="backup_time_label">备份时间: </string>
-    <string name="no_backup_files">暂无备份文件</string>
-    <string name="backup_hint">在应用列表中选择应用进行备份</string>
-    <string name="backup_operations_hint">提示：点击恢复应用，长按删除备份</string>
-    <string name="refresh">刷新</string>
-    <string name="clear_all">清空全部</string>
-    <string name="restore">恢复</string>
-    <string name="restore_app_confirm">确定要恢复应用 "%s" 吗？</string>
-    <string name="delete_backup_confirm">确定要删除备份文件 "%s" 吗？</string>
-    <string name="clear_all_backup_confirm">确定要删除所有备份文件吗？此操作不可恢复！</string>
-    <string name="restore_started">开始恢复应用，请在安装界面确认</string>
-    <string name="restore_failed">恢复失败: %s</string>
-    <string name="delete_backup_success">删除成功</string>
-    <string name="delete_backup_failed">删除失败</string>
+    <!-- 备份管理硬编码迁移 -->
+    <string name="backup_refresh">刷新</string>
+    <string name="backup_clear_all">清空全部</string>
+    <string name="backup_no_files">暂无备份文件</string>
+    <string name="backup_hint_select">在应用列表中选择应用进行备份</string>
+    <string name="backup_hint_operations">提示：点击恢复应用，长按删除备份</string>
+    <string name="backup_restore_title">恢复应用</string>
+    <string name="backup_restore_confirm">确定要恢复应用 "%1$s" 吗？</string>
+    <string name="backup_delete_title">删除备份</string>
+    <string name="backup_delete_confirm">确定要删除备份文件 "%1$s" 吗？</string>
+    <string name="backup_clear_all_title">清空所有备份</string>
+    <string name="backup_clear_all_confirm">确定要删除所有备份文件吗？此操作不可恢复！</string>
+    <string name="backup_restore_start">开始恢复应用，请在安装界面确认</string>
+    <string name="backup_restore_failed">恢复失败: %1$s</string>
+    <string name="backup_delete_success">删除成功</string>
+    <string name="backup_delete_failed">删除失败</string>
+    <string name="backup_version">版本: %1$s</string>
+    <string name="backup_version_unknown">版本: 未知</string>
+    <string name="backup_file_size">大小: %1$s</string>
     
     <!-- 时间格式化 -->
     <string name="time_prefix">安装: </string>
@@ -98,4 +105,6 @@
     <string name="share_failed">分享失败</string>
     <string name="apk_file_not_found">APK文件不存在</string>
     <string name="select_apps_first">请先选择要分享的应用</string>
+    <string name="backup_manage_title">备份管理</string>
+    <string name="backup_load_failed">加载备份列表失败</string>
 </resources>

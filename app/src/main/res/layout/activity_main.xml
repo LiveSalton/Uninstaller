@@ -51,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="应用管理"
+                    android:text="@string/main_title"
                     android:textColor="@color/title_bar_text"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -69,7 +69,7 @@
                         android:ellipsize="middle"
                         android:gravity="center_vertical|start"
                         android:singleLine="true"
-                        android:text="app_description"
+                        android:text="@string/main_app_description"
                         android:textColor="@color/text_secondary"
                         android:textSize="10sp" />
 
@@ -111,7 +111,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="left|center_vertical"
-            android:text="总数: 0个"
+            android:text="@string/main_total_count"
             android:textColor="@color/text_secondary"
             android:textSize="14sp" />
 
@@ -121,7 +121,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right|center_vertical"
-            android:text="已选择: 0个"
+            android:text="@string/main_selected_count"
             android:textColor="@color/text_primary"
             android:textSize="14sp" />
 
@@ -178,7 +178,7 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@drawable/btn_primary_background"
-            android:text="卸载"
+            android:text="@string/main_uninstall"
             android:textColor="@color/button_text_primary"
             android:textSize="16sp" />
 
@@ -189,7 +189,7 @@
             android:layout_marginStart="12dp"
             android:layout_weight="1"
             android:background="@drawable/btn_secondary_background"
-            android:text="备份"
+            android:text="@string/main_backup"
             android:textColor="@color/white"
             android:textSize="16sp" />
 

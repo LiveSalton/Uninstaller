@@ -235,8 +235,8 @@ public class MainActivity extends AbsImmersionAtivity {
     private void toggleAppSelection(AppEntity entity) {
         if (entity != null) {
             entity.isChecked = !entity.isChecked;
-            String status = entity.isChecked ? "选中" : "取消选中";
-            XLog.i("MainActivity", status + "应用: " + entity.mAppName);
+            String status = entity.isChecked ? getString(R.string.main_selected) : getString(R.string.main_unselected);
+            XLog.i("MainActivity", status + getString(R.string.main_select) + ": " + entity.mAppName);
             Toast.makeText(this, status + ": " + entity.mAppName, Toast.LENGTH_SHORT).show();
             updateButtonStates();
         }
@@ -247,19 +247,19 @@ public class MainActivity extends AbsImmersionAtivity {
         int selectedCount = getSelectedApps().size();
         int totalCount = mAdapter.getCount();
         if (titleText != null) {
-            titleText.setText("应用管理");
+            titleText.setText(getString(R.string.main_title));
         }
         updateSummaryInfo(totalCount, selectedCount);
         if (btnDelete != null) {
             btnDelete.setEnabled(selectedCount > 0);
-            btnDelete.setText(selectedCount > 0 ? "删除(" + selectedCount + ")" : "删除");
+            btnDelete.setText(selectedCount > 0 ? getString(R.string.delete_with_count, selectedCount) : getString(R.string.main_uninstall));
         }
         if (btnBackup != null) {
             btnBackup.setEnabled(selectedCount > 0);
-            btnBackup.setText(selectedCount > 0 ? "备份(" + selectedCount + ")" : "备份");
+            btnBackup.setText(selectedCount > 0 ? getString(R.string.backup_with_count, selectedCount) : getString(R.string.main_backup));
         }
         if (summarySelectedText != null) {
-            summarySelectedText.setText("已选择: " + selectedCount + "个");
+            summarySelectedText.setText(getString(R.string.main_selected_count, selectedCount));
             summarySelectedText.setTextColor(getResources().getColor(selectedCount > 0 ? R.color.text_primary : R.color.text_secondary));
         }
     }
@@ -267,14 +267,14 @@ public class MainActivity extends AbsImmersionAtivity {
     private void updateSummaryInfo(int totalCount, int selectedCount) {
         XLog.i("MainActivity", "updateSummaryInfo - 总数: " + totalCount + ", 已选择: " + selectedCount);
         if (summaryTotalText != null) {
-            summaryTotalText.setText("总数: " + totalCount + "个");
+            summaryTotalText.setText(getString(R.string.main_total_count, totalCount));
         }
         if (summarySelectedText != null) {
             if (selectedCount > 0) {
-                summarySelectedText.setText("已选择: " + selectedCount + "个");
+                summarySelectedText.setText(getString(R.string.main_selected_count, selectedCount));
                 summarySelectedText.setTextColor(getResources().getColor(R.color.colorPrimary));
             } else {
-                summarySelectedText.setText("已选择: 0个");
+                summarySelectedText.setText(getString(R.string.main_selected_count, 0));
                 summarySelectedText.setTextColor(getResources().getColor(R.color.text_secondary));
             }
         }

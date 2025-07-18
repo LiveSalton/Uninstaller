@@ -44,7 +44,7 @@ public class BackupActivity extends Activity {
         setContentView(R.layout.activity_backup);
         
         // 设置标题
-        setTitle("备份管理");
+        setTitle(getString(R.string.backup_manage_title));
 
         initViews();
         loadBackupList();
@@ -121,7 +121,7 @@ public class BackupActivity extends Activity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(BackupActivity.this, "加载备份列表失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BackupActivity.this, getString(R.string.backup_load_failed), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -145,60 +145,53 @@ public class BackupActivity extends Activity {
 
     private void showRestoreDialog(final BackupManager.BackupInfo backupInfo) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("恢复应用");
-        builder.setMessage("确定要恢复应用 \"" + 
-            (backupInfo.appName != null ? backupInfo.appName : backupInfo.packageName) + "\" 吗？");
-        
-        builder.setPositiveButton("恢复", new DialogInterface.OnClickListener() {
+        builder.setTitle(getString(R.string.backup_restore_title));
+        builder.setMessage(getString(R.string.backup_restore_confirm, backupInfo.appName != null ? backupInfo.appName : backupInfo.packageName));
+        builder.setPositiveButton(getString(R.string.backup_restore_title), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 restoreApp(backupInfo);
             }
         });
-        
-        builder.setNegativeButton("取消", null);
+        builder.setNegativeButton(getString(R.string.cancel), null);
         builder.show();
     }
 
     private void showDeleteDialog(final BackupManager.BackupInfo backupInfo) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("删除备份");
-        builder.setMessage("确定要删除备份文件 \"" + backupInfo.backupFileName + "\" 吗？");
-        
-        builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+        builder.setTitle(getString(R.string.backup_delete_title));
+        builder.setMessage(getString(R.string.backup_delete_confirm, backupInfo.backupFileName));
+        builder.setPositiveButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 deleteBackup(backupInfo);
             }
         });
-        
-        builder.setNegativeButton("取消", null);
+        builder.setNegativeButton(getString(R.string.cancel), null);
         builder.show();
     }
 
     private void showClearAllDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("清空所有备份");
-        builder.setMessage("确定要删除所有备份文件吗？此操作不可恢复！");
-        
-        builder.setPositiveButton("清空", new DialogInterface.OnClickListener() {
+        builder.setTitle(getString(R.string.backup_clear_all_title));
+        builder.setMessage(getString(R.string.backup_clear_all_confirm));
+        builder.setPositiveButton(getString(R.string.backup_clear_all), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 clearAllBackups();
             }
         });
-        
-        builder.setNegativeButton("取消", null);
+        builder.setNegativeButton(getString(R.string.cancel), null);
         builder.show();
     }
 
     private void restoreApp(BackupManager.BackupInfo backupInfo) {
         try {
             BackupManager.restoreApp(this, backupInfo);
-            Toast.makeText(this, "开始恢复应用，请在安装界面确认", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.backup_restore_start), Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             XLog.e("BackupActivity", "Restore failed: " + e.getMessage());
-            Toast.makeText(this, "恢复失败: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.backup_restore_failed, e.getMessage()), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -207,7 +200,6 @@ public class BackupActivity extends Activity {
             @Override
             public void run() {
                 boolean success = BackupManager.deleteBackup(backupInfo);
-                
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -216,9 +208,9 @@ public class BackupActivity extends Activity {
                             backupAdapter.notifyDataSetChanged();
                             updateEmptyView();
                             updateButtons();
-                            Toast.makeText(BackupActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BackupActivity.this, getString(R.string.backup_delete_success), Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(BackupActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BackupActivity.this, getString(R.string.backup_delete_failed), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -304,9 +296,9 @@ public class BackupActivity extends Activity {
             
             // 版本
             if (backupInfo.versionName != null) {
-                holder.versionText.setText("版本: " + backupInfo.versionName);
+                holder.versionText.setText(getString(R.string.backup_version, backupInfo.versionName));
             } else {
-                holder.versionText.setText("版本: 未知");
+                holder.versionText.setText(getString(R.string.backup_version_unknown));
             }
             
             // 备份时间
@@ -314,7 +306,7 @@ public class BackupActivity extends Activity {
             holder.backupTimeText.setText(getString(R.string.backup_time_label) + sdf.format(backupInfo.backupTime));
             
             // 文件大小
-            holder.fileSizeText.setText("大小: " + Utils.getSize2(backupInfo.fileSize));
+            holder.fileSizeText.setText(getString(R.string.backup_file_size, Utils.getSize2(backupInfo.fileSize)));
 
             return convertView;
         }

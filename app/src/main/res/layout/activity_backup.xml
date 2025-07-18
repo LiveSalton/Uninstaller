@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:text="刷新"
+            android:text="@string/backup_refresh"
             android:background="@drawable/selector_btn_recommend"
             android:textColor="@color/button_text_primary" />
 
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
-            android:text="清空全部"
+            android:text="@string/backup_clear_all"
             android:background="@drawable/selector_btn_warning"
             android:textColor="@color/button_text_secondary" />
 
@@ -60,7 +60,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="暂无备份文件"
+                android:text="@string/backup_no_files"
                 android:textSize="18sp"
                 android:textColor="@color/text_secondary"
                 android:layout_marginBottom="8dp" />
@@ -68,7 +68,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="在应用列表中选择应用进行备份"
+                android:text="@string/backup_hint_select"
                 android:textSize="14sp"
                 android:textColor="@color/text_secondary" />
 
@@ -81,7 +81,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="提示：点击恢复应用，长按删除备份"
+        android:text="@string/backup_hint_operations"
         android:textSize="12sp"
         android:textColor="@color/text_secondary"
         android:gravity="center"
