@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="应用管理"
+            android:text="@string/auto_2623667450802219676"
             android:textColor="@color/title_bar_text"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -62,7 +62,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="总数: 0个"
+            android:text="@string/auto_354826608356190889"
             android:textSize="14sp"
             android:textColor="@color/text_secondary"
             android:gravity="left|center_vertical" />
@@ -72,7 +72,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="已选择: 0个"
+            android:text="@string/auto_8839014975645868300"
             android:textSize="14sp"
             android:textColor="@color/text_secondary"
             android:gravity="right|center_vertical" />
@@ -116,7 +116,7 @@
             android:layout_marginLeft="10.0dp"
             android:layout_weight="1.0"
             android:background="@drawable/selector_btn_warning"
-            android:text="删除"
+            android:text="@string/auto_7803433360898273987"
             android:textColor="@color/button_text_secondary"
             android:textSize="@dimen/dialog_button_text_size" />
 
@@ -127,7 +127,7 @@
             android:layout_marginLeft="10.0dp"
             android:layout_weight="1.0"
             android:background="@drawable/selector_btn_recommend"
-            android:text="备份"
+            android:text="@string/auto_7611491949064207416"
             android:textColor="@color/button_text_primary"
             android:textSize="@dimen/dialog_button_text_size" />
 
@@ -138,7 +138,7 @@
             android:layout_marginLeft="10.0dp"
             android:layout_weight="1.0"
             android:background="@drawable/selector_btn_recommend"
-            android:text="备份管理"
+            android:text="@string/auto_1015951795981143864"
             android:textColor="@color/button_text_primary"
             android:textSize="@dimen/dialog_button_text_size" />
 

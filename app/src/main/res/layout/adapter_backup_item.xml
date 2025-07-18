@@ -12,7 +12,7 @@
         android:id="@+id/app_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="应用名称"
+        android:text="@string/auto_8607274809791025561"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="@color/text_primary"
@@ -45,7 +45,7 @@
                 android:id="@+id/version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="版本: 1.0.0"
+                android:text="@string/auto_2677392295785979481"
                 android:textSize="12sp"
                 android:textColor="@color/text_secondary"
                 android:layout_marginBottom="2dp" />
@@ -54,7 +54,7 @@
                 android:id="@+id/file_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="大小: 10.5MB"
+                android:text="@string/auto_4735679025662775451"
                 android:textSize="12sp"
                 android:textColor="@color/text_secondary" />
 
@@ -84,7 +84,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="点击恢复 | 长按删除"
+        android:text="@string/auto_6557016694683876325"
         android:textSize="10sp"
         android:textColor="@color/text_hint"
         android:gravity="center"

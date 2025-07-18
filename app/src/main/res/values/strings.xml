@@ -67,6 +67,7 @@
     <string name="backup_version">版本: %1$s</string>
     <string name="backup_version_unknown">版本: 未知</string>
     <string name="backup_file_size">大小: %1$s</string>
+    <string name="backup_time_label">备份时间: </string>
     
     <!-- 时间格式化 -->
     <string name="time_prefix">安装: </string>
@@ -107,4 +108,9 @@
     <string name="select_apps_first">请先选择要分享的应用</string>
     <string name="backup_manage_title">备份管理</string>
     <string name="backup_load_failed">加载备份列表失败</string>
+    <string name="auto_8607274809791025561">应用名称</string>    <string name="auto_2677392295785979481">版本: 1.0.0</string>    <string name="auto_4735679025662775451">大小: 10.5MB</string>    <string name="auto_6557016694683876325">点击恢复 | 长按删除</string>    <string name="auto_354826608356190889">总数: 0个</string>    <string name="auto_8839014975645868300">已选择: 0个</string>
+    <string name="auto_2623667450802219676">应用管理</string>
+    <string name="auto_7803433360898273987">卸载</string>
+    <string name="auto_7611491949064207416">备份</string>
+    <string name="auto_1015951795981143864">备份管理</string>
 </resources>
