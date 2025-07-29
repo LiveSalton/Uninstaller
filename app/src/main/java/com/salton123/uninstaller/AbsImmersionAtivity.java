@@ -46,7 +46,18 @@ public abstract class AbsImmersionAtivity extends Activity {
     private void checkAndRequestStoragePermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Android 6.0 及以上版本需要动态请求权限
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                // Android 14 (API 34) 及以上版本，READ_EXTERNAL_STORAGE权限已被废弃
+                // 我们只需要READ_MEDIA_IMAGES, READ_MEDIA_VIDEO, READ_MEDIA_AUDIO权限
+                String[] newPermissions = new String[]{
+                        Manifest.permission.READ_MEDIA_IMAGES,
+                        Manifest.permission.READ_MEDIA_VIDEO,
+                        Manifest.permission.READ_MEDIA_AUDIO
+                };
+                if (!hasAllPermissions(newPermissions)) {
+                    requestPermissions(newPermissions, requestCode);
+                }
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 // Android 13 (API 33) 及以上版本使用新的媒体权限
                 String[] newPermissions = new String[]{
                         Manifest.permission.READ_MEDIA_IMAGES,

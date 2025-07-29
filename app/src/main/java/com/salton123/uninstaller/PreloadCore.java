@@ -33,14 +33,28 @@ public enum PreloadCore {
                 Log.i("PreloadCore", "start call time one=" + System.currentTimeMillis());
                 PackageManager pm = XApp.getInstance().getPackageManager();//获取包管理者
                 List<AppEntity> pList = new ArrayList<>();// 获取所有的应用程序集合
-                for (PackageInfo item : pm.getInstalledPackages(0)) {
-                    AppEntity entity = new AppEntity(item);
-                    if (Utils.isThirdPartyApp(item.applicationInfo)) {
-                        if (!item.applicationInfo.packageName.equals(XApp.getInstance().getPackageName())) {
-                            pList.add(entity);
+                
+                try {
+                    List<PackageInfo> installedPackages = pm.getInstalledPackages(0);
+                    Log.i("PreloadCore", "获取到的安装包数量: " + installedPackages.size());
+                    
+                    for (PackageInfo item : installedPackages) {
+                        try {
+                            AppEntity entity = new AppEntity(item);
+                            if (Utils.isThirdPartyApp(item.applicationInfo)) {
+                                if (!item.applicationInfo.packageName.equals(XApp.getInstance().getPackageName())) {
+                                    pList.add(entity);
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e("PreloadCore", "处理单个应用时出错: " + item.packageName, e);
                         }
                     }
+                } catch (Exception e) {
+                    Log.e("PreloadCore", "获取安装包列表时出错", e);
                 }
+                
+                Log.i("PreloadCore", "筛选后的第三方应用数量: " + pList.size());
                 Log.i("PreloadCore", "start call time=" + System.currentTimeMillis());
                 return pList;
             }
@@ -55,6 +69,7 @@ public enum PreloadCore {
             Log.i("PreloadCore", "start get time=" + System.currentTimeMillis());
             return mInstallPackagesInfos;
         } catch (Exception e) {
+            Log.e("PreloadCore", "preloadAppList执行出错", e);
             e.printStackTrace();
             return new ArrayList<>();
         }

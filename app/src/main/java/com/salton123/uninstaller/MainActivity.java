@@ -110,22 +110,45 @@ public class MainActivity extends AbsImmersionAtivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Android 6.0及以上需要动态申请存储权限
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                permissionsList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-            }
-
-            // 如果是Android 10以下，还需要写入权限
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    permissionsList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                }
-            }
-
-            // Android 11及以上针对多媒体文件的权限
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                // 对于备份APK可能会使用到READ_MEDIA相关权限
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                // Android 14 (API 34) 及以上版本，READ_EXTERNAL_STORAGE权限已被废弃
+                // 我们只需要READ_MEDIA_IMAGES, READ_MEDIA_VIDEO, READ_MEDIA_AUDIO权限
                 if (checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
                     permissionsList.add(Manifest.permission.READ_MEDIA_IMAGES);
+                }
+                if (checkSelfPermission(Manifest.permission.READ_MEDIA_VIDEO) != PackageManager.PERMISSION_GRANTED) {
+                    permissionsList.add(Manifest.permission.READ_MEDIA_VIDEO);
+                }
+                if (checkSelfPermission(Manifest.permission.READ_MEDIA_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                    permissionsList.add(Manifest.permission.READ_MEDIA_AUDIO);
+                }
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                // Android 13 (API 33) 及以上版本使用新的媒体权限
+                if (checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+                    permissionsList.add(Manifest.permission.READ_MEDIA_IMAGES);
+                }
+                if (checkSelfPermission(Manifest.permission.READ_MEDIA_VIDEO) != PackageManager.PERMISSION_GRANTED) {
+                    permissionsList.add(Manifest.permission.READ_MEDIA_VIDEO);
+                }
+                if (checkSelfPermission(Manifest.permission.READ_MEDIA_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                    permissionsList.add(Manifest.permission.READ_MEDIA_AUDIO);
+                }
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                // Android 11 (API 30) 及以上版本
+                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    permissionsList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+                }
+            } else {
+                // Android 6.0 到 Android 10
+                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    permissionsList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+                }
+
+                // 如果是Android 10以下，还需要写入权限
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        permissionsList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    }
                 }
             }
 
@@ -155,6 +178,7 @@ public class MainActivity extends AbsImmersionAtivity {
                 initUIAndData();
             } else {
                 XLog.e(this, "权限被拒绝");
+                Toast.makeText(this, "需要存储权限才能正常使用应用功能", Toast.LENGTH_LONG).show();
             }
         }
     }
