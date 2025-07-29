@@ -64,7 +64,7 @@ public class MainActivity extends AbsImmersionAtivity {
     private ImageButton btnSettings;
     private EditText etSearch;
     private CheckBox checkboxSelectAll;
-    private LinearLayout rootView;
+    private LinearLayout llSearch;
     private TextView titleText;
     private TextView summaryTotalText;
     private TextView summarySelectedText;
@@ -80,15 +80,11 @@ public class MainActivity extends AbsImmersionAtivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        XLog.i(this, "MainActivity onCreate");
-
-        // 初始化控件
-        rootView = findViewById(R.id.rootView);
         titleText = findViewById(R.id.title_text);
         summaryTotalText = findViewById(R.id.summary_total);
         summarySelectedText = findViewById(R.id.summary_selected);
         etSearch = findViewById(R.id.etSearch);
+        llSearch = findViewById(R.id.llSearch);
         appListView = findViewById(R.id.appListView);
         btnDelete = findViewById(R.id.btn_left);
         btnBackup = findViewById(R.id.btn_right);
@@ -217,7 +213,7 @@ public class MainActivity extends AbsImmersionAtivity {
         if (settingsManager != null) {
             mAdapter.setDisplayOptions(
                     settingsManager.isShowTime(),
-                    settingsManager.isShowFilename(),
+                    settingsManager.isShowPackage(),
                     settingsManager.isShowPath()
             );
             XLog.i("MainActivity", "Set initial display options on adapter");
@@ -374,13 +370,13 @@ public class MainActivity extends AbsImmersionAtivity {
             }
         });
         CheckBox cbShowTime = popupView.findViewById(R.id.cb_show_time);
-        CheckBox cbShowFilename = popupView.findViewById(R.id.cb_show_filename);
+        CheckBox cbShowPackage = popupView.findViewById(R.id.cb_show_package);
         CheckBox cbShowPath = popupView.findViewById(R.id.cb_show_path);
         CheckBox cbShowSearch = popupView.findViewById(R.id.cb_show_search);
         RadioGroup rgSortOptions = popupView.findViewById(R.id.rg_sort_options);
         Button btnShareAppDetails = popupView.findViewById(R.id.btn_share_app_details);
         cbShowTime.setChecked(settingsManager.isShowTime());
-        cbShowFilename.setChecked(settingsManager.isShowFilename());
+        cbShowPackage.setChecked(settingsManager.isShowPackage());
         cbShowPath.setChecked(settingsManager.isShowPath());
         cbShowSearch.setChecked(settingsManager.isShowSearch());
         SettingsManager.SortType currentSort = settingsManager.getSortType();
@@ -403,10 +399,10 @@ public class MainActivity extends AbsImmersionAtivity {
             applySettings();
             XLog.i("MainActivity", "Show time: " + isChecked);
         });
-        cbShowFilename.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            settingsManager.setShowFilename(isChecked);
+        cbShowPackage.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            settingsManager.setShowPackage(isChecked);
             applySettings();
-            XLog.i("MainActivity", "Show filename: " + isChecked);
+            XLog.i("MainActivity", "Show package: " + isChecked);
         });
         cbShowPath.setOnCheckedChangeListener((buttonView, isChecked) -> {
             settingsManager.setShowPath(isChecked);
@@ -465,15 +461,15 @@ public class MainActivity extends AbsImmersionAtivity {
 
     private void applySettings() {
         if (settingsManager == null) return;
-        XLog.i("MainActivity", "Applying settings - Time: " + settingsManager.isShowTime() +
-                ", Filename: " + settingsManager.isShowFilename() + ", Path: " + settingsManager.isShowPath() +
-                ", Search: " + settingsManager.isShowSearch());
+                XLog.i("MainActivity", "Applying settings - Time: " + settingsManager.isShowTime() +
+            ", Package: " + settingsManager.isShowPackage() + ", Path: " + settingsManager.isShowPath() +
+            ", Search: " + settingsManager.isShowSearch());
         int visibility = settingsManager.isShowSearch() ? View.VISIBLE : View.GONE;
-        etSearch.setVisibility(visibility);
+        llSearch.setVisibility(visibility);
         if (mAdapter != null) {
             mAdapter.setDisplayOptions(
                     settingsManager.isShowTime(),
-                    settingsManager.isShowFilename(),
+                    settingsManager.isShowPackage(),
                     settingsManager.isShowPath()
             );
             mAdapter.notifyDataSetChanged();
@@ -537,7 +533,7 @@ public class MainActivity extends AbsImmersionAtivity {
         // 设置显示选项
         mAdapter.setDisplayOptions(
                 settingsManager.isShowTime(),
-                settingsManager.isShowFilename(),
+                settingsManager.isShowPackage(),
                 settingsManager.isShowPath()
         );
         // 设置选择状态变化监听器

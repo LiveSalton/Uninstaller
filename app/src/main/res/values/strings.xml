@@ -35,6 +35,7 @@
     <string name="settings_display_options">显示选项</string>
     <string name="settings_show_time">显示时间</string>
     <string name="settings_show_filename">显示文件名</string>
+    <string name="settings_show_package">显示包名</string>
     <string name="settings_show_path">显示路径</string>
     
     <string name="settings_sort_options">排序选项</string>
@@ -99,7 +100,7 @@
     
     <!-- 时间格式化 -->
     <string name="time_prefix">安装: </string>
-    <string name="filename_prefix">包名: </string>
+    <string name="package_prefix">包名: </string>
     <string name="path_prefix">路径: </string>
     <string name="year_prefix">年</string>
     <string name="month_prefix">月</string>

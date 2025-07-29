@@ -37,7 +37,7 @@ public class AppEntity implements Serializable {
         this.appInfo = appInfo;
         if (appInfo != null) {
             if (appInfo.versionName != null) {
-                this.mVersionName = appInfo.versionName;
+            this.mVersionName = appInfo.versionName;
             }
             
             // 保存必要的信息用于序列化

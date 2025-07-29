@@ -12,7 +12,7 @@ public class SettingsManager {
     
     // 显示选项
     private static final String KEY_SHOW_TIME = "show_time";
-    private static final String KEY_SHOW_FILENAME = "show_filename";
+    private static final String KEY_SHOW_PACKAGE = "show_package";
     private static final String KEY_SHOW_PATH = "show_path";
     
     // 排序选项
@@ -59,12 +59,12 @@ public class SettingsManager {
         return preferences.getBoolean(KEY_SHOW_TIME, false);
     }
     
-    public void setShowFilename(boolean show) {
-        preferences.edit().putBoolean(KEY_SHOW_FILENAME, show).apply();
+    public void setShowPackage(boolean show) {
+        preferences.edit().putBoolean(KEY_SHOW_PACKAGE, show).apply();
     }
     
-    public boolean isShowFilename() {
-        return preferences.getBoolean(KEY_SHOW_FILENAME, false);
+    public boolean isShowPackage() {
+        return preferences.getBoolean(KEY_SHOW_PACKAGE, false);
     }
     
     public void setShowPath(boolean show) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 黑白主题配色 - 完整版本 -->
-
+    
     <!-- 主色调 -->
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#0A0D0A</color>
@@ -23,7 +23,7 @@
     <color name="background_primary">#121712</color>
     <color name="background_secondary">#1A1F1A</color>
     <color name="surface">#121712</color>
-
+    
     <!-- 分割线和边框 -->
     <color name="divider">#1A1F1A</color>
     <color name="border_light">#242924</color>
@@ -32,11 +32,11 @@
 
     <!-- 状态颜色 -->
     <color name="warning">#99FFFFFF</color>
-
+    
     <!-- 标题栏 -->
     <color name="title_bar_background">#000000</color>
     <color name="title_bar_text">#FFFFFF</color>
-
+    
     <!-- 按钮颜色 -->
     <color name="button_primary">#1A1F1A</color>
     <color name="button_primary_pressed">#242924</color>

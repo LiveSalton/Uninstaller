@@ -29,14 +29,14 @@
         android:textSize="12sp" />
 
     <CheckBox
-        android:id="@+id/cb_show_filename"
+        android:id="@+id/cb_show_package"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:button="@null"
         android:drawableStart="@drawable/checkbox_selector_small"
         android:drawablePadding="8dp"
-        android:text="@string/settings_show_filename"
+        android:text="@string/settings_show_package"
         android:textColor="@color/text_primary"
         android:textSize="12sp" />
 

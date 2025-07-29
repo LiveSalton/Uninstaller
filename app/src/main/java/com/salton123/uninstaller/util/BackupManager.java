@@ -82,7 +82,7 @@ public class BackupManager {
             runningTasks.clear();
         }
     }
-    
+
     /**
      * 备份应用列表
      */
@@ -100,7 +100,7 @@ public class BackupManager {
         backupCount = 0;
         successCount = 0;
         failedCount = 0;
-        
+
         // 确保备份目录存在
         if (!ensureBackupDirectory(context)) {
             if (iBackup != null) {
