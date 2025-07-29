@@ -89,18 +89,32 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
         cbSelect.setOnCheckedChangeListener(null);
         cbSelect.setChecked(appEntity.isChecked);
         
-        // 然后设置监听器
-        cbSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        // 清除所有可能的点击监听器，避免重复注册
+        convertView.setOnClickListener(null);
+        cbSelect.setOnClickListener(null);
+        
+        // 使整个布局可点击，点击时切换选中状态
+        // 使用资源ID作为tag key
+        convertView.setTag(R.id.list_item_position, position);
+        convertView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                appEntity.isChecked = isChecked;
+            public void onClick(View v) {
+                int pos = (int) v.getTag(R.id.list_item_position);
+                AppEntity entity = getItem(pos);
+                entity.isChecked = !entity.isChecked;
+                notifyDataSetChanged();
+                
                 // 通知选择状态变化
                 if (selectionChangeListener != null) {
                     selectionChangeListener.onSelectionChanged();
                 }
-                XLog.i("SpeedUpAdapter", "应用选择状态变化: " + appEntity.mAppName + " -> " + isChecked);
+                
+                XLog.i("SpeedUpAdapter", "列表项点击切换选择状态: " + entity.mAppName + " -> " + entity.isChecked);
             }
         });
+        
+        // 取消CheckBox的点击事件，使用整行点击
+        cbSelect.setClickable(false);
         
         return convertView;
     }

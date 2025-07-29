@@ -268,11 +268,11 @@ public class MainActivity extends AbsImmersionAtivity {
         updateSummaryInfo(totalCount, selectedCount);
         if (btnDelete != null) {
             btnDelete.setEnabled(selectedCount > 0);
-            btnDelete.setText(selectedCount > 0 ? getString(R.string.delete_with_count, selectedCount) : getString(R.string.main_uninstall));
+            btnDelete.setText(getString(R.string.main_uninstall));
         }
         if (btnBackup != null) {
             btnBackup.setEnabled(selectedCount > 0);
-            btnBackup.setText(selectedCount > 0 ? getString(R.string.backup_with_count, selectedCount) : getString(R.string.main_backup));
+            btnBackup.setText(getString(R.string.main_backup));
         }
         if (summarySelectedText != null) {
             summarySelectedText.setText(getString(R.string.main_selected_count, selectedCount));

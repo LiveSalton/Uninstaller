@@ -14,7 +14,7 @@
     
     <!-- 主界面硬编码迁移 -->
     <string name="main_title">应用管理</string>
-    <string name="main_app_description">app_description</string>
+    <string name="main_app_description">批量卸载 | 备份APK | 极简体积</string>
     <string name="main_total_count">总数: %1$d个</string>
     <string name="main_selected_count">已选择: %1$d个</string>
     <string name="main_uninstall">卸载</string>
