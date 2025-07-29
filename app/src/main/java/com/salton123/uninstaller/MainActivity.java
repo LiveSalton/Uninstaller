@@ -213,8 +213,7 @@ public class MainActivity extends AbsImmersionAtivity {
         if (settingsManager != null) {
             mAdapter.setDisplayOptions(
                     settingsManager.isShowTime(),
-                    settingsManager.isShowPackage(),
-                    settingsManager.isShowPath()
+                    settingsManager.isShowPackage()
             );
             XLog.i("MainActivity", "Set initial display options on adapter");
         }
@@ -371,27 +370,31 @@ public class MainActivity extends AbsImmersionAtivity {
         });
         CheckBox cbShowTime = popupView.findViewById(R.id.cb_show_time);
         CheckBox cbShowPackage = popupView.findViewById(R.id.cb_show_package);
-        CheckBox cbShowPath = popupView.findViewById(R.id.cb_show_path);
         CheckBox cbShowSearch = popupView.findViewById(R.id.cb_show_search);
         RadioGroup rgSortOptions = popupView.findViewById(R.id.rg_sort_options);
         Button btnShareAppDetails = popupView.findViewById(R.id.btn_share_app_details);
         cbShowTime.setChecked(settingsManager.isShowTime());
         cbShowPackage.setChecked(settingsManager.isShowPackage());
-        cbShowPath.setChecked(settingsManager.isShowPath());
         cbShowSearch.setChecked(settingsManager.isShowSearch());
         SettingsManager.SortType currentSort = settingsManager.getSortType();
         switch (currentSort) {
-            case NAME:
-                rgSortOptions.check(R.id.rb_sort_name);
+            case NAME_ASC:
+                rgSortOptions.check(R.id.rb_sort_name_asc);
                 break;
-            case SIZE:
-                rgSortOptions.check(R.id.rb_sort_size);
+            case NAME_DESC:
+                rgSortOptions.check(R.id.rb_sort_name_desc);
                 break;
-            case TIME:
-                rgSortOptions.check(R.id.rb_sort_time);
+            case SIZE_ASC:
+                rgSortOptions.check(R.id.rb_sort_size_asc);
                 break;
-            case PATH:
-                rgSortOptions.check(R.id.rb_sort_path);
+            case SIZE_DESC:
+                rgSortOptions.check(R.id.rb_sort_size_desc);
+                break;
+            case TIME_ASC:
+                rgSortOptions.check(R.id.rb_sort_time_asc);
+                break;
+            case TIME_DESC:
+                rgSortOptions.check(R.id.rb_sort_time_desc);
                 break;
         }
         cbShowTime.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -404,26 +407,25 @@ public class MainActivity extends AbsImmersionAtivity {
             applySettings();
             XLog.i("MainActivity", "Show package: " + isChecked);
         });
-        cbShowPath.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            settingsManager.setShowPath(isChecked);
-            applySettings();
-            XLog.i("MainActivity", "Show path: " + isChecked);
-        });
         cbShowSearch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             settingsManager.setShowSearch(isChecked);
             applySettings();
             XLog.i("MainActivity", "Show search: " + isChecked);
         });
         rgSortOptions.setOnCheckedChangeListener((group, checkedId) -> {
-            SettingsManager.SortType newSortType = SettingsManager.SortType.NAME;
-            if (checkedId == R.id.rb_sort_name) {
-                newSortType = SettingsManager.SortType.NAME;
-            } else if (checkedId == R.id.rb_sort_size) {
-                newSortType = SettingsManager.SortType.SIZE;
-            } else if (checkedId == R.id.rb_sort_time) {
-                newSortType = SettingsManager.SortType.TIME;
-            } else if (checkedId == R.id.rb_sort_path) {
-                newSortType = SettingsManager.SortType.PATH;
+            SettingsManager.SortType newSortType = SettingsManager.SortType.NAME_ASC;
+            if (checkedId == R.id.rb_sort_name_asc) {
+                newSortType = SettingsManager.SortType.NAME_ASC;
+            } else if (checkedId == R.id.rb_sort_name_desc) {
+                newSortType = SettingsManager.SortType.NAME_DESC;
+            } else if (checkedId == R.id.rb_sort_size_asc) {
+                newSortType = SettingsManager.SortType.SIZE_ASC;
+            } else if (checkedId == R.id.rb_sort_size_desc) {
+                newSortType = SettingsManager.SortType.SIZE_DESC;
+            } else if (checkedId == R.id.rb_sort_time_asc) {
+                newSortType = SettingsManager.SortType.TIME_ASC;
+            } else if (checkedId == R.id.rb_sort_time_desc) {
+                newSortType = SettingsManager.SortType.TIME_DESC;
             }
             settingsManager.setSortType(newSortType);
             applySettings();
@@ -461,16 +463,15 @@ public class MainActivity extends AbsImmersionAtivity {
 
     private void applySettings() {
         if (settingsManager == null) return;
-                XLog.i("MainActivity", "Applying settings - Time: " + settingsManager.isShowTime() +
-            ", Package: " + settingsManager.isShowPackage() + ", Path: " + settingsManager.isShowPath() +
+        XLog.i("MainActivity", "Applying settings - Time: " + settingsManager.isShowTime() +
+            ", Package: " + settingsManager.isShowPackage() +
             ", Search: " + settingsManager.isShowSearch());
         int visibility = settingsManager.isShowSearch() ? View.VISIBLE : View.GONE;
         llSearch.setVisibility(visibility);
         if (mAdapter != null) {
             mAdapter.setDisplayOptions(
                     settingsManager.isShowTime(),
-                    settingsManager.isShowPackage(),
-                    settingsManager.isShowPath()
+                    settingsManager.isShowPackage()
             );
             mAdapter.notifyDataSetChanged();
             XLog.i("MainActivity", "Adapter display options updated");
@@ -481,44 +482,60 @@ public class MainActivity extends AbsImmersionAtivity {
         // 根据设置的排序类型进行排序
         SettingsManager.SortType sortType = settingsManager.getSortType();
         switch (sortType) {
-            case SIZE:
-                // 按大小排序
+            case SIZE_ASC:
+                // 按大小升序
                 Collections.sort(entities, new Comparator<AppEntity>() {
                     @Override
                     public int compare(AppEntity lhs, AppEntity rhs) {
-                        long diff = lhs.getSize() - rhs.getSize();
-                        return (asc == 1) ? (int) diff : (int) -diff;
+                        return (int) (lhs.getSize() - rhs.getSize());
                     }
                 });
                 break;
-            case TIME:
-                // 按时间排序
+            case SIZE_DESC:
+                // 按大小降序
                 Collections.sort(entities, new Comparator<AppEntity>() {
                     @Override
                     public int compare(AppEntity lhs, AppEntity rhs) {
-                        long diff = lhs.getInstallTime() - rhs.getInstallTime();
-                        return (asc == 1) ? (int) diff : (int) -diff;
+                        return (int) (rhs.getSize() - lhs.getSize());
                     }
                 });
                 break;
-            case PATH:
-                // 按路径排序
+            case TIME_ASC:
+                // 按时间升序
+                Collections.sort(entities, new Comparator<AppEntity>() {
+                    @Override
+                    public int compare(AppEntity lhs, AppEntity rhs) {
+                        return Long.compare(lhs.getInstallTime(), rhs.getInstallTime());
+                    }
+                });
+                break;
+            case TIME_DESC:
+                // 按时间降序
+                Collections.sort(entities, new Comparator<AppEntity>() {
+                    @Override
+                    public int compare(AppEntity lhs, AppEntity rhs) {
+                        return Long.compare(rhs.getInstallTime(), lhs.getInstallTime());
+                    }
+                });
+                break;
+            case NAME_DESC:
+                // 按名称降序
                 Collections.sort(entities, new Comparator<AppEntity>() {
                     @Override
                     public int compare(AppEntity lhs, AppEntity rhs) {
                         Collator c = Collator.getInstance(Locale.CHINA);
-                        return (asc == 1) ? c.compare(lhs.sourceDir, rhs.sourceDir) : c.compare(rhs.sourceDir, lhs.sourceDir);
+                        return c.compare(rhs.mAppName, lhs.mAppName);
                     }
                 });
                 break;
-            case NAME:
+            case NAME_ASC:
             default:
-                // 按名称排序（默认）
+                // 按名称升序（默认）
                 Collections.sort(entities, new Comparator<AppEntity>() {
                     @Override
                     public int compare(AppEntity lhs, AppEntity rhs) {
                         Collator c = Collator.getInstance(Locale.CHINA);
-                        return (asc == 1) ? c.compare(lhs.mAppName, rhs.mAppName) : c.compare(rhs.mAppName, lhs.mAppName);
+                        return c.compare(lhs.mAppName, rhs.mAppName);
                     }
                 });
                 break;
@@ -533,8 +550,7 @@ public class MainActivity extends AbsImmersionAtivity {
         // 设置显示选项
         mAdapter.setDisplayOptions(
                 settingsManager.isShowTime(),
-                settingsManager.isShowPackage(),
-                settingsManager.isShowPath()
+                settingsManager.isShowPackage()
         );
         // 设置选择状态变化监听器
         mAdapter.setOnSelectionChangeListener(new SpeedUpAdapter.OnSelectionChangeListener() {

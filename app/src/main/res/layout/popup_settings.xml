@@ -32,23 +32,11 @@
         android:id="@+id/cb_show_package"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:button="@null"
-        android:drawableStart="@drawable/checkbox_selector_small"
-        android:drawablePadding="8dp"
-        android:text="@string/settings_show_package"
-        android:textColor="@color/text_primary"
-        android:textSize="12sp" />
-
-    <CheckBox
-        android:id="@+id/cb_show_path"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:button="@null"
         android:drawableStart="@drawable/checkbox_selector_small"
         android:drawablePadding="8dp"
-        android:text="@string/settings_show_path"
+        android:text="@string/settings_show_package"
         android:textColor="@color/text_primary"
         android:textSize="12sp" />
 
@@ -69,7 +57,7 @@
         android:layout_marginBottom="10dp">
 
         <RadioButton
-            android:id="@+id/rb_sort_name"
+            android:id="@+id/rb_sort_name_asc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
@@ -77,42 +65,66 @@
             android:checked="true"
             android:drawableStart="@drawable/checkbox_selector_small"
             android:drawablePadding="8dp"
-            android:text="@string/settings_sort_by_name"
+            android:text="@string/settings_sort_by_name_asc"
             android:textColor="@color/text_primary"
             android:textSize="12sp" />
 
         <RadioButton
-            android:id="@+id/rb_sort_size"
+            android:id="@+id/rb_sort_name_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:button="@null"
             android:drawableStart="@drawable/checkbox_selector_small"
             android:drawablePadding="8dp"
-            android:text="@string/settings_sort_by_size"
+            android:text="@string/settings_sort_by_name_desc"
             android:textColor="@color/text_primary"
             android:textSize="12sp" />
 
         <RadioButton
-            android:id="@+id/rb_sort_time"
+            android:id="@+id/rb_sort_size_asc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:button="@null"
             android:drawableStart="@drawable/checkbox_selector_small"
             android:drawablePadding="8dp"
-            android:text="@string/settings_sort_by_time"
+            android:text="@string/settings_sort_by_size_asc"
             android:textColor="@color/text_primary"
             android:textSize="12sp" />
 
         <RadioButton
-            android:id="@+id/rb_sort_path"
+            android:id="@+id/rb_sort_size_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:button="@null"
+            android:drawableStart="@drawable/checkbox_selector_small"
+            android:drawablePadding="8dp"
+            android:text="@string/settings_sort_by_size_desc"
+            android:textColor="@color/text_primary"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/rb_sort_time_asc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:button="@null"
+            android:drawableStart="@drawable/checkbox_selector_small"
+            android:drawablePadding="8dp"
+            android:text="@string/settings_sort_by_time_asc"
+            android:textColor="@color/text_primary"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/rb_sort_time_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@null"
             android:drawableStart="@drawable/checkbox_selector_small"
             android:drawablePadding="8dp"
-            android:text="@string/settings_sort_by_path"
+            android:text="@string/settings_sort_by_time_desc"
             android:textColor="@color/text_primary"
             android:textSize="12sp" />
 

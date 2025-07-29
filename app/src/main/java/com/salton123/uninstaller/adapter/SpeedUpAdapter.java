@@ -40,7 +40,6 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
     // 显示选项
     private boolean showTime = false;
     private boolean showPackage = false;
-    private boolean showPath = false;
     
     // 选择状态变化回调接口
     public interface OnSelectionChangeListener {
@@ -68,9 +67,7 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
         // 获取新增控件引用
         TextView tvInstallTime = ViewHolder.get(convertView, R.id.installTime);
         TextView tvPackageName = ViewHolder.get(convertView, R.id.app_package_name);
-        TextView tvPath = ViewHolder.get(convertView, R.id.path);
         View installTimeDivider = ViewHolder.get(convertView, R.id.installTimeDivider);
-        View pathDivider = ViewHolder.get(convertView, R.id.pathDivider);
         
         final AppEntity appEntity = getItem(position);
         
@@ -112,22 +109,6 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
             tvPackageName.setText(packageName);
         } else {
             tvPackageName.setVisibility(View.GONE);
-        }
-        
-        // 根据设置显示或隐藏应用路径
-        if (showPath) {
-            tvPath.setVisibility(View.VISIBLE);
-            String path = appEntity.appInfo.applicationInfo.sourceDir;
-            tvPath.setText(path);
-        } else {
-            tvPath.setVisibility(View.GONE);
-        }
-        
-        // 只有在显示路径且显示包名的情况下才显示分隔符
-        if (showPath && showPackage) {
-            pathDivider.setVisibility(View.VISIBLE);
-        } else {
-            pathDivider.setVisibility(View.GONE);
         }
         
         // 首先设置复选框状态，避免触发监听器
@@ -182,12 +163,11 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
     /**
      * 设置显示选项
      */
-    public void setDisplayOptions(boolean showTime, boolean showPackage, boolean showPath) {
+    public void setDisplayOptions(boolean showTime, boolean showPackage) {
         XLog.i("SpeedUpAdapter", "Setting display options - Time: " + showTime + 
-            ", Package: " + showPackage + ", Path: " + showPath);
+            ", Package: " + showPackage);
         this.showTime = showTime;
         this.showPackage = showPackage;
-        this.showPath = showPath;
     }
     
     /**
@@ -236,6 +216,6 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
             XLog.i("SpeedUpAdapter", "分享APK: " + appEntity.mAppName);
         } catch (Exception e) {
             XLog.e("SpeedUpAdapter", "分享APK失败: " + e.getMessage());
-    }
+        }
     }
 }

@@ -13,7 +13,6 @@ public class SettingsManager {
     // 显示选项
     private static final String KEY_SHOW_TIME = "show_time";
     private static final String KEY_SHOW_PACKAGE = "show_package";
-    private static final String KEY_SHOW_PATH = "show_path";
     
     // 排序选项
     private static final String KEY_SORT_TYPE = "sort_type";
@@ -22,7 +21,12 @@ public class SettingsManager {
     private static final String KEY_SHOW_SEARCH = "show_search";
     
     public enum SortType {
-        NAME(0), SIZE(1), TIME(2), PATH(3);
+        NAME_ASC(0),
+        NAME_DESC(1),
+        SIZE_ASC(2),
+        SIZE_DESC(3),
+        TIME_ASC(4),
+        TIME_DESC(5);
         
         private final int value;
         
@@ -40,7 +44,7 @@ public class SettingsManager {
                     return type;
                 }
             }
-            return NAME; // 默认返回按名称排序
+            return NAME_ASC; // 默认返回按名称升序排序
         }
     }
     
@@ -67,21 +71,13 @@ public class SettingsManager {
         return preferences.getBoolean(KEY_SHOW_PACKAGE, false);
     }
     
-    public void setShowPath(boolean show) {
-        preferences.edit().putBoolean(KEY_SHOW_PATH, show).apply();
-    }
-    
-    public boolean isShowPath() {
-        return preferences.getBoolean(KEY_SHOW_PATH, false);
-    }
-    
     // 排序选项的设置和获取
     public void setSortType(SortType sortType) {
         preferences.edit().putInt(KEY_SORT_TYPE, sortType.getValue()).apply();
     }
     
     public SortType getSortType() {
-        int value = preferences.getInt(KEY_SORT_TYPE, SortType.NAME.getValue());
+        int value = preferences.getInt(KEY_SORT_TYPE, SortType.NAME_ASC.getValue());
         return SortType.fromValue(value);
     }
     
