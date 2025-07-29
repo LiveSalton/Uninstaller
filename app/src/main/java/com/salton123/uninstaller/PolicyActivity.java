@@ -3,6 +3,7 @@ package com.salton123.uninstaller;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -33,6 +34,17 @@ public class PolicyActivity extends AbsImmersionAtivity {
         webView = findViewById(R.id.webView);
         tvTitle = findViewById(R.id.tvTitle);
         btnBack = findViewById(R.id.btn_back);
+        
+        // 设置WebView
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true); // 启用JavaScript
+        webSettings.setDomStorageEnabled(true); // 启用DOM存储
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT); // 默认缓存模式
+        webSettings.setAllowContentAccess(true);
+        webSettings.setAllowFileAccess(true);
+        webSettings.setSupportZoom(true);
+        webSettings.setBuiltInZoomControls(true);
+        webSettings.setDisplayZoomControls(false);
         
         // 设置返回按钮点击事件
         if (btnBack != null) {
