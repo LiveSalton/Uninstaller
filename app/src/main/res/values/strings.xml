@@ -134,6 +134,7 @@
     <string name="share_failed">分享失败</string>
     <string name="apk_file_not_found">APK文件不存在</string>
     <string name="select_apps_first">请先选择要分享的应用</string>
+    <string name="share_app_apk">分享应用APK</string>
     <string name="backup_manage_title">备份管理</string>
     <string name="backup_load_failed">加载备份列表失败</string>
     <string name="auto_8607274809791025561">应用名称</string>    <string name="auto_2677392295785979481">版本: 1.0.0</string>    <string name="auto_4735679025662775451">大小: 10.5MB</string>    <string name="auto_6557016694683876325">点击恢复 | 长按删除</string>    <string name="auto_354826608356190889">总数: 0个</string>    <string name="auto_8839014975645868300">已选择: 0个</string>
