@@ -20,6 +20,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -36,6 +37,8 @@ import com.salton123.uninstaller.entity.AppEntity;
 import com.salton123.uninstaller.util.Utils;
 import com.salton123.uninstaller.util.BackupManager;
 import com.salton123.uninstaller.util.SettingsManager;
+import com.salton123.uninstaller.util.ThemeHelper;
+import com.salton123.uninstaller.util.LocaleHelper;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -66,6 +69,7 @@ public class MainActivity extends AbsImmersionAtivity {
     private CheckBox checkboxSelectAll;
     private LinearLayout llSearch;
     private TextView titleText;
+    private ImageView ivAppLogo;
     private TextView summaryTotalText;
     private TextView summarySelectedText;
     private ListView appListView;
@@ -78,9 +82,16 @@ public class MainActivity extends AbsImmersionAtivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // 应用主题设置
+        ThemeHelper.initTheme(this);
+
+        // 应用语言设置
+        LocaleHelper.initLocale(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         titleText = findViewById(R.id.title_text);
+        ivAppLogo = findViewById(R.id.iv_app_logo);
         summaryTotalText = findViewById(R.id.summary_total);
         summarySelectedText = findViewById(R.id.summary_selected);
         etSearch = findViewById(R.id.etSearch);
@@ -164,6 +175,12 @@ public class MainActivity extends AbsImmersionAtivity {
             @Override
             public void onClick(View v) {
                 onAction(ActionCode.CODE_BACKUP);
+            }
+        });
+        ivAppLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SettingsActivity.start(MainActivity.this);
             }
         });
         btnSettings.setOnClickListener(new View.OnClickListener() {
@@ -439,15 +456,15 @@ public class MainActivity extends AbsImmersionAtivity {
                     Toast.makeText(MainActivity.this, getString(R.string.select_apps_first), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                
+
                 // 如果选择了多个应用，只分享第一个
                 if (selectedApps.size() > 1) {
                     Toast.makeText(MainActivity.this, getString(R.string.share_single_app_only), Toast.LENGTH_SHORT).show();
                 }
-                
+
                 AppEntity appToShare = selectedApps.get(0);
                 shareAppDetails(appToShare);
-                
+
                 if (currentPopupWindow != null) {
                     currentPopupWindow.dismiss();
                 }
@@ -464,16 +481,16 @@ public class MainActivity extends AbsImmersionAtivity {
     private void applySettings() {
         if (settingsManager == null) return;
         XLog.i("MainActivity", "Applying settings - Time: " + settingsManager.isShowTime() +
-            ", Package: " + settingsManager.isShowPackage() +
-            ", Search: " + settingsManager.isShowSearch());
+                ", Package: " + settingsManager.isShowPackage() +
+                ", Search: " + settingsManager.isShowSearch());
         int visibility = settingsManager.isShowSearch() ? View.VISIBLE : View.GONE;
         llSearch.setVisibility(visibility);
-        
+
         // 应用排序设置
         if (mAdapter != null && !allEntity.isEmpty()) {
             updateSort(allEntity);
         }
-        
+
         // 应用显示设置
         if (mAdapter != null) {
             mAdapter.setDisplayOptions(
@@ -798,11 +815,11 @@ public class MainActivity extends AbsImmersionAtivity {
         if (app == null || app.appInfo == null) {
             return;
         }
-        
+
         try {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
-            
+
             StringBuilder sb = new StringBuilder();
             sb.append(getString(R.string.sharing_app, app.mAppName)).append("\n\n");
             sb.append("应用名称：").append(app.mAppName).append("\n");
@@ -811,10 +828,10 @@ public class MainActivity extends AbsImmersionAtivity {
             sb.append("安装时间：").append(Utils.getTime(app.appInfo.firstInstallTime)).append("\n");
             sb.append("大小：").append(app.getSizeString()).append("\n");
             sb.append("路径：").append(app.appInfo.applicationInfo.sourceDir);
-            
+
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, app.mAppName);
             shareIntent.putExtra(Intent.EXTRA_TEXT, sb.toString());
-            
+
             startActivity(Intent.createChooser(shareIntent, getString(R.string.share_app_details)));
             XLog.i("MainActivity", "已分享应用详情: " + app.mAppName);
         } catch (Exception e) {

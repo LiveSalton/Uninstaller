@@ -45,6 +45,34 @@
             android:theme="@style/Theme.Uninstaller.WithActionBar"
             android:parentActivityName=".MainActivity"/>
             
+        <!-- 设置页面Activity -->
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:label="@string/settings_title"
+            android:theme="@style/Theme.Uninstaller"/>
+            
+        <!-- 主题设置Activity -->
+        <activity
+            android:name=".ThemeSettingActivity"
+            android:exported="false"
+            android:label="@string/theme_title"
+            android:theme="@style/Theme.Uninstaller"/>
+            
+        <!-- 语言设置Activity -->
+        <activity
+            android:name=".LanguageSettingActivity"
+            android:exported="false"
+            android:label="@string/language_title"
+            android:theme="@style/Theme.Uninstaller"/>
+            
+        <!-- 关于页面Activity -->
+        <activity
+            android:name=".AboutActivity"
+            android:exported="false"
+            android:label="@string/about_title"
+            android:theme="@style/Theme.Uninstaller"/>
+            
         <!-- FileProvider for sharing APK files -->
         <provider
             android:name="androidx.core.content.FileProvider"

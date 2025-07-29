@@ -23,6 +23,39 @@
     <string name="main_selected">选中</string>
     <string name="main_unselected">取消选中</string>
     
+    <!-- 设置页面相关 -->
+    <string name="settings_title">设置</string>
+    <string name="settings_clear_cache">清除缓存</string>
+    <string name="settings_theme_mode">夜间模式</string>
+    <string name="settings_theme_system">跟随系统</string>
+    <string name="settings_theme_dark">开启</string>
+    <string name="settings_theme_light">关闭</string>
+    <string name="settings_language">多语言</string>
+    <string name="settings_language_system">跟随系统</string>
+    <string name="settings_language_chinese">中文</string>
+    <string name="settings_language_english">English</string>
+    <string name="settings_check_update">检查更新</string>
+    <string name="settings_about">关于我们</string>
+    <string name="settings_feedback">举报与反馈</string>
+    <string name="settings_logout">退出当前账号</string>
+    
+    <!-- 关于页面相关 -->
+    <string name="about_title">关于我们</string>
+    <string name="about_version">版本号：%s</string>
+    <string name="about_github">Github</string>
+    <string name="about_github_content">查看源码</string>
+    <string name="about_blog">作者博客</string>
+
+    <!-- 主题设置页面相关 -->
+    <string name="theme_title">夜间模式</string>
+
+    <!-- 语言设置页面相关 -->
+    <string name="language_title">多语言</string>
+
+    <!-- 退出对话框相关 -->
+    <string name="logout_confirm_title">退出确认</string>
+    <string name="logout_confirm_message">确定要退出当前账号吗？</string>
+    
     <!-- 操作相关 -->
     <string name="select_all_apps">已全选 %d 个应用</string>
     <string name="unselect_all_apps">已取消全选</string>
@@ -30,6 +63,18 @@
     <string name="start_backup_apps">开始备份 %d 个应用，请稍候</string>
     <string name="backup_complete_apps">备份完成，共备份 %d 个应用</string>
     <string name="deleted_backup_files">已删除 %d 个备份文件</string>
+    
+    <!-- 缓存相关 -->
+    <string name="clear_cache_success">缓存清除成功</string>
+    <string name="clear_cache_failed">缓存清除失败</string>
+    <string name="cache_size_calculating">正在清除缓存…</string>
+    
+    <!-- 更新相关 -->
+    <string name="update_available">发现新版本</string>
+    <string name="update_not_available">当前已是最新版本</string>
+    <string name="update_checking">正在检查更新…</string>
+    <string name="update_check_failed">检查更新失败</string>
+    <string name="update_content">发现新版本 %1$s\n\n更新内容：\n%2$s</string>
     
     <!-- 设置相关 -->
     <string name="settings_display_options">显示选项</string>
