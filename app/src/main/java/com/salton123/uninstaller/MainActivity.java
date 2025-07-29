@@ -39,6 +39,7 @@ import com.salton123.uninstaller.util.SettingsManager;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -50,7 +51,9 @@ import android.text.TextWatcher;
 import android.os.Environment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+
 import java.io.Serializable;
+
 import android.widget.ProgressBar;
 
 public class MainActivity extends AbsImmersionAtivity {
@@ -77,9 +80,9 @@ public class MainActivity extends AbsImmersionAtivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
         XLog.i(this, "MainActivity onCreate");
-        
+
         // 初始化控件
         rootView = findViewById(R.id.rootView);
         titleText = findViewById(R.id.title_text);
@@ -107,7 +110,7 @@ public class MainActivity extends AbsImmersionAtivity {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 permissionsList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
             }
-            
+
             // 如果是Android 10以下，还需要写入权限
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -122,13 +125,13 @@ public class MainActivity extends AbsImmersionAtivity {
                     permissionsList.add(Manifest.permission.READ_MEDIA_IMAGES);
                 }
             }
-            
+
             if (!permissionsList.isEmpty()) {
                 requestPermissions(permissionsList.toArray(new String[0]), REQUEST_PERMISSIONS);
                 return false;
             }
         }
-        
+
         // 权限已授予或Android 5.1及以下版本
         return true;
     }
@@ -144,7 +147,7 @@ public class MainActivity extends AbsImmersionAtivity {
                     break;
                 }
             }
-            
+
             if (allGranted) {
                 initUIAndData();
             } else {
@@ -474,7 +477,7 @@ public class MainActivity extends AbsImmersionAtivity {
                 Collections.sort(entities, new Comparator<AppEntity>() {
                     @Override
                     public int compare(AppEntity lhs, AppEntity rhs) {
-                        long diff = lhs.mAppSize - rhs.mAppSize;
+                        long diff = lhs.getSize() - rhs.getSize();
                         return (asc == 1) ? (int) diff : (int) -diff;
                     }
                 });
@@ -484,7 +487,7 @@ public class MainActivity extends AbsImmersionAtivity {
                 Collections.sort(entities, new Comparator<AppEntity>() {
                     @Override
                     public int compare(AppEntity lhs, AppEntity rhs) {
-                        long diff = lhs.mInstallTime - rhs.mInstallTime;
+                        long diff = lhs.getInstallTime() - rhs.getInstallTime();
                         return (asc == 1) ? (int) diff : (int) -diff;
                     }
                 });
@@ -495,7 +498,7 @@ public class MainActivity extends AbsImmersionAtivity {
                     @Override
                     public int compare(AppEntity lhs, AppEntity rhs) {
                         Collator c = Collator.getInstance(Locale.CHINA);
-                        return (asc == 1) ? c.compare(lhs.mAppPath, rhs.mAppPath) : c.compare(rhs.mAppPath, lhs.mAppPath);
+                        return (asc == 1) ? c.compare(lhs.sourceDir, rhs.sourceDir) : c.compare(rhs.sourceDir, lhs.sourceDir);
                     }
                 });
                 break;
@@ -511,24 +514,30 @@ public class MainActivity extends AbsImmersionAtivity {
                 });
                 break;
         }
-        
+
         if (mAdapter == null) {
-            mAdapter = new SpeedUpAdapter(MainActivity.this, entities);
+            mAdapter = new SpeedUpAdapter(MainActivity.this);
         } else {
-            mAdapter.clear();
-            mAdapter.addAll(entities);
+            mAdapter.getList().clear();
+            mAdapter.getList().addAll(entities);
         }
         // 设置显示选项
         mAdapter.setDisplayOptions(
-            settingsManager.isShowTime(),
-            settingsManager.isShowFilename(),
-            settingsManager.isShowPath()
+                settingsManager.isShowTime(),
+                settingsManager.isShowFilename(),
+                settingsManager.isShowPath()
         );
         // 设置选择状态变化监听器
-        mAdapter.setOnSelectionChangeListener(() -> updateSummary());
+        mAdapter.setOnSelectionChangeListener(new SpeedUpAdapter.OnSelectionChangeListener() {
+            @Override
+            public void onSelectionChanged() {
+                updateButtonStates();
+            }
+        });
         appListView.setAdapter(mAdapter);
-        updateSummary();
+        updateButtonStates();
     }
+
     private void onAction(Integer actionCode) {
         switch (actionCode) {
             case ActionCode.CODE_DELETE:
@@ -558,11 +567,11 @@ public class MainActivity extends AbsImmersionAtivity {
             Toast.makeText(this, getString(R.string.backup_no_apps_selected), Toast.LENGTH_SHORT).show();
             return;
         }
-        
+
         // 显示备份进度弹窗
         showBackupProgressDialog(selectedApps);
     }
-    
+
     // 备份进度弹窗
     private AlertDialog backupProgressDialog;
     private ProgressBar progressBar;
@@ -572,14 +581,14 @@ public class MainActivity extends AbsImmersionAtivity {
     private TextView backupStatusText;
     private Button btnCancel;
     private boolean isBackupComplete = false;
-    
+
     private void showBackupProgressDialog(final List<AppEntity> appsToBackup) {
         // 创建对话框
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_backup_progress, null);
         builder.setView(dialogView);
         builder.setCancelable(false);
-        
+
         // 初始化视图
         progressBar = dialogView.findViewById(R.id.progress_bar);
         progressText = dialogView.findViewById(R.id.progress_text);
@@ -587,15 +596,15 @@ public class MainActivity extends AbsImmersionAtivity {
         appPackageText = dialogView.findViewById(R.id.app_package_text);
         backupStatusText = dialogView.findViewById(R.id.backup_status_text);
         btnCancel = dialogView.findViewById(R.id.btn_cancel);
-        
+
         // 设置进度条初始状态
         progressBar.setMax(appsToBackup.size());
         progressBar.setProgress(0);
-        
+
         // 创建并显示对话框
         backupProgressDialog = builder.create();
         backupProgressDialog.show();
-        
+
         // 设置取消按钮
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -607,7 +616,7 @@ public class MainActivity extends AbsImmersionAtivity {
                 }
             }
         });
-        
+
         // 开始备份操作
         isBackupComplete = false;
         BackupManager.toBackup(appsToBackup, this, new BackupManager.IBackupProgress() {
@@ -621,7 +630,7 @@ public class MainActivity extends AbsImmersionAtivity {
                     }
                 });
             }
-            
+
             @Override
             public void onBackupStart(AppEntity app, int current, int total) {
                 runOnUiThread(new Runnable() {
@@ -632,7 +641,7 @@ public class MainActivity extends AbsImmersionAtivity {
                     }
                 });
             }
-            
+
             @Override
             public void onProgress(int current, int total, boolean isSuccess, String appName, String packageName) {
                 runOnUiThread(new Runnable() {
@@ -645,7 +654,7 @@ public class MainActivity extends AbsImmersionAtivity {
                     }
                 });
             }
-            
+
             @Override
             public void onBackupComplete(boolean success, String message, int successCount, int failedCount) {
                 runOnUiThread(new Runnable() {
@@ -653,45 +662,45 @@ public class MainActivity extends AbsImmersionAtivity {
                     public void run() {
                         isBackupComplete = true;
                         progressBar.setProgress(progressBar.getMax());
-                        
-                        String statusText = successCount > 0 ? 
-                                getString(R.string.backup_completed) : 
+
+                        String statusText = successCount > 0 ?
+                                getString(R.string.backup_completed) :
                                 getString(R.string.backup_failed);
-                        
+
                         if (failedCount > 0) {
                             statusText += " (" + getString(R.string.backup_failed_apps, failedCount) + ")";
                         }
-                        
+
                         backupStatusText.setText(statusText);
                         btnCancel.setText(getString(R.string.complete));
-                        
+
                         // 重置选择状态
                         onCheckAll(false);
-                        
+
                         // 显示备份完成提示
                         Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-                        
+
                         // 如果有成功备份的应用，更新对话框内容提供查看选项
                         if (success && successCount > 0) {
                             btnCancel.setText(getString(R.string.ok));
-                            
+
                             // 添加"查看备份"按钮
                             if (backupProgressDialog != null && backupProgressDialog.isShowing()) {
                                 backupProgressDialog.setButton(
-                                    DialogInterface.BUTTON_NEUTRAL, 
-                                    getString(R.string.backup_view_all),
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            openBackupManager();
+                                        DialogInterface.BUTTON_NEUTRAL,
+                                        getString(R.string.backup_view_all),
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                openBackupManager();
+                                            }
                                         }
-                                    }
                                 );
                             }
-                            
+
                             // 显示备份路径信息
-                            String backupPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() + 
-                                               File.separator + "UninstallerBackup";
+                            String backupPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() +
+                                    File.separator + "UninstallerBackup";
                             progressText.setText(getString(R.string.backup_storage_location, backupPath));
                         }
                     }
@@ -699,27 +708,27 @@ public class MainActivity extends AbsImmersionAtivity {
             }
         });
     }
-    
+
     private void showCancelBackupDialog() {
         new AlertDialog.Builder(this)
-            .setTitle(getString(R.string.backup_cancel_confirm_title))
-            .setMessage(getString(R.string.backup_cancel_confirm_message))
-            .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    cancelBackup();
-                }
-            })
-            .setNegativeButton(getString(R.string.cancel), null)
-            .show();
+                .setTitle(getString(R.string.backup_cancel_confirm_title))
+                .setMessage(getString(R.string.backup_cancel_confirm_message))
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        cancelBackup();
+                    }
+                })
+                .setNegativeButton(getString(R.string.cancel), null)
+                .show();
     }
-    
+
     private void cancelBackup() {
         // 取消备份任务
         BackupManager.cancelBackup();
-        
+
         Toast.makeText(this, getString(R.string.backup_canceled), Toast.LENGTH_SHORT).show();
-        
+
         if (backupProgressDialog != null && backupProgressDialog.isShowing()) {
             backupProgressDialog.dismiss();
         }
