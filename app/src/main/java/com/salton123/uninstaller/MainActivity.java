@@ -39,8 +39,12 @@ import com.salton123.uninstaller.util.SettingsManager;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -463,8 +467,72 @@ public class MainActivity extends AbsImmersionAtivity {
     }
 
     private void updateSort(List<AppEntity> entities) {
-        mAdapter.addAll(entities);
-        mAdapter.notifyDataSetChanged();
+        // 根据设置的排序类型进行排序
+        SettingsManager.SortType sortType = settingsManager.getSortType();
+        switch (sortType) {
+            case SIZE:
+                // 按大小排序
+                Collections.sort(entities, new Comparator<AppEntity>() {
+                    @Override
+                    public int compare(AppEntity lhs, AppEntity rhs) {
+                        long diff = lhs.getSize() - rhs.getSize();
+                        return (asc == 1) ? (int) diff : (int) -diff;
+                    }
+                });
+                break;
+            case TIME:
+                // 按时间排序
+                Collections.sort(entities, new Comparator<AppEntity>() {
+                    @Override
+                    public int compare(AppEntity lhs, AppEntity rhs) {
+                        long diff = lhs.getInstallTime() - rhs.getInstallTime();
+                        return (asc == 1) ? (int) diff : (int) -diff;
+                    }
+                });
+                break;
+            case PATH:
+                // 按路径排序
+                Collections.sort(entities, new Comparator<AppEntity>() {
+                    @Override
+                    public int compare(AppEntity lhs, AppEntity rhs) {
+                        Collator c = Collator.getInstance(Locale.CHINA);
+                        return (asc == 1) ? c.compare(lhs.sourceDir, rhs.sourceDir) : c.compare(rhs.sourceDir, lhs.sourceDir);
+                    }
+                });
+                break;
+            case NAME:
+            default:
+                // 按名称排序（默认）
+                Collections.sort(entities, new Comparator<AppEntity>() {
+                    @Override
+                    public int compare(AppEntity lhs, AppEntity rhs) {
+                        Collator c = Collator.getInstance(Locale.CHINA);
+                        return (asc == 1) ? c.compare(lhs.mAppName, rhs.mAppName) : c.compare(rhs.mAppName, lhs.mAppName);
+                    }
+                });
+                break;
+        }
+        
+        if (mAdapter == null) {
+            mAdapter = new SpeedUpAdapter(MainActivity.this);
+        } else {
+            mAdapter.getList().clear();
+            mAdapter.getList().addAll(entities);
+        }
+        // 设置显示选项
+        mAdapter.setDisplayOptions(
+            settingsManager.isShowTime(),
+            settingsManager.isShowFilename(),
+            settingsManager.isShowPath()
+        );
+        // 设置选择状态变化监听器
+        mAdapter.setOnSelectionChangeListener(new SpeedUpAdapter.OnSelectionChangeListener() {
+            @Override
+            public void onSelectionChanged() {
+                updateButtonStates();
+            }
+        });
+        appListView.setAdapter(mAdapter);
         updateButtonStates();
     }
     private void onAction(Integer actionCode) {
