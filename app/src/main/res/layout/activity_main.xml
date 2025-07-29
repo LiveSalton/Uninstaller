@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingStart="15dp"
-            android:paddingEnd="15dp">
+            android:paddingEnd="10dp">
 
             <FrameLayout
                 android:layout_width="42dp"
@@ -79,20 +79,46 @@
 
             <ImageButton
                 android:id="@+id/btn_settings"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_gravity="center_vertical|end"
-
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:contentDescription="设置"
                 android:gravity="center"
-                android:maxWidth="120dp"
-                android:padding="12dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_settings_white" />
 
         </LinearLayout>
     </FrameLayout>
+
+    <!-- 搜索区域 -->
+    <LinearLayout
+        android:id="@+id/llSearch"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp">
+
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/search_background"
+            android:cursorVisible="false"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="8dp"
+            android:hint="@string/search_apps"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:paddingHorizontal="16dp"
+            android:singleLine="true"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"
+            android:textCursorDrawable="@drawable/edit_text_cursor" />
+    </LinearLayout>
+
     <!-- 统计信息区域 -->
     <LinearLayout
         android:id="@+id/summary_container"
@@ -127,32 +153,6 @@
 
     </LinearLayout>
 
-    <!-- 搜索区域 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="12dp">
-
-        <EditText
-            android:id="@+id/etSearch"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/search_background"
-            android:cursorVisible="false"
-            android:drawableStart="@drawable/ic_search"
-            android:drawablePadding="8dp"
-            android:hint="Search apps"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:paddingHorizontal="16dp"
-            android:singleLine="true"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_secondary"
-            android:textCursorDrawable="@drawable/edit_text_cursor" />
-    </LinearLayout>
 
     <ListView
         android:id="@+id/appListView"

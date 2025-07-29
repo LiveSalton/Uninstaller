@@ -61,6 +61,7 @@ public class MainActivity extends AbsImmersionAtivity {
     private Button btnDelete, btnBackup;
     private ImageButton btnSettings;
     private EditText etSearch;
+    private LinearLayout llSearch;
     private CheckBox checkboxSelectAll;
     private LinearLayout rootView;
     private TextView titleText;
@@ -87,6 +88,7 @@ public class MainActivity extends AbsImmersionAtivity {
         summaryTotalText = findViewById(R.id.summary_total);
         summarySelectedText = findViewById(R.id.summary_selected);
         etSearch = findViewById(R.id.etSearch);
+        llSearch = findViewById(R.id.llSearch);
         appListView = findViewById(R.id.appListView);
         btnDelete = findViewById(R.id.btn_left);
         btnBackup = findViewById(R.id.btn_right);
@@ -429,6 +431,7 @@ public class MainActivity extends AbsImmersionAtivity {
             }
             settingsManager.setSortType(newSortType);
             applySettings();
+            loadData(); // 重新加载数据以应用排序
             XLog.i("MainActivity", "Sort type changed: " + newSortType.name());
         });
         btnShareAppDetails.setOnClickListener(new View.OnClickListener() {
@@ -454,7 +457,7 @@ public class MainActivity extends AbsImmersionAtivity {
                 ", Filename: " + settingsManager.isShowFilename() + ", Path: " + settingsManager.isShowPath() +
                 ", Search: " + settingsManager.isShowSearch());
         int visibility = settingsManager.isShowSearch() ? View.VISIBLE : View.GONE;
-        etSearch.setVisibility(visibility);
+        llSearch.setVisibility(visibility);
         if (mAdapter != null) {
             mAdapter.setDisplayOptions(
                     settingsManager.isShowTime(),
