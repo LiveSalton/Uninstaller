@@ -173,16 +173,16 @@ public class MainActivity extends AbsImmersionAtivity {
                 onAction(ActionCode.CODE_BACKUP);
             }
         });
-        ivAppLogo.setOnClickListener(new View.OnClickListener() {
+        btn_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SettingsActivity.start(MainActivity.this);
+                showSettingsDialog();
             }
         });
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showSettingsDialog();
+                SettingsActivity.start(MainActivity.this);
             }
         });
         checkboxSelectAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
