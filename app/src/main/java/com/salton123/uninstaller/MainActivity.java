@@ -38,7 +38,6 @@ import com.salton123.uninstaller.util.Utils;
 import com.salton123.uninstaller.util.BackupManager;
 import com.salton123.uninstaller.util.SettingsManager;
 import com.salton123.uninstaller.util.ThemeHelper;
-import com.salton123.uninstaller.util.LocaleHelper;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -84,10 +83,7 @@ public class MainActivity extends AbsImmersionAtivity {
     protected void onCreate(Bundle savedInstanceState) {
         // 应用主题设置
         ThemeHelper.initTheme(this);
-
-        // 应用语言设置
-        LocaleHelper.initLocale(this);
-
+        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         titleText = findViewById(R.id.title_text);
@@ -456,15 +452,15 @@ public class MainActivity extends AbsImmersionAtivity {
                     Toast.makeText(MainActivity.this, getString(R.string.select_apps_first), Toast.LENGTH_SHORT).show();
                     return;
                 }
-
+                
                 // 如果选择了多个应用，只分享第一个
                 if (selectedApps.size() > 1) {
                     Toast.makeText(MainActivity.this, getString(R.string.share_single_app_only), Toast.LENGTH_SHORT).show();
                 }
-
+                
                 AppEntity appToShare = selectedApps.get(0);
                 shareAppDetails(appToShare);
-
+                
                 if (currentPopupWindow != null) {
                     currentPopupWindow.dismiss();
                 }
@@ -815,11 +811,11 @@ public class MainActivity extends AbsImmersionAtivity {
         if (app == null || app.appInfo == null) {
             return;
         }
-
+        
         try {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
-
+            
             StringBuilder sb = new StringBuilder();
             sb.append(getString(R.string.sharing_app, app.mAppName)).append("\n\n");
             sb.append("应用名称：").append(app.mAppName).append("\n");
@@ -828,10 +824,10 @@ public class MainActivity extends AbsImmersionAtivity {
             sb.append("安装时间：").append(Utils.getTime(app.appInfo.firstInstallTime)).append("\n");
             sb.append("大小：").append(app.getSizeString()).append("\n");
             sb.append("路径：").append(app.appInfo.applicationInfo.sourceDir);
-
+            
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, app.mAppName);
             shareIntent.putExtra(Intent.EXTRA_TEXT, sb.toString());
-
+            
             startActivity(Intent.createChooser(shareIntent, getString(R.string.share_app_details)));
             XLog.i("MainActivity", "已分享应用详情: " + app.mAppName);
         } catch (Exception e) {

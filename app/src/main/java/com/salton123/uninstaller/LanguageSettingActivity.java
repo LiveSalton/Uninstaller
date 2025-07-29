@@ -11,9 +11,8 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.hjq.language.MultiLanguages;
 import com.salton123.log.XLog;
-import com.salton123.uninstaller.util.LocaleHelper;
-import com.salton123.uninstaller.util.PreferenceManager;
 
 import java.util.Locale;
 
@@ -47,31 +46,34 @@ public class LanguageSettingActivity extends AbsImmersionAtivity implements View
         btnBack.setOnClickListener(this);
         
         rgLanguageOptions.setOnCheckedChangeListener((group, checkedId) -> {
-            String language;
+            boolean restart = false;
             if (checkedId == R.id.rb_language_chinese) {
-                language = PreferenceManager.LANGUAGE_CHINESE;
+                // 设置为中文
+                restart = MultiLanguages.setAppLanguage(this, Locale.SIMPLIFIED_CHINESE);
             } else if (checkedId == R.id.rb_language_english) {
-                language = PreferenceManager.LANGUAGE_ENGLISH;
+                // 设置为英文
+                restart = MultiLanguages.setAppLanguage(this, Locale.ENGLISH);
             } else {
-                language = PreferenceManager.LANGUAGE_SYSTEM;
+                // 跟随系统
+                restart = MultiLanguages.clearAppLanguage(this);
             }
             
-            // 保存语言设置
-            PreferenceManager.setLanguage(this, language);
-            
-            // 应用语言变更
-            LocaleHelper.setLocale(this, language);
-            
-            // 重新启动Activity以应用语言设置
-            recreateActivity();
+            if (restart) {
+                // 重启Activity以应用语言设置
+                recreateActivity();
+            }
         });
     }
     
     private void updateSelectedLanguage() {
-        String currentLanguage = PreferenceManager.getLanguage(this);
-        if (PreferenceManager.LANGUAGE_CHINESE.equals(currentLanguage)) {
+        Locale locale = MultiLanguages.getAppLanguage(this);
+        boolean isSystemLanguage = MultiLanguages.isSystemLanguage(this);
+        
+        if (isSystemLanguage) {
+            rbSystem.setChecked(true);
+        } else if (locale.equals(Locale.SIMPLIFIED_CHINESE) || locale.getLanguage().equals("zh")) {
             rbChinese.setChecked(true);
-        } else if (PreferenceManager.LANGUAGE_ENGLISH.equals(currentLanguage)) {
+        } else if (locale.equals(Locale.ENGLISH) || locale.getLanguage().equals("en")) {
             rbEnglish.setChecked(true);
         } else {
             rbSystem.setChecked(true);
@@ -79,9 +81,12 @@ public class LanguageSettingActivity extends AbsImmersionAtivity implements View
     }
     
     private void recreateActivity() {
-        Intent intent = getIntent();
-        finish();
+        // 重启整个应用以应用语言设置
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        finish();
+        // 设置平滑的过渡动画
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 

@@ -1,7 +1,9 @@
 package com.salton123.uninstaller;
 
 import android.app.Application;
+import android.content.Context;
 
+import com.hjq.language.MultiLanguages;
 import com.salton123.log.XLog;
 
 /**
@@ -18,10 +20,19 @@ public class XApp extends Application {
     }
 
     @Override
+    protected void attachBaseContext(Context base) {
+        // 绑定语种
+        super.attachBaseContext(MultiLanguages.attach(base));
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
         XLog.e(this, "time app init =" + System.currentTimeMillis());
         mInstance = this;
+        
+        // 初始化语种切换框架
+        MultiLanguages.init(this);
         
         // 预加载应用列表
         new Thread(new Runnable() {

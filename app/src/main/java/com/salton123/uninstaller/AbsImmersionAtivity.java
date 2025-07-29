@@ -2,6 +2,7 @@ package com.salton123.uninstaller;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.hjq.language.MultiLanguages;
 import com.salton123.uninstaller.util.Utils;
 
 public abstract class AbsImmersionAtivity extends Activity {
@@ -22,6 +24,12 @@ public abstract class AbsImmersionAtivity extends Activity {
             Manifest.permission.READ_EXTERNAL_STORAGE, 
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+    
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        // 绑定语种
+        super.attachBaseContext(MultiLanguages.attach(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

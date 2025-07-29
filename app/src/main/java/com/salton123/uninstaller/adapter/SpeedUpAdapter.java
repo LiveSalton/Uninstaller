@@ -216,6 +216,6 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
             XLog.i("SpeedUpAdapter", "分享APK: " + appEntity.mAppName);
         } catch (Exception e) {
             XLog.e("SpeedUpAdapter", "分享APK失败: " + e.getMessage());
-        }
+    }
     }
 }
