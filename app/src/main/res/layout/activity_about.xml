@@ -156,7 +156,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:gravity="center"
-                android:text="© 2023 Salton. All rights reserved."
+                android:text="© 2025 Salton. All rights reserved."
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
 

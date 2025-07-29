@@ -63,9 +63,9 @@ public class AboutActivity extends AbsImmersionAtivity implements View.OnClickLi
         if (v == btnBack) {
             finish();
         } else if (v == itemGithub) {
-            openUrl("https://github.com/salton123/Unstaller");
+            openUrl("https://github.com/LiveSalton/Uninstaller");
         } else if (v == itemBlog) {
-            openUrl("https://github.com/salton123");
+            openUrl("https://github.com/LiveSalton");
         } else if (v == ivAppLogo) {
             // 彩蛋：点击应用图标10次显示特殊信息
         }

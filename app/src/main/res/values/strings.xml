@@ -11,6 +11,8 @@
     <string name="complete">Complete</string>
     <string name="success">Success</string>
     <string name="failed">Failed</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_of_services">Terms of Services</string>
     
     <!-- 主界面硬编码迁移 -->
     <string name="main_title">App Manager</string>

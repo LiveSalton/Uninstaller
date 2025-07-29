@@ -58,7 +58,13 @@
             android:exported="false"
             android:label="@string/theme_title"
             android:theme="@style/Theme.Uninstaller"/>
-            
+
+        <activity
+            android:name=".PolicyActivity"
+            android:exported="false"
+            android:label="@string/theme_title"
+            android:theme="@style/Theme.Uninstaller"/>
+
         <!-- 语言设置Activity -->
         <activity
             android:name=".LanguageSettingActivity"

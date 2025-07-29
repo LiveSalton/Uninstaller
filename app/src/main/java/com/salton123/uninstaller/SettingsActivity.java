@@ -26,6 +26,8 @@ public class SettingsActivity extends AbsImmersionAtivity implements View.OnClic
     private View itemCheckUpdate;
     private View itemAbout;
     private View itemFeedback;
+    private View itemPrivacyPolicy;
+    private View itemTermsOfServices;
     
     private TextView tvLanguageValue;
     private TextView tvCacheSize;
@@ -46,6 +48,8 @@ public class SettingsActivity extends AbsImmersionAtivity implements View.OnClic
         itemCheckUpdate = findViewById(R.id.item_check_update);
         itemAbout = findViewById(R.id.item_about);
         itemFeedback = findViewById(R.id.item_feedback);
+        itemPrivacyPolicy = findViewById(R.id.item_privacy_policy);
+        itemTermsOfServices = findViewById(R.id.item_terms_of_services);
         
         tvLanguageValue = findViewById(R.id.tv_language_value);
         tvCacheSize = findViewById(R.id.tv_cache_size);
@@ -57,6 +61,8 @@ public class SettingsActivity extends AbsImmersionAtivity implements View.OnClic
         itemCheckUpdate.setOnClickListener(this);
         itemAbout.setOnClickListener(this);
         itemFeedback.setOnClickListener(this);
+        itemPrivacyPolicy.setOnClickListener(this);
+        itemTermsOfServices.setOnClickListener(this);
     }
     
     private void updateSettingsInfo() {
@@ -160,6 +166,26 @@ public class SettingsActivity extends AbsImmersionAtivity implements View.OnClic
             }
         }
     }
+    
+    /**
+     * 打开隐私政策页面
+     */
+    private void openPrivacyPolicy() {
+        Intent intent = new Intent(this, PolicyActivity.class);
+        intent.putExtra("url", "https://www.salton123.com/privacy-policy");
+        intent.putExtra("title", getString(R.string.privacy_policy));
+        startActivity(intent);
+    }
+    
+    /**
+     * 打开使用条款页面
+     */
+    private void openTermsOfServices() {
+        Intent intent = new Intent(this, PolicyActivity.class);
+        intent.putExtra("url", "https://www.salton123.com/terms-of-services");
+        intent.putExtra("title", getString(R.string.terms_of_services));
+        startActivity(intent);
+    }
 
     @Override
     public void onClick(View v) {
@@ -180,6 +206,12 @@ public class SettingsActivity extends AbsImmersionAtivity implements View.OnClic
         } else if (v == itemFeedback) {
             // 跳转到Google Play商店给好评
             openGooglePlayForRating();
+        } else if (v == itemPrivacyPolicy) {
+            // 打开隐私政策页面
+            openPrivacyPolicy();
+        } else if (v == itemTermsOfServices) {
+            // 打开使用条款页面
+            openTermsOfServices();
         }
     }
     

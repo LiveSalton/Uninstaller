@@ -11,6 +11,8 @@
     <string name="complete">完成</string>
     <string name="success">成功</string>
     <string name="failed">失败</string>
+    <string name="privacy_policy">隐私政策</string>
+    <string name="terms_of_services">使用条款</string>
     
     <!-- 主界面硬编码迁移 -->
     <string name="main_title">应用管理</string>
