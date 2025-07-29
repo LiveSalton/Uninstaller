@@ -289,24 +289,14 @@ public class MainActivity extends AbsImmersionAtivity {
             btnBackup.setText(getString(R.string.main_backup));
         }
         if (summaryTotalText != null) {
-            if (selectedCount > 0) {
-                summaryTotalText.setText(String.format("%s%s", getString(R.string.main_total_count, totalCount), getString(R.string.main_selected_count, selectedCount)));
-            } else {
-
-                summaryTotalText.setText(String.format("%s%s", getString(R.string.main_total_count, totalCount), getString(R.string.main_selected_count, 0)));
-            }
+            summaryTotalText.setText(getString(R.string.main_total_and_selected_count, totalCount,selectedCount));
         }
     }
 
     private void updateSummaryInfo(int totalCount, int selectedCount) {
         XLog.i("MainActivity", "updateSummaryInfo - 总数: " + totalCount + ", 已选择: " + selectedCount);
         if (summaryTotalText != null) {
-            if (selectedCount > 0) {
-                summaryTotalText.setText(String.format("%s%s", getString(R.string.main_total_count, totalCount), getString(R.string.main_selected_count, selectedCount)));
-            } else {
-
-                summaryTotalText.setText(String.format("%s%s", getString(R.string.main_total_count, totalCount), getString(R.string.main_selected_count, 0)));
-            }
+            summaryTotalText.setText(getString(R.string.main_total_and_selected_count, totalCount,selectedCount));
         }
 
 
