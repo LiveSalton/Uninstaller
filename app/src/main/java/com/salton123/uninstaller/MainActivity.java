@@ -468,6 +468,13 @@ public class MainActivity extends AbsImmersionAtivity {
             ", Search: " + settingsManager.isShowSearch());
         int visibility = settingsManager.isShowSearch() ? View.VISIBLE : View.GONE;
         llSearch.setVisibility(visibility);
+        
+        // 应用排序设置
+        if (mAdapter != null && !allEntity.isEmpty()) {
+            updateSort(allEntity);
+        }
+        
+        // 应用显示设置
         if (mAdapter != null) {
             mAdapter.setDisplayOptions(
                     settingsManager.isShowTime(),
