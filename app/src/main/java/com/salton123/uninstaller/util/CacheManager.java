@@ -28,6 +28,12 @@ public class CacheManager {
                 if (externalCacheDir != null) {
                     cacheSize += getFolderSize(externalCacheDir);
                 }
+                
+                // 添加备份文件夹大小
+                File backupDir = getBackupDir(context);
+                if (backupDir != null && backupDir.exists()) {
+                    cacheSize += getFolderSize(backupDir);
+                }
             }
             return formatFileSize(cacheSize);
         } catch (Exception e) {
@@ -47,7 +53,13 @@ public class CacheManager {
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 File externalCacheDir = context.getExternalCacheDir();
                 if (externalCacheDir != null) {
-                    return deleteDir(externalCacheDir);
+                    deleteDir(externalCacheDir);
+                }
+                
+                // 清除备份文件夹
+                File backupDir = getBackupDir(context);
+                if (backupDir != null && backupDir.exists()) {
+                    deleteDir(backupDir);
                 }
             }
             return true;
@@ -128,11 +140,24 @@ public class CacheManager {
             // 如果小于1MB，返回大小为KB
             return fileSize.divide(kbDivisor, 2, BigDecimal.ROUND_HALF_UP) + "KB";
         } else if (size < gbDivisor.longValue()) {
-            // 如果小于1MB，返回大小为MB
+            // 如果小于1GB，返回大小为MB
             return fileSize.divide(mbDivisor, 2, BigDecimal.ROUND_HALF_UP) + "MB";
         } else {
             // 如果大于等于1GB，返回大小为GB
             return fileSize.divide(gbDivisor, 2, BigDecimal.ROUND_HALF_UP) + "GB";
         }
     }
-} 
+    
+    /**
+     * 获取备份目录
+     * @param context 上下文
+     * @return 备份目录文件对象
+     */
+    private static File getBackupDir(Context context) {
+        String backupPath = BackupManager.getBackupPath(context);
+        if (backupPath != null) {
+            return new File(backupPath);
+        }
+        return null;
+    }
+}

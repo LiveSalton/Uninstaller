@@ -36,7 +36,7 @@ public class BackupManager {
     private static final List<Future<?>> runningTasks = new ArrayList<>();
     
     // 备份路径 - 使用公共下载目录
-    private static String getBackupPath(Context context) {
+    public static String getBackupPath(Context context) {
         File backupDir;
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
