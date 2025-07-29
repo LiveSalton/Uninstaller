@@ -70,7 +70,7 @@ public class MainActivity extends AbsImmersionAtivity {
     private TextView titleText;
     private ImageView ivAppLogo;
     private TextView summaryTotalText;
-    private TextView summarySelectedText;
+    private ImageButton btn_filter;
     private ListView appListView;
     private PopupWindow currentPopupWindow;
     // 数据
@@ -89,7 +89,7 @@ public class MainActivity extends AbsImmersionAtivity {
         titleText = findViewById(R.id.title_text);
         ivAppLogo = findViewById(R.id.iv_app_logo);
         summaryTotalText = findViewById(R.id.summary_total);
-        summarySelectedText = findViewById(R.id.summary_selected);
+        btn_filter = findViewById(R.id.btn_filter);
         etSearch = findViewById(R.id.etSearch);
         llSearch = findViewById(R.id.llSearch);
         appListView = findViewById(R.id.appListView);
@@ -288,26 +288,28 @@ public class MainActivity extends AbsImmersionAtivity {
             btnBackup.setEnabled(selectedCount > 0);
             btnBackup.setText(getString(R.string.main_backup));
         }
-        if (summarySelectedText != null) {
-            summarySelectedText.setText(getString(R.string.main_selected_count, selectedCount));
-            summarySelectedText.setTextColor(getResources().getColor(selectedCount > 0 ? R.color.text_primary : R.color.text_secondary));
+        if (summaryTotalText != null) {
+            if (selectedCount > 0) {
+                summaryTotalText.setText(String.format("%s%s", getString(R.string.main_total_count, totalCount), getString(R.string.main_selected_count, selectedCount)));
+            } else {
+
+                summaryTotalText.setText(String.format("%s%s", getString(R.string.main_total_count, totalCount), getString(R.string.main_selected_count, 0)));
+            }
         }
     }
 
     private void updateSummaryInfo(int totalCount, int selectedCount) {
         XLog.i("MainActivity", "updateSummaryInfo - 总数: " + totalCount + ", 已选择: " + selectedCount);
         if (summaryTotalText != null) {
-            summaryTotalText.setText(getString(R.string.main_total_count, totalCount));
-        }
-        if (summarySelectedText != null) {
             if (selectedCount > 0) {
-                summarySelectedText.setText(getString(R.string.main_selected_count, selectedCount));
-                summarySelectedText.setTextColor(getResources().getColor(R.color.colorPrimary));
+                summaryTotalText.setText(String.format("%s%s", getString(R.string.main_total_count, totalCount), getString(R.string.main_selected_count, selectedCount)));
             } else {
-                summarySelectedText.setText(getString(R.string.main_selected_count, 0));
-                summarySelectedText.setTextColor(getResources().getColor(R.color.text_secondary));
+
+                summaryTotalText.setText(String.format("%s%s", getString(R.string.main_total_count, totalCount), getString(R.string.main_selected_count, 0)));
             }
         }
+
+
         if (checkboxSelectAll != null) {
             checkboxSelectAll.setOnCheckedChangeListener(null);
             if (totalCount > 0 && selectedCount == totalCount) {
