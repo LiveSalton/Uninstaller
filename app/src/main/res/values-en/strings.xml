@@ -83,4 +83,5 @@
     <string name="time_prefix">Time: </string>
     <string name="empty_app_list">No apps found</string>
     <string name="no_selected_apps">No apps selected</string>
+    <string name="restart">重启应用以应用语言设置</string>
 </resources> 

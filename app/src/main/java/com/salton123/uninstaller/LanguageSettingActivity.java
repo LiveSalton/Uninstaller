@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.hjq.language.MultiLanguages;
 import com.salton123.log.XLog;
@@ -26,25 +27,25 @@ public class LanguageSettingActivity extends AbsImmersionAtivity implements View
     private RadioButton rbSystem;
     private RadioButton rbChinese;
     private RadioButton rbEnglish;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_language_setting);
-        
+
         initViews();
         updateSelectedLanguage();
     }
-    
+
     private void initViews() {
         btnBack = findViewById(R.id.btn_back);
         rgLanguageOptions = findViewById(R.id.rg_language_options);
         rbSystem = findViewById(R.id.rb_language_system);
         rbChinese = findViewById(R.id.rb_language_chinese);
         rbEnglish = findViewById(R.id.rb_language_english);
-        
+
         btnBack.setOnClickListener(this);
-        
+
         rgLanguageOptions.setOnCheckedChangeListener((group, checkedId) -> {
             boolean restart = false;
             if (checkedId == R.id.rb_language_chinese) {
@@ -57,18 +58,18 @@ public class LanguageSettingActivity extends AbsImmersionAtivity implements View
                 // 跟随系统
                 restart = MultiLanguages.clearAppLanguage(this);
             }
-            
+
             if (restart) {
                 // 重启Activity以应用语言设置
                 recreateActivity();
             }
         });
     }
-    
+
     private void updateSelectedLanguage() {
         Locale locale = MultiLanguages.getAppLanguage(this);
         boolean isSystemLanguage = MultiLanguages.isSystemLanguage(this);
-        
+
         if (isSystemLanguage) {
             rbSystem.setChecked(true);
         } else if (locale.equals(Locale.SIMPLIFIED_CHINESE) || locale.getLanguage().equals("zh")) {
@@ -79,15 +80,11 @@ public class LanguageSettingActivity extends AbsImmersionAtivity implements View
             rbSystem.setChecked(true);
         }
     }
-    
+
     private void recreateActivity() {
         // 重启整个应用以应用语言设置
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-        // 设置平滑的过渡动画
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        Toast.makeText(this, R.string.restart, Toast.LENGTH_SHORT);
+        System.exit(0);
     }
 
     @Override
@@ -96,7 +93,7 @@ public class LanguageSettingActivity extends AbsImmersionAtivity implements View
             finish();
         }
     }
-    
+
     public static void start(Context context) {
         Intent intent = new Intent(context, LanguageSettingActivity.class);
         context.startActivity(intent);
