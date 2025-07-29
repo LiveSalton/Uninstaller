@@ -64,6 +64,14 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
         TextView tvVersion = ViewHolder.get(convertView, R.id.version);
         final TextView tvSize = ViewHolder.get(convertView, R.id.app_size);
         CheckBox cbSelect = ViewHolder.get(convertView, R.id.checkbox_select);
+        
+        // 获取新增控件引用
+        TextView tvInstallTime = ViewHolder.get(convertView, R.id.installTime);
+        TextView tvPackageName = ViewHolder.get(convertView, R.id.app_package_name);
+        TextView tvPath = ViewHolder.get(convertView, R.id.path);
+        View installTimeDivider = ViewHolder.get(convertView, R.id.installTimeDivider);
+        View pathDivider = ViewHolder.get(convertView, R.id.pathDivider);
+        
         final AppEntity appEntity = getItem(position);
         
         // 加载应用信息（只在第一次加载时设置）
@@ -75,19 +83,46 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
             appEntity.mAppName = ((String) appEntity.appInfo.applicationInfo.loadLabel(packageManager)).trim();
         }
         
-        // 动态构建显示文本（不存储到appEntity中）
-        String displayText = buildDisplayText(appEntity);
-        
-        // 设置UI
+        // 基本信息设置
         tvVersion.setText(appEntity.mVersionName);
         if (!TextUtils.isEmpty(appEntity.mAppName)) {
             tvTitle.setText(appEntity.mAppName);
         }
-        if (!TextUtils.isEmpty(displayText)) {
-            tvSize.setText(displayText);
-        }
+        tvSize.setText(appEntity.getSizeString());
         if (appEntity.mIcon != null) {
             ivLogo.setImageDrawable(appEntity.mIcon);
+        }
+        
+        // 根据设置显示或隐藏安装时间
+        if (showTime) {
+            tvInstallTime.setVisibility(View.VISIBLE);
+            installTimeDivider.setVisibility(View.VISIBLE);
+            long installTime = appEntity.getInstallTime();
+            String timeStr = DateUtils.timeFormatNearby(new Date(installTime));
+            tvInstallTime.setText(timeStr);
+        } else {
+            tvInstallTime.setVisibility(View.GONE);
+            installTimeDivider.setVisibility(View.GONE);
+        }
+        
+        // 根据设置显示或隐藏应用包名
+        if (showFilename) {
+            tvPackageName.setVisibility(View.VISIBLE);
+            String packageName = appEntity.appInfo.packageName;
+            tvPackageName.setText(packageName);
+        } else {
+            tvPackageName.setVisibility(View.GONE);
+        }
+        
+        // 根据设置显示或隐藏应用路径
+        if (showPath) {
+            tvPath.setVisibility(View.VISIBLE);
+            pathDivider.setVisibility(View.VISIBLE);
+            String path = appEntity.appInfo.applicationInfo.sourceDir;
+            tvPath.setText(path);
+        } else {
+            tvPath.setVisibility(View.GONE);
+            pathDivider.setVisibility(View.GONE);
         }
         
         // 首先设置复选框状态，避免触发监听器
@@ -155,46 +190,6 @@ public class SpeedUpAdapter extends AdapterBase<AppEntity> implements View.OnCli
      */
     public void setOnSelectionChangeListener(OnSelectionChangeListener listener) {
         this.selectionChangeListener = listener;
-    }
-    
-    /**
-     * 构建显示文本
-     */
-    private String buildDisplayText(AppEntity appEntity) {
-        StringBuilder builder = new StringBuilder();
-        
-        // 基础大小信息
-        String sizeStr = appEntity.getSizeString();
-        builder.append(sizeStr);
-        
-        // 添加时间信息 - 使用DateUtils格式化
-        if (showTime) {
-            long installTime = appEntity.getInstallTime();
-            String timeStr = DateUtils.timeFormatNearby(new Date(installTime));
-            builder.append("  ");
-            builder.append(getContext().getString(R.string.time_prefix));
-            builder.append(timeStr);
-        }
-        
-        // 添加包名信息
-        if (showFilename && appEntity.appInfo != null) {
-            String packageName = appEntity.appInfo.packageName;
-            if (packageName != null) {
-                builder.append("  ");
-                builder.append(getContext().getString(R.string.filename_prefix));
-                builder.append(packageName);
-            }
-        }
-        
-        // 添加路径信息
-        if (showPath && appEntity.appInfo != null && appEntity.appInfo.applicationInfo != null) {
-            String path = appEntity.appInfo.applicationInfo.sourceDir;
-            builder.append("\n");
-            builder.append(getContext().getString(R.string.path_prefix));
-            builder.append(path);
-        }
-        
-        return builder.toString();
     }
     
     /**

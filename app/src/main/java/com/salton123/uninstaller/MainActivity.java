@@ -436,7 +436,20 @@ public class MainActivity extends AbsImmersionAtivity {
         btnShareAppDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareSelectedAppApk();
+                List<AppEntity> selectedApps = getSelectedApps();
+                if (selectedApps.isEmpty()) {
+                    Toast.makeText(MainActivity.this, getString(R.string.select_apps_first), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                
+                // 如果选择了多个应用，只分享第一个
+                if (selectedApps.size() > 1) {
+                    Toast.makeText(MainActivity.this, getString(R.string.share_single_app_only), Toast.LENGTH_SHORT).show();
+                }
+                
+                AppEntity appToShare = selectedApps.get(0);
+                shareAppDetails(appToShare);
+                
                 if (currentPopupWindow != null) {
                     currentPopupWindow.dismiss();
                 }
@@ -756,6 +769,38 @@ public class MainActivity extends AbsImmersionAtivity {
         } catch (Exception e) {
             XLog.e("MainActivity", "Error sharing APKs: " + e.getMessage());
             Toast.makeText(this, getString(R.string.share_failed), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 分享应用详情
+     */
+    private void shareAppDetails(AppEntity app) {
+        if (app == null || app.appInfo == null) {
+            return;
+        }
+        
+        try {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            
+            StringBuilder sb = new StringBuilder();
+            sb.append(getString(R.string.sharing_app, app.mAppName)).append("\n\n");
+            sb.append("应用名称：").append(app.mAppName).append("\n");
+            sb.append("包名：").append(app.appInfo.packageName).append("\n");
+            sb.append("版本：").append(app.appInfo.versionName).append("\n");
+            sb.append("安装时间：").append(Utils.getTime(app.appInfo.firstInstallTime)).append("\n");
+            sb.append("大小：").append(app.getSizeString()).append("\n");
+            sb.append("路径：").append(app.appInfo.applicationInfo.sourceDir);
+            
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, app.mAppName);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, sb.toString());
+            
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_app_details)));
+            XLog.i("MainActivity", "已分享应用详情: " + app.mAppName);
+        } catch (Exception e) {
+            Toast.makeText(this, getString(R.string.share_failed), Toast.LENGTH_SHORT).show();
+            XLog.e("MainActivity", "分享应用详情失败: " + e.getMessage());
         }
     }
 }
