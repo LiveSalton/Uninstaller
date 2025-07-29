@@ -26,12 +26,17 @@ public class DateUtils {
         nowCalender.setTime(now);
 
         int sendDateYear = sendCalender.get(Calendar.YEAR);
-        //如果时间的年份算出来是1970，则可能时间精度是到秒，需要乘于1000以毫秒计算
-        if (sendDateYear == 1970) {
-            date.setTime(date.getTime() * 1000);
+        
+        // 检查时间是否合理，如果年份是1970或大于当前年份，可能是不正确的时间戳
+        if (sendDateYear == 1970 || sendCalender.getTimeInMillis() > nowCalender.getTimeInMillis()) {
+            // 使用一个安全的默认值，如今天减去30天
+            Calendar safeCalendar = Calendar.getInstance();
+            safeCalendar.add(Calendar.DAY_OF_YEAR, -30);
+            date = safeCalendar.getTime();
             sendCalender.setTime(date);
             sendDateYear = sendCalender.get(Calendar.YEAR);
         }
+        
         int dateMonth = sendCalender.get(Calendar.MONTH) + 1;
         String sendDateMonth = String.valueOf(dateMonth < 10 ? "0" + dateMonth : dateMonth);
         int dateDay = sendCalender.get(Calendar.DATE);

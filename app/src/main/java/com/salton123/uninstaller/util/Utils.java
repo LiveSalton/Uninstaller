@@ -63,9 +63,14 @@ public class Utils {
      * @return
      */
     public static boolean isThirdPartyApp(ApplicationInfo applicationInfo) {
-        // 只返回非系统应用，排除可更新的系统应用
-        // FLAG_SYSTEM == 0 表示用户安装的第三方应用
-        return (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
+        // 检查是否是系统应用
+        boolean isSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+        
+        // 检查是否是更新过的系统应用
+        boolean isUpdatedSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0;
+        
+        // 如果既不是系统应用也不是更新过的系统应用，则是用户安装的第三方应用
+        return !isSystemApp && !isUpdatedSystemApp;
     }
 
     /**
