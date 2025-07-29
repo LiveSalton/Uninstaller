@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.salton123.log.XLog;
 import com.salton123.uninstaller.util.PreferenceManager;
 import com.salton123.uninstaller.util.CacheManager;
-import com.salton123.uninstaller.util.UpdateManager;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
@@ -115,40 +114,27 @@ public class SettingsActivity extends AbsImmersionAtivity implements View.OnClic
     }
     
     /**
-     * 检查应用更新
+     * 打开Google Play商店页面查看应用更新
      */
-    private void checkUpdate() {
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(getString(R.string.update_checking));
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-        
-        UpdateManager.checkUpdate(this, new UpdateManager.UpdateCheckListener() {
-            @Override
-            public void onCheckStart() {
-                XLog.d("SettingsActivity", "Start checking update");
+    private void openGooglePlayForUpdate() {
+        try {
+            // 尝试直接打开Google Play商店应用页面
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + getPackageName()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } catch (Exception e) {
+            // 如果无法打开Play商店应用，尝试在浏览器中打开
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW, 
+                    Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName()));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            } catch (Exception ex) {
+                // 如果两种方式都失败，显示提示信息
+                Toast.makeText(this, "无法打开Google Play商店", Toast.LENGTH_SHORT).show();
+                XLog.e("SettingsActivity", "无法打开Google Play商店: " + ex.getMessage());
             }
-            
-            @Override
-            public void onUpdateAvailable(UpdateManager.UpdateInfo updateInfo) {
-                progressDialog.dismiss();
-                // 显示更新对话框
-                UpdateManager.showUpdateDialog(SettingsActivity.this, updateInfo);
-            }
-            
-            @Override
-            public void onNoUpdateAvailable() {
-                progressDialog.dismiss();
-                Toast.makeText(SettingsActivity.this, R.string.update_not_available, Toast.LENGTH_SHORT).show();
-            }
-            
-            @Override
-            public void onCheckFailed(String errorMsg) {
-                progressDialog.dismiss();
-                Toast.makeText(SettingsActivity.this, R.string.update_check_failed, Toast.LENGTH_SHORT).show();
-                XLog.e("SettingsActivity", "Update check failed: " + errorMsg);
-            }
-        });
+        }
     }
     
     /**
@@ -186,8 +172,8 @@ public class SettingsActivity extends AbsImmersionAtivity implements View.OnClic
             // 清除缓存
             clearCache();
         } else if (v == itemCheckUpdate) {
-            // 检查更新
-            checkUpdate();
+            // 跳转到Google Play商店查看更新
+            openGooglePlayForUpdate();
         } else if (v == itemAbout) {
             // 跳转到关于页面
             AboutActivity.start(this);
