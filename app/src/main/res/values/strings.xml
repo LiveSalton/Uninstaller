@@ -1,192 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">极简卸载器</string>
+    <string name="app_name">Uninstaller</string>
     
     <!-- 通用 -->
-    <string name="ok">确定</string>
-    <string name="cancel">取消</string>
-    <string name="delete">删除</string>
-    <string name="backup">备份</string>
-    <string name="loading">加载中...</string>
-    <string name="complete">完成</string>
-    <string name="success">成功</string>
-    <string name="failed">失败</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="backup">Backup</string>
+    <string name="loading">Loading...</string>
+    <string name="complete">Complete</string>
+    <string name="success">Success</string>
+    <string name="failed">Failed</string>
     
     <!-- 主界面硬编码迁移 -->
-    <string name="main_title">应用管理</string>
-    <string name="main_app_description">批量卸载 | 备份APK | 极简体积</string>
-    <string name="main_total_count">总数: %1$d个</string>
-    <string name="main_selected_count">已选择: %1$d个</string>
-    <string name="main_uninstall">卸载</string>
-    <string name="main_backup">备份</string>
-    <string name="main_select">选择</string>
-    <string name="main_selected">选中</string>
-    <string name="main_unselected">取消选中</string>
+    <string name="main_title">App Manager</string>
+    <string name="main_app_description">Batch Uninstall | APK Backup | Simple Design</string>
+    <string name="main_total_count">Total: %1$d</string>
+    <string name="main_selected_count">Selected: %1$d</string>
+    <string name="main_uninstall">Uninstall</string>
+    <string name="main_backup">Backup</string>
+    <string name="main_select">Select</string>
+    <string name="main_selected">Selected</string>
+    <string name="main_unselected">Unselected</string>
     
     <!-- 设置页面相关 -->
-    <string name="settings_title">设置</string>
-    <string name="settings_clear_cache">清除缓存</string>
-    <string name="settings_theme_mode">夜间模式</string>
-    <string name="settings_theme_system">跟随系统</string>
-    <string name="settings_theme_dark">开启</string>
-    <string name="settings_theme_light">关闭</string>
-    <string name="settings_language">多语言</string>
-    <string name="settings_language_system">跟随系统</string>
-    <string name="settings_language_chinese">中文</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_clear_cache">Clear Cache</string>
+    <string name="settings_theme_mode">Dark Mode</string>
+    <string name="settings_theme_system">Follow System</string>
+    <string name="settings_theme_dark">On</string>
+    <string name="settings_theme_light">Off</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_system">Follow System</string>
+    <string name="settings_language_chinese">Chinese</string>
     <string name="settings_language_english">English</string>
-    <string name="settings_check_update">检查更新</string>
-    <string name="settings_about">关于我们</string>
-    <string name="settings_feedback">举报与反馈</string>
-    <string name="settings_logout">退出当前账号</string>
+    <string name="settings_check_update">Check Update</string>
+    <string name="settings_about">About Us</string>
+    <string name="settings_feedback">Feedback</string>
+    <string name="settings_logout">Log Out</string>
     
     <!-- 关于页面相关 -->
-    <string name="about_title">关于我们</string>
-    <string name="about_version">版本号：%s</string>
+    <string name="about_title">About</string>
+    <string name="about_version">Version: %s</string>
     <string name="about_github">Github</string>
-    <string name="about_github_content">查看源码</string>
-    <string name="about_blog">作者博客</string>
+    <string name="about_github_content">View Source Code</string>
+    <string name="about_blog">Developer Blog</string>
 
     <!-- 主题设置页面相关 -->
-    <string name="theme_title">夜间模式</string>
+    <string name="theme_title">Dark Mode</string>
 
     <!-- 语言设置页面相关 -->
-    <string name="language_title">多语言</string>
+    <string name="language_title">Language</string>
 
     <!-- 退出对话框相关 -->
-    <string name="logout_confirm_title">退出确认</string>
-    <string name="logout_confirm_message">确定要退出当前账号吗？</string>
+    <string name="logout_confirm_title">Logout Confirmation</string>
+    <string name="logout_confirm_message">Are you sure you want to log out?</string>
     
     <!-- 操作相关 -->
-    <string name="select_all_apps">已全选 %d 个应用</string>
-    <string name="unselect_all_apps">已取消全选</string>
-    <string name="start_uninstall_apps">开始卸载 %d 个应用</string>
-    <string name="start_backup_apps">开始备份 %d 个应用，请稍候</string>
-    <string name="backup_complete_apps">备份完成，共备份 %d 个应用</string>
-    <string name="deleted_backup_files">已删除 %d 个备份文件</string>
+    <string name="select_all_apps">Selected All %d Apps</string>
+    <string name="unselect_all_apps">Unselected All</string>
+    <string name="start_uninstall_apps">Start uninstalling %d apps</string>
+    <string name="start_backup_apps">Start backing up %d apps, please wait</string>
+    <string name="backup_complete_apps">Backup complete, %d apps backed up</string>
+    <string name="deleted_backup_files">Deleted %d backup files</string>
     
     <!-- 缓存相关 -->
-    <string name="clear_cache_success">缓存清除成功</string>
-    <string name="clear_cache_failed">缓存清除失败</string>
-    <string name="cache_size_calculating">正在清除缓存…</string>
+    <string name="clear_cache_success">Cache cleared successfully</string>
+    <string name="clear_cache_failed">Failed to clear cache</string>
+    <string name="cache_size_calculating">Clearing cache...</string>
     
     <!-- 更新相关 -->
-    <string name="update_available">发现新版本</string>
-    <string name="update_not_available">当前已是最新版本</string>
-    <string name="update_checking">正在检查更新…</string>
-    <string name="update_check_failed">检查更新失败</string>
-    <string name="update_content">发现新版本 %1$s\n\n更新内容：\n%2$s</string>
+    <string name="update_available">New Version Available</string>
+    <string name="update_not_available">Your app is up to date</string>
+    <string name="update_checking">Checking for updates...</string>
+    <string name="update_check_failed">Update check failed</string>
+    <string name="update_content">New version %1$s\n\nUpdate content:\n%2$s</string>
     
-    <!-- 设置相关 -->
-    <string name="settings_display_options">显示选项</string>
-    <string name="settings_show_time">显示时间</string>
-    <string name="settings_show_filename">显示文件名</string>
-    <string name="settings_show_package">显示包名</string>
-    
-    <string name="settings_sort_options">排序选项</string>
-    <string name="settings_sort_by_name_asc">按名称升序</string>
-    <string name="settings_sort_by_name_desc">按名称降序</string>
-    <string name="settings_sort_by_size_asc">按大小升序</string>
-    <string name="settings_sort_by_size_desc">按大小降序</string>
-    <string name="settings_sort_by_time_asc">按时间升序</string>
-    <string name="settings_sort_by_time_desc">按时间降序</string>
-    
-    <string name="settings_other_options">其他选项</string>
-    <string name="settings_show_search">显示搜索框</string>
-    
-    <string name="share_app">分享应用详情</string>
-    
-    <!-- 备份管理硬编码迁移 -->
-    <string name="backup_refresh">刷新</string>
-    <string name="backup_clear_all">清空全部</string>
-    <string name="backup_no_files">暂无备份文件</string>
-    <string name="backup_hint_select">在应用列表中选择应用进行备份</string>
-    <string name="backup_hint_operations">提示：点击恢复应用，长按删除备份</string>
-    <string name="backup_restore_title">恢复应用</string>
-    <string name="backup_restore_confirm">确定要恢复应用 "%1$s" 吗？</string>
-    <string name="backup_delete_title">删除备份</string>
-    <string name="backup_delete_confirm">确定要删除备份文件 "%1$s" 吗？</string>
-    <string name="backup_clear_all_title">清空所有备份</string>
-    <string name="backup_clear_all_confirm">确定要删除所有备份文件吗？此操作不可恢复！</string>
-    <string name="backup_restore_start">开始恢复应用，请在安装界面确认</string>
-    <string name="backup_restore_failed">恢复失败: %1$s</string>
-    <string name="backup_delete_success">删除成功</string>
-    <string name="backup_delete_failed">删除失败</string>
-    <string name="backup_version">版本: %1$s</string>
-    <string name="backup_version_unknown">版本: 未知</string>
-    <string name="backup_file_size">大小: %1$s</string>
-    <string name="backup_time_label">备份时间: </string>
-    
-    <!-- 新增备份功能相关 -->
-    <string name="backup_progress">备份进度: %1$d/%2$d - %3$s</string>
-    <string name="backup_success">备份成功</string>
-    <string name="backup_failed">备份失败</string>
-    <string name="backup_dir_create_failed">创建备份目录失败</string>
-    <string name="backup_no_source_file">找不到源APK文件</string>
-    <string name="backup_source_file_access_denied">无法读取源APK文件</string>
-    <string name="backup_file_copy_failed">复制APK文件失败</string>
-    <string name="backup_info_save_failed">保存备份信息失败</string>
-    <string name="backup_storage_location">备份存储位置: %1$s</string>
-    <string name="backup_open_folder">打开备份文件夹</string>
-    <string name="backup_app_detail">应用详情</string>
-    <string name="backup_view_all">查看全部备份</string>
-    <string name="backup_no_apps_selected">请先选择要备份的应用</string>
-    <string name="backup_invalid_file">无效的备份文件</string>
-    
-    <!-- 备份进度页面 -->
-    <string name="backup_progress_title">正在备份</string>
-    <string name="backup_progress_preparing">正在准备备份...</string>
-    <string name="backup_current_app">当前备份应用:</string>
-    <string name="backup_progress_status">%1$d/%2$d 完成</string>
-    <string name="backup_cancel">取消备份</string>
-    <string name="backup_cancel_confirm_title">确认取消</string>
-    <string name="backup_cancel_confirm_message">确定要取消当前备份任务吗？已备份的应用将保留。</string>
-    <string name="backup_canceled">备份已取消</string>
-    <string name="backup_completed">备份已完成</string>
-    <string name="backup_failed_apps">%1$d个应用备份失败</string>
-    
-    <!-- 时间格式化 -->
-    <string name="time_prefix">安装: </string>
-    <string name="package_prefix">包名: </string>
-    <string name="year_prefix">年</string>
-    <string name="month_prefix">月</string>
-    <string name="today">今天</string>
-    <string name="yesterday">昨天</string>
-    <string name="monday">周一</string>
-    <string name="tuesday">周二</string>
-    <string name="wednesday">周三</string>
-    <string name="thursday">周四</string>
-    <string name="friday">周五</string>
-    <string name="saturday">周六</string>
-    <string name="sunday">周日</string>
-    
-    <!-- 权限相关 -->
-    <string name="permission_storage_required">需要存储权限才能正常使用应用功能</string>
-    <string name="permission_granted">权限授予成功</string>
-    
-    <!-- 错误信息 -->
-    <string name="error_no_apps_selected">请先选择要操作的应用</string>
-    <string name="error_load_apps_failed">加载应用列表失败</string>
-    <string name="error_backup_failed">备份失败</string>
-    <string name="error_restore_failed">恢复失败</string>
-    
-    <!-- 按钮状态 -->
-    <string name="delete_with_count">删除(%d)</string>
-    <string name="backup_with_count">备份(%d)</string>
-    
-    <!-- 分享功能 -->
-    <string name="share_single_app_only">一次只能分享一个应用</string>
-    <string name="share_app_details">分享应用详情</string>
-    <string name="sharing_app">正在分享 %s</string>
-    <string name="share_failed">分享失败</string>
-    <string name="apk_file_not_found">APK文件不存在</string>
-    <string name="select_apps_first">请先选择要分享的应用</string>
-    <string name="backup_manage_title">备份管理</string>
-    <string name="backup_load_failed">加载备份列表失败</string>
-    <string name="share_app_apk">分享应用安装包</string>
-    <string name="auto_8607274809791025561">应用名称</string>    <string name="auto_2677392295785979481">版本: 1.0.0</string>    <string name="auto_4735679025662775451">大小: 10.5MB</string>    <string name="auto_6557016694683876325">点击恢复 | 长按删除</string>    <string name="auto_354826608356190889">总数: 0个</string>    <string name="auto_8839014975645868300">已选择: 0个</string>
-    <string name="auto_2623667450802219676">应用管理</string>
-    <string name="auto_7803433360898273987">卸载</string>
-    <string name="auto_7611491949064207416">备份</string>
-    <string name="auto_1015951795981143864">备份管理</string>
-    <string name="search_apps">Search apps</string>
-</resources>
+    <!-- 其他可能的字符串 -->
+    <string name="select_apps_first">Please select apps first</string>
+    <string name="package_prefix">Package: </string>
+    <string name="size_prefix">Size: </string>
+    <string name="time_prefix">Time: </string>
+    <string name="empty_app_list">No apps found</string>
+    <string name="no_selected_apps">No apps selected</string>
+</resources> 
