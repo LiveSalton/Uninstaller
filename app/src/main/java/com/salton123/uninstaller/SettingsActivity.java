@@ -2,20 +2,19 @@ package com.salton123.uninstaller;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.salton123.log.XLog;
 import com.salton123.uninstaller.util.PreferenceManager;
 import com.salton123.uninstaller.util.CacheManager;
 import com.salton123.uninstaller.util.UpdateManager;
-import com.salton123.uninstaller.util.UserManager;
-import com.salton123.uninstaller.dialog.LogoutConfirmDialog;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 /**
  * 设置页面
@@ -23,15 +22,12 @@ import android.widget.Toast;
 public class SettingsActivity extends AbsImmersionAtivity implements View.OnClickListener {
 
     private ImageButton btnBack;
-    private View itemThemeMode;
     private View itemLanguage;
     private View itemClearCache;
     private View itemCheckUpdate;
     private View itemAbout;
     private View itemFeedback;
-    private View itemLogout;
     
-    private TextView tvThemeValue;
     private TextView tvLanguageValue;
     private TextView tvCacheSize;
     
@@ -46,40 +42,25 @@ public class SettingsActivity extends AbsImmersionAtivity implements View.OnClic
     
     private void initViews() {
         btnBack = findViewById(R.id.btn_back);
-        itemThemeMode = findViewById(R.id.item_theme_mode);
         itemLanguage = findViewById(R.id.item_language);
         itemClearCache = findViewById(R.id.item_clear_cache);
         itemCheckUpdate = findViewById(R.id.item_check_update);
         itemAbout = findViewById(R.id.item_about);
         itemFeedback = findViewById(R.id.item_feedback);
-        itemLogout = findViewById(R.id.item_logout);
         
-        tvThemeValue = findViewById(R.id.tv_theme_value);
         tvLanguageValue = findViewById(R.id.tv_language_value);
         tvCacheSize = findViewById(R.id.tv_cache_size);
         
         // 设置点击事件
         btnBack.setOnClickListener(this);
-        itemThemeMode.setOnClickListener(this);
         itemLanguage.setOnClickListener(this);
         itemClearCache.setOnClickListener(this);
         itemCheckUpdate.setOnClickListener(this);
         itemAbout.setOnClickListener(this);
         itemFeedback.setOnClickListener(this);
-        itemLogout.setOnClickListener(this);
     }
     
     private void updateSettingsInfo() {
-        // 更新主题模式显示
-        String themeMode = PreferenceManager.getThemeMode(this);
-        if ("dark".equals(themeMode)) {
-            tvThemeValue.setText(R.string.settings_theme_dark);
-        } else if ("light".equals(themeMode)) {
-            tvThemeValue.setText(R.string.settings_theme_light);
-        } else {
-            tvThemeValue.setText(R.string.settings_theme_system);
-        }
-        
         // 更新语言显示
         String language = PreferenceManager.getLanguage(this);
         if ("zh".equals(language)) {
@@ -171,41 +152,33 @@ public class SettingsActivity extends AbsImmersionAtivity implements View.OnClic
     }
     
     /**
-     * 显示退出确认对话框
+     * 打开Google Play商店页面给应用评分
      */
-    private void showLogoutConfirmDialog() {
-        LogoutConfirmDialog dialog = new LogoutConfirmDialog(this);
-        dialog.setOnConfirmListener(new LogoutConfirmDialog.OnConfirmListener() {
-            @Override
-            public void onConfirm() {
-                // 执行退出登录操作
-                logout();
+    private void openGooglePlayForRating() {
+        try {
+            // 尝试直接打开Google Play商店应用页面
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + getPackageName()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } catch (Exception e) {
+            // 如果无法打开Play商店应用，尝试在浏览器中打开
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW, 
+                    Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName()));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            } catch (Exception ex) {
+                // 如果两种方式都失败，显示提示信息
+                Toast.makeText(this, "无法打开Google Play商店", Toast.LENGTH_SHORT).show();
+                XLog.e("SettingsActivity", "无法打开Google Play商店: " + ex.getMessage());
             }
-        });
-        dialog.show();
-    }
-    
-    /**
-     * 执行退出登录操作
-     */
-    private void logout() {
-        // 清除用户登录状态
-        UserManager.logout(this);
-        
-        Toast.makeText(this, "已退出登录", Toast.LENGTH_SHORT).show();
-        
-        // 这里可以根据实际需求跳转到登录页面
-        // 或者返回到主界面，这里我们简单返回
-        finish();
+        }
     }
 
     @Override
     public void onClick(View v) {
         if (v == btnBack) {
             finish();
-        } else if (v == itemThemeMode) {
-            // 跳转到主题设置页面
-            ThemeSettingActivity.start(this);
         } else if (v == itemLanguage) {
             // 跳转到语言设置页面
             LanguageSettingActivity.start(this);
@@ -219,10 +192,8 @@ public class SettingsActivity extends AbsImmersionAtivity implements View.OnClic
             // 跳转到关于页面
             AboutActivity.start(this);
         } else if (v == itemFeedback) {
-            // 跳转到反馈页面 (后续实现)
-        } else if (v == itemLogout) {
-            // 显示退出确认对话框
-            showLogoutConfirmDialog();
+            // 跳转到Google Play商店给好评
+            openGooglePlayForRating();
         }
     }
     
@@ -230,4 +201,4 @@ public class SettingsActivity extends AbsImmersionAtivity implements View.OnClic
         Intent intent = new Intent(context, SettingsActivity.class);
         context.startActivity(intent);
     }
-} 
+}
