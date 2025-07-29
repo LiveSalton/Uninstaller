@@ -8,28 +8,27 @@
     tools:context=".SettingsActivity">
 
     <!-- 顶部标题栏 -->
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/title_bar_background">
+        android:layout_height="@dimen/immersionBarHeight"
+        android:background="@color/title_bar_background"
+        android:paddingTop="@dimen/statusBarHeight">
 
         <ImageButton
             android:id="@+id/btn_back"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_centerVertical="true"
             android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:padding="12dp"
-            android:src="@mipmap/back" />
+            android:src="@drawable/ic_back_white" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_gravity="center"
             android:text="@string/settings_title"
             android:textColor="@color/text_primary"
             android:textSize="18sp" />
-    </RelativeLayout>
+    </FrameLayout>
 
     <!-- 设置选项列表 -->
     <ScrollView
@@ -72,8 +71,7 @@
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@mipmap/back"
-                    android:rotation="180" />
+                    android:src="@drawable/ic_right" />
             </LinearLayout>
 
             <View
@@ -112,8 +110,8 @@
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@mipmap/back"
-                    android:rotation="180" />
+
+                    android:src="@drawable/ic_right" />
             </LinearLayout>
 
             <View
@@ -152,8 +150,8 @@
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@mipmap/back"
-                    android:rotation="180" />
+
+                    android:src="@drawable/ic_right" />
             </LinearLayout>
 
             <View
@@ -183,8 +181,8 @@
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@mipmap/back"
-                    android:rotation="180" />
+
+                    android:src="@drawable/ic_right" />
             </LinearLayout>
 
             <View
@@ -214,8 +212,8 @@
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@mipmap/back"
-                    android:rotation="180" />
+
+                    android:src="@drawable/ic_right" />
             </LinearLayout>
 
             <View
@@ -245,8 +243,8 @@
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@mipmap/back"
-                    android:rotation="180" />
+
+                    android:src="@drawable/ic_right" />
             </LinearLayout>
 
             <View

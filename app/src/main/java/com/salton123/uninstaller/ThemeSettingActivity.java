@@ -51,10 +51,10 @@ public class ThemeSettingActivity extends AbsImmersionAtivity implements View.On
             }
             
             // 保存主题设置
-            PreferenceManager.setThemeMode(this, themeMode);
-            
-            // 应用主题变更
-            ThemeHelper.applyTheme(this, themeMode);
+//            PreferenceManager.setThemeMode(this, themeMode);
+//
+//            // 应用主题变更
+//            ThemeHelper.applyTheme(this, themeMode);
         });
     }
     
