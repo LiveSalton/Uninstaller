@@ -76,11 +76,125 @@
     <string name="update_check_failed">Update check failed</string>
     <string name="update_content">New version %1$s\n\nUpdate content:\n%2$s</string>
     
-    <!-- 其他可能的字符串 -->
-    <string name="select_apps_first">Please select apps first</string>
+    <!-- 设置相关 -->
+    <string name="settings_display_options">Display Options</string>
+    <string name="settings_show_time">Show Time</string>
+    <string name="settings_show_filename">Show Filename</string>
+    <string name="settings_show_package">Show Package</string>
+    
+    <string name="settings_sort_options">Sort Options</string>
+    <string name="settings_sort_by_name_asc">Sort by Name Ascending</string>
+    <string name="settings_sort_by_name_desc">Sort by Name Descending</string>
+    <string name="settings_sort_by_size_asc">Sort by Size Ascending</string>
+    <string name="settings_sort_by_size_desc">Sort by Size Descending</string>
+    <string name="settings_sort_by_time_asc">Sort by Time Ascending</string>
+    <string name="settings_sort_by_time_desc">Sort by Time Descending</string>
+    
+    <string name="settings_other_options">Other Options</string>
+    <string name="settings_show_search">Show Search Box</string>
+    
+    <string name="share_app">Share App Details</string>
+    
+    <!-- 备份管理硬编码迁移 -->
+    <string name="backup_refresh">Refresh</string>
+    <string name="backup_clear_all">Clear All</string>
+    <string name="backup_no_files">No Backup Files</string>
+    <string name="backup_hint_select">Select apps in the app list to backup</string>
+    <string name="backup_hint_operations">Tip: Click to restore app, long press to delete backup</string>
+    <string name="backup_restore_title">Restore App</string>
+    <string name="backup_restore_confirm">Are you sure you want to restore app "%1$s"?</string>
+    <string name="backup_delete_title">Delete Backup</string>
+    <string name="backup_delete_confirm">Are you sure you want to delete backup file "%1$s"?</string>
+    <string name="backup_clear_all_title">Clear All Backups</string>
+    <string name="backup_clear_all_confirm">Are you sure you want to delete all backup files? This action cannot be undone!</string>
+    <string name="backup_restore_start">Starting to restore app, please confirm in the installation interface</string>
+    <string name="backup_restore_failed">Restore failed: %1$s</string>
+    <string name="backup_delete_success">Delete successful</string>
+    <string name="backup_delete_failed">Delete failed</string>
+    <string name="backup_version">Version: %1$s</string>
+    <string name="backup_version_unknown">Version: Unknown</string>
+    <string name="backup_file_size">Size: %1$s</string>
+    <string name="backup_time_label">Backup Time: </string>
+    
+    <!-- 新增备份功能相关 -->
+    <string name="backup_progress">Backup Progress: %1$d/%2$d - %3$s</string>
+    <string name="backup_success">Backup Successful</string>
+    <string name="backup_failed">Backup Failed</string>
+    <string name="backup_dir_create_failed">Failed to create backup directory</string>
+    <string name="backup_no_source_file">Source APK file not found</string>
+    <string name="backup_source_file_access_denied">Cannot read source APK file</string>
+    <string name="backup_file_copy_failed">Failed to copy APK file</string>
+    <string name="backup_info_save_failed">Failed to save backup information</string>
+    <string name="backup_storage_location">Backup Storage Location: %1$s</string>
+    <string name="backup_open_folder">Open Backup Folder</string>
+    <string name="backup_app_detail">App Details</string>
+    <string name="backup_view_all">View All Backups</string>
+    <string name="backup_no_apps_selected">Please select apps to backup first</string>
+    <string name="backup_invalid_file">Invalid backup file</string>
+    
+    <!-- 备份进度页面 -->
+    <string name="backup_progress_title">Backing Up</string>
+    <string name="backup_progress_preparing">Preparing backup...</string>
+    <string name="backup_current_app">Currently backing up app:</string>
+    <string name="backup_progress_status">%1$d/%2$d Completed</string>
+    <string name="backup_cancel">Cancel Backup</string>
+    <string name="backup_cancel_confirm_title">Confirm Cancel</string>
+    <string name="backup_cancel_confirm_message">Are you sure you want to cancel the current backup task? Backed up apps will be retained.</string>
+    <string name="backup_canceled">Backup canceled</string>
+    <string name="backup_completed">Backup completed</string>
+    <string name="backup_failed_apps">%1$d apps failed to backup</string>
+    
+    <!-- 时间格式化 -->
+    <string name="time_prefix">Installed: </string>
     <string name="package_prefix">Package: </string>
-    <string name="size_prefix">Size: </string>
-    <string name="time_prefix">Time: </string>
+    <string name="year_prefix">Y</string>
+    <string name="month_prefix">M</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+    
+    <!-- 权限相关 -->
+    <string name="permission_storage_required">Storage permission is required to use app functions properly</string>
+    <string name="permission_granted">Permission granted successfully</string>
+    
+    <!-- 错误信息 -->
+    <string name="error_no_apps_selected">Please select apps to operate first</string>
+    <string name="error_load_apps_failed">Failed to load app list</string>
+    <string name="error_backup_failed">Backup failed</string>
+    <string name="error_restore_failed">Restore failed</string>
+    
+    <!-- 按钮状态 -->
+    <string name="delete_with_count">Delete(%d)</string>
+    <string name="backup_with_count">Backup(%d)</string>
+    
+    <!-- 分享功能 -->
+    <string name="share_single_app_only">Can only share one app at a time</string>
+    <string name="share_app_details">Share App Details</string>
+    <string name="sharing_app">Sharing %s</string>
+    <string name="share_failed">Share failed</string>
+    <string name="apk_file_not_found">APK file not found</string>
+    <string name="select_apps_first">Please select apps to share first</string>
+    <string name="backup_manage_title">Backup Management</string>
+    <string name="backup_load_failed">Failed to load backup list</string>
+    <string name="share_app_apk">Share App APK</string>
+    <string name="auto_8607274809791025561">App Name</string>
+    <string name="auto_2677392295785979481">Version: 1.0.0</string>
+    <string name="auto_4735679025662775451">Size: 10.5MB</string>
+    <string name="auto_6557016694683876325">Click to Restore | Long Press to Delete</string>
+    <string name="auto_354826608356190889">Total: 0</string>
+    <string name="auto_8839014975645868300">Selected: 0</string>
+    <string name="auto_2623667450802219676">App Manager</string>
+    <string name="auto_7803433360898273987">Uninstall</string>
+    <string name="auto_7611491949064207416">Backup</string>
+    <string name="auto_1015951795981143864">Backup Management</string>
+    <string name="search_apps">Search apps</string>
     <string name="empty_app_list">No apps found</string>
     <string name="no_selected_apps">No apps selected</string>
-</resources> 
+    <string name="size_prefix">Size: </string>
+</resources>
