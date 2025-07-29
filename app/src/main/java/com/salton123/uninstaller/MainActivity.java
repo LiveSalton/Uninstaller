@@ -39,7 +39,6 @@ import com.salton123.uninstaller.util.SettingsManager;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -61,7 +60,6 @@ public class MainActivity extends AbsImmersionAtivity {
     private Button btnDelete, btnBackup;
     private ImageButton btnSettings;
     private EditText etSearch;
-    private LinearLayout llSearch;
     private CheckBox checkboxSelectAll;
     private LinearLayout rootView;
     private TextView titleText;
@@ -88,7 +86,6 @@ public class MainActivity extends AbsImmersionAtivity {
         summaryTotalText = findViewById(R.id.summary_total);
         summarySelectedText = findViewById(R.id.summary_selected);
         etSearch = findViewById(R.id.etSearch);
-        llSearch = findViewById(R.id.llSearch);
         appListView = findViewById(R.id.appListView);
         btnDelete = findViewById(R.id.btn_left);
         btnBackup = findViewById(R.id.btn_right);
@@ -431,7 +428,6 @@ public class MainActivity extends AbsImmersionAtivity {
             }
             settingsManager.setSortType(newSortType);
             applySettings();
-            loadData(); // 重新加载数据以应用排序
             XLog.i("MainActivity", "Sort type changed: " + newSortType.name());
         });
         btnShareAppDetails.setOnClickListener(new View.OnClickListener() {
@@ -457,7 +453,7 @@ public class MainActivity extends AbsImmersionAtivity {
                 ", Filename: " + settingsManager.isShowFilename() + ", Path: " + settingsManager.isShowPath() +
                 ", Search: " + settingsManager.isShowSearch());
         int visibility = settingsManager.isShowSearch() ? View.VISIBLE : View.GONE;
-        llSearch.setVisibility(visibility);
+        etSearch.setVisibility(visibility);
         if (mAdapter != null) {
             mAdapter.setDisplayOptions(
                     settingsManager.isShowTime(),
@@ -478,7 +474,7 @@ public class MainActivity extends AbsImmersionAtivity {
                 Collections.sort(entities, new Comparator<AppEntity>() {
                     @Override
                     public int compare(AppEntity lhs, AppEntity rhs) {
-                        long diff = lhs.getSize() - rhs.getSize();
+                        long diff = lhs.mAppSize - rhs.mAppSize;
                         return (asc == 1) ? (int) diff : (int) -diff;
                     }
                 });
@@ -488,7 +484,7 @@ public class MainActivity extends AbsImmersionAtivity {
                 Collections.sort(entities, new Comparator<AppEntity>() {
                     @Override
                     public int compare(AppEntity lhs, AppEntity rhs) {
-                        long diff = lhs.getInstallTime() - rhs.getInstallTime();
+                        long diff = lhs.mInstallTime - rhs.mInstallTime;
                         return (asc == 1) ? (int) diff : (int) -diff;
                     }
                 });
@@ -499,7 +495,7 @@ public class MainActivity extends AbsImmersionAtivity {
                     @Override
                     public int compare(AppEntity lhs, AppEntity rhs) {
                         Collator c = Collator.getInstance(Locale.CHINA);
-                        return (asc == 1) ? c.compare(lhs.sourceDir, rhs.sourceDir) : c.compare(rhs.sourceDir, lhs.sourceDir);
+                        return (asc == 1) ? c.compare(lhs.mAppPath, rhs.mAppPath) : c.compare(rhs.mAppPath, lhs.mAppPath);
                     }
                 });
                 break;
@@ -517,10 +513,10 @@ public class MainActivity extends AbsImmersionAtivity {
         }
         
         if (mAdapter == null) {
-            mAdapter = new SpeedUpAdapter(MainActivity.this);
+            mAdapter = new SpeedUpAdapter(MainActivity.this, entities);
         } else {
-            mAdapter.getList().clear();
-            mAdapter.getList().addAll(entities);
+            mAdapter.clear();
+            mAdapter.addAll(entities);
         }
         // 设置显示选项
         mAdapter.setDisplayOptions(
@@ -529,14 +525,9 @@ public class MainActivity extends AbsImmersionAtivity {
             settingsManager.isShowPath()
         );
         // 设置选择状态变化监听器
-        mAdapter.setOnSelectionChangeListener(new SpeedUpAdapter.OnSelectionChangeListener() {
-            @Override
-            public void onSelectionChanged() {
-                updateButtonStates();
-            }
-        });
+        mAdapter.setOnSelectionChangeListener(() -> updateSummary());
         appListView.setAdapter(mAdapter);
-        updateButtonStates();
+        updateSummary();
     }
     private void onAction(Integer actionCode) {
         switch (actionCode) {
