@@ -361,7 +361,7 @@ public class MainActivity extends AbsImmersionAtivity {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenWidth = displayMetrics.widthPixels;
-        int popupWidth = screenWidth * 2 / 5;
+        int popupWidth = screenWidth * 1 / 2;
         currentPopupWindow = new PopupWindow(popupView, popupWidth, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         currentPopupWindow.setBackgroundDrawable(getResources().getDrawable(android.R.drawable.dialog_holo_light_frame));
         currentPopupWindow.setOutsideTouchable(true);
