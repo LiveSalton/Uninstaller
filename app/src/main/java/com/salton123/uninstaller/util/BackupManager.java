@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 /**
  * 应用备份和恢复管理器
@@ -29,48 +30,133 @@ public class BackupManager {
     private static final String BACKUP_FOLDER_NAME = "UninstallerBackup";
     private static final String BACKUP_FILE_EXTENSION = ".apk.backup";
     
-    // 备份路径
-    private static final String backup_path = Environment.getExternalStorageDirectory() +
-            File.separator + BACKUP_FOLDER_NAME + File.separator;
+    // 取消标志
+    private static volatile boolean isCancelled = false;
+    // 当前运行的备份任务
+    private static final List<Future<?>> runningTasks = new ArrayList<>();
+    
+    // 备份路径 - 使用公共下载目录
+    private static String getBackupPath(Context context) {
+        File backupDir;
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // Android 10及以上使用应用专属外部存储目录
+            backupDir = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), BACKUP_FOLDER_NAME);
+        } else {
+            // Android 9及以下使用公共下载目录
+            backupDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), BACKUP_FOLDER_NAME);
+        }
+        
+        return backupDir.getAbsolutePath() + File.separator;
+    }
     
     static int backupCount;
+    static int successCount;
+    static int failedCount;
 
+    /**
+     * 取消当前备份任务
+     */
+    public static void cancelBackup() {
+        isCancelled = true;
+        
+        // 取消所有运行中的任务
+        synchronized (runningTasks) {
+            for (Future<?> task : runningTasks) {
+                if (!task.isDone() && !task.isCancelled()) {
+                    task.cancel(true);
+                }
+            }
+            runningTasks.clear();
+        }
+        
+        XLog.i(TAG, "备份任务已取消");
+    }
+    
+    /**
+     * 重置取消状态
+     */
+    public static void resetCancellation() {
+        isCancelled = false;
+        synchronized (runningTasks) {
+            runningTasks.clear();
+        }
+    }
+    
     /**
      * 备份应用列表
      */
-    public static void toBackup(final List<AppEntity> toBackupData, final IBackupProgress iBackup) {
+    public static void toBackup(final List<AppEntity> toBackupData, final Context context, final IBackupProgress iBackup) {
         if (toBackupData == null || toBackupData.isEmpty()) {
             XLog.w(TAG, "No data to backup");
             if (iBackup != null) {
-                iBackup.onBackupComplete(false, "没有要备份的应用");
+                iBackup.onBackupComplete(false, "没有要备份的应用", 0, 0);
             }
             return;
         }
 
-        // 确保备份目录存在
-        ensureBackupDirectory();
-        
+        // 重置状态
+        resetCancellation();
         backupCount = 0;
+        successCount = 0;
+        failedCount = 0;
+        
+        // 确保备份目录存在
+        if (!ensureBackupDirectory(context)) {
+            if (iBackup != null) {
+                iBackup.onBackupComplete(false, "创建备份目录失败", 0, 0);
+            }
+            return;
+        }
+        
         int totalApps = toBackupData.size();
         
+        // 准备阶段回调
+        if (iBackup != null) {
+            iBackup.onBackupPrepare(totalApps);
+        }
+        
         for (int i = 0; i < totalApps; i++) {
+            if (isCancelled) {
+                if (iBackup != null) {
+                    iBackup.onBackupComplete(false, "备份已取消", successCount, failedCount);
+                }
+                return;
+            }
+            
             final AppEntity item = toBackupData.get(i);
             final int index = i;
             
-            PreloadCore.INSTANCE.mThreadPool.submit(new Callable<Boolean>() {
+            Future<?> future = PreloadCore.INSTANCE.mThreadPool.submit(new Callable<Boolean>() {
                 @Override
                 public Boolean call() {
+                    if (isCancelled) {
+                        return false;
+                    }
+                    
                     try {
-                        boolean result = backupSingleApp(item);
+                        // 准备开始备份当前应用
+                        if (iBackup != null) {
+                            iBackup.onBackupStart(item, index + 1, totalApps);
+                        }
+                        
+                        boolean result = backupSingleApp(item, context);
                         
                         synchronized (BackupManager.class) {
                             backupCount++;
+                            if (result) {
+                                successCount++;
+                            } else {
+                                failedCount++;
+                            }
+                            
                             if (iBackup != null) {
-                                iBackup.onProgress(backupCount, totalApps, result, item.mAppName);
+                                iBackup.onProgress(backupCount, totalApps, result, item.mAppName, item.appInfo.packageName);
                                 
                                 // 检查是否全部完成
                                 if (backupCount >= totalApps) {
-                                    iBackup.onBackupComplete(true, "备份完成，共备份 " + backupCount + " 个应用");
+                                    String message = "备份完成，成功: " + successCount + "，失败: " + failedCount;
+                                    iBackup.onBackupComplete(failedCount == 0, message, successCount, failedCount);
                                 }
                             }
                         }
@@ -80,21 +166,32 @@ public class BackupManager {
                         XLog.e(TAG, "Backup failed for " + item.mAppName + ": " + e.getMessage());
                         synchronized (BackupManager.class) {
                             backupCount++;
+                            failedCount++;
+                            
                             if (iBackup != null) {
-                                iBackup.onProgress(backupCount, totalApps, false, item.mAppName);
+                                iBackup.onProgress(backupCount, totalApps, false, item.mAppName, item.appInfo.packageName);
+                                
+                                if (backupCount >= totalApps) {
+                                    String message = "备份完成，成功: " + successCount + "，失败: " + failedCount;
+                                    iBackup.onBackupComplete(false, message, successCount, failedCount);
+                                }
                             }
                         }
                         return false;
                     }
                 }
             });
+            
+            synchronized (runningTasks) {
+                runningTasks.add(future);
+            }
         }
     }
 
     /**
      * 备份单个应用
      */
-    private static boolean backupSingleApp(AppEntity app) {
+    private static boolean backupSingleApp(AppEntity app, Context context) {
         try {
             String sourceFilePath = app.mPath;
             if (sourceFilePath == null || sourceFilePath.isEmpty()) {
@@ -108,7 +205,7 @@ public class BackupManager {
 
             // 生成备份文件名
             String backupFileName = generateBackupFileName(app);
-            String destPath = backup_path + backupFileName;
+            String destPath = getBackupPath(context) + backupFileName;
             
             // 执行文件复制
             boolean result = Utils.copyFile(sourceFilePath, destPath);
@@ -117,7 +214,7 @@ public class BackupManager {
                 XLog.i(TAG, "备份成功: " + app.mAppName + " -> " + destPath);
                 
                 // 创建备份信息文件
-                createBackupInfo(app, backupFileName);
+                createBackupInfo(app, backupFileName, context);
             } else {
                 XLog.e(TAG, "备份失败: " + app.mAppName);
             }
@@ -137,17 +234,34 @@ public class BackupManager {
                 .format(new Date());
         String packageName = app.appInfo.packageName;
         String versionName = app.appInfo.versionName != null ? app.appInfo.versionName : "unknown";
+        String appName = app.mAppName != null ? app.mAppName : packageName;
         
-        return packageName + "_v" + versionName + "_" + timestamp + BACKUP_FILE_EXTENSION;
+        // 确保文件名有效，移除特殊字符
+        appName = appName.replaceAll("[\\\\/:*?\"<>|]", "_");
+        versionName = versionName.replaceAll("[\\\\/:*?\"<>|]", "_");
+        
+        return appName + "_" + packageName + "_v" + versionName + "_" + timestamp + BACKUP_FILE_EXTENSION;
+    }
+    
+    /**
+     * 检查文件路径是否可访问
+     */
+    private static boolean isFileAccessible(String filePath) {
+        if (filePath == null || filePath.isEmpty()) {
+            return false;
+        }
+        
+        File file = new File(filePath);
+        return file.exists() && file.isFile() && file.canRead();
     }
 
     /**
      * 创建备份信息文件
      */
-    private static void createBackupInfo(AppEntity app, String backupFileName) {
+    private static void createBackupInfo(AppEntity app, String backupFileName, Context context) {
         try {
             String infoFileName = backupFileName.replace(BACKUP_FILE_EXTENSION, ".info");
-            String infoFilePath = backup_path + infoFileName;
+            String infoFilePath = getBackupPath(context) + infoFileName;
             
             StringBuilder info = new StringBuilder();
             info.append("应用名称: ").append(app.mAppName).append("\n");
@@ -168,10 +282,10 @@ public class BackupManager {
     /**
      * 获取所有备份文件
      */
-    public static List<BackupInfo> getBackupList() {
+    public static List<BackupInfo> getBackupList(Context context) {
         List<BackupInfo> backupList = new ArrayList<>();
         
-        File backupDir = new File(backup_path);
+        File backupDir = new File(getBackupPath(context));
         if (!backupDir.exists()) {
             return backupList;
         }
@@ -319,19 +433,21 @@ public class BackupManager {
     /**
      * 确保备份目录存在
      */
-    private static void ensureBackupDirectory() {
-        File backupDir = new File(backup_path);
+    private static boolean ensureBackupDirectory(Context context) {
+        File backupDir = new File(getBackupPath(context));
         if (!backupDir.exists()) {
             boolean created = backupDir.mkdirs();
-            XLog.i(TAG, "创建备份目录: " + backup_path + " - " + (created ? "成功" : "失败"));
+            XLog.i(TAG, "创建备份目录: " + backupDir.getAbsolutePath() + " - " + (created ? "成功" : "失败"));
+            return created;
         }
+        return true;
     }
 
     /**
      * 获取备份目录大小
      */
-    public static long getBackupDirectorySize() {
-        File backupDir = new File(backup_path);
+    public static long getBackupDirectorySize(Context context) {
+        File backupDir = new File(getBackupPath(context));
         return getDirectorySize(backupDir);
     }
 
@@ -359,8 +475,52 @@ public class BackupManager {
      * 备份进度回调接口
      */
     public interface IBackupProgress {
-        void onProgress(int current, int total, boolean isSuccess, String appName);
-        void onBackupComplete(boolean success, String message);
+        /**
+         * 备份准备阶段
+         * @param totalApps 总应用数
+         */
+        default void onBackupPrepare(int totalApps) {}
+        
+        /**
+         * 开始备份某个应用
+         * @param app 当前应用
+         * @param current 当前索引
+         * @param total 总数
+         */
+        default void onBackupStart(AppEntity app, int current, int total) {}
+        
+        /**
+         * 备份进度更新
+         * @param current 当前完成数量
+         * @param total 总数量
+         * @param isSuccess 当前应用是否备份成功
+         * @param appName 应用名称
+         * @param packageName 包名
+         */
+        void onProgress(int current, int total, boolean isSuccess, String appName, String packageName);
+        
+        /**
+         * 原兼容方法
+         */
+        default void onProgress(int current, int total, boolean isSuccess, String appName) {
+            onProgress(current, total, isSuccess, appName, "");
+        }
+        
+        /**
+         * 备份完成
+         * @param success 是否全部成功
+         * @param message 完成消息
+         * @param successCount 成功数量
+         * @param failedCount 失败数量
+         */
+        void onBackupComplete(boolean success, String message, int successCount, int failedCount);
+        
+        /**
+         * 原兼容方法
+         */
+        default void onBackupComplete(boolean success, String message) {
+            onBackupComplete(success, message, 0, 0);
+        }
     }
 
     /**

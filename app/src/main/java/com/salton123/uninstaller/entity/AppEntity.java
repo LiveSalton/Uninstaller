@@ -1,9 +1,11 @@
 package com.salton123.uninstaller.entity;
 
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.graphics.drawable.Drawable;
 
 import java.io.File;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -14,19 +16,38 @@ import java.util.Locale;
  * ModifyTime: 6:00 PM
  * Description:
  */
-public class AppEntity {
+public class AppEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     public String mAppName = ""; // 应用名
-    public Drawable mIcon = null;// 图标
+    public transient Drawable mIcon = null;// 图标 - 使用transient标记不序列化的字段
     public String mSize = "";// 大小: MB
     public String mVersionName = ""; // 版本名称
-    public PackageInfo appInfo;
+    public transient PackageInfo appInfo; // PackageInfo不可序列化，用transient标记
     public boolean isChecked = false;
     public String mPath = "";
+    
+    // 保存PackageInfo中需要的信息
+    public String packageName;
+    public long versionCode;
+    public long firstInstallTime;
+    public String sourceDir;
 
     public AppEntity(PackageInfo appInfo) {
         this.appInfo = appInfo;
-        if (appInfo != null && appInfo.versionName != null) {
-            this.mVersionName = appInfo.versionName;
+        if (appInfo != null) {
+            if (appInfo.versionName != null) {
+                this.mVersionName = appInfo.versionName;
+            }
+            
+            // 保存必要的信息用于序列化
+            this.packageName = appInfo.packageName;
+            this.versionCode = appInfo.getLongVersionCode();
+            this.firstInstallTime = appInfo.firstInstallTime;
+            
+            if (appInfo.applicationInfo != null) {
+                this.sourceDir = appInfo.applicationInfo.sourceDir;
+            }
         }
     }
     

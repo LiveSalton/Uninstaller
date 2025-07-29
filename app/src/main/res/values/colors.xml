@@ -18,6 +18,11 @@
     <color name="gray_dark">#1A1F1A</color>
     <color name="gray_medium">#242924</color>
     <color name="gray_light">#2E332E</color>
+    
+    <!-- 背景颜色 -->
+    <color name="background_primary">#121712</color>
+    <color name="background_secondary">#1A1F1A</color>
+    <color name="surface">#121712</color>
 
     <!-- 分割线和边框 -->
     <color name="divider">#1A1F1A</color>

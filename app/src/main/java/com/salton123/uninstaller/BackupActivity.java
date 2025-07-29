@@ -101,7 +101,7 @@ public class BackupActivity extends Activity {
             @Override
             public void run() {
                 try {
-                    final List<BackupManager.BackupInfo> newBackupList = BackupManager.getBackupList();
+                    final List<BackupManager.BackupInfo> newBackupList = BackupManager.getBackupList(BackupActivity.this);
                     
                     runOnUiThread(new Runnable() {
                         @Override

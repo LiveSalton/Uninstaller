@@ -69,6 +69,34 @@
     <string name="backup_file_size">大小: %1$s</string>
     <string name="backup_time_label">备份时间: </string>
     
+    <!-- 新增备份功能相关 -->
+    <string name="backup_progress">备份进度: %1$d/%2$d - %3$s</string>
+    <string name="backup_success">备份成功</string>
+    <string name="backup_failed">备份失败</string>
+    <string name="backup_dir_create_failed">创建备份目录失败</string>
+    <string name="backup_no_source_file">找不到源APK文件</string>
+    <string name="backup_source_file_access_denied">无法读取源APK文件</string>
+    <string name="backup_file_copy_failed">复制APK文件失败</string>
+    <string name="backup_info_save_failed">保存备份信息失败</string>
+    <string name="backup_storage_location">备份存储位置: %1$s</string>
+    <string name="backup_open_folder">打开备份文件夹</string>
+    <string name="backup_app_detail">应用详情</string>
+    <string name="backup_view_all">查看全部备份</string>
+    <string name="backup_no_apps_selected">请先选择要备份的应用</string>
+    <string name="backup_invalid_file">无效的备份文件</string>
+    
+    <!-- 备份进度页面 -->
+    <string name="backup_progress_title">正在备份</string>
+    <string name="backup_progress_preparing">正在准备备份...</string>
+    <string name="backup_current_app">当前备份应用:</string>
+    <string name="backup_progress_status">%1$d/%2$d 完成</string>
+    <string name="backup_cancel">取消备份</string>
+    <string name="backup_cancel_confirm_title">确认取消</string>
+    <string name="backup_cancel_confirm_message">确定要取消当前备份任务吗？已备份的应用将保留。</string>
+    <string name="backup_canceled">备份已取消</string>
+    <string name="backup_completed">备份已完成</string>
+    <string name="backup_failed_apps">%1$d个应用备份失败</string>
+    
     <!-- 时间格式化 -->
     <string name="time_prefix">安装: </string>
     <string name="filename_prefix">包名: </string>

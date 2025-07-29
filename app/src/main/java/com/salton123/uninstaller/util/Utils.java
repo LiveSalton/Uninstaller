@@ -144,21 +144,51 @@ public class Utils {
     }
 
     /**
-     * copy file
+     * copy file 增强版本
      *
-     * @param sourceFilePath
-     * @param destFilePath
-     * @return
-     * @throws RuntimeException if an error occurs while operator FileOutputStream
+     * @param sourceFilePath 源文件路径
+     * @param destFilePath 目标文件路径
+     * @return 是否复制成功
      */
     public static boolean copyFile(String sourceFilePath, String destFilePath) {
+        if (TextUtils.isEmpty(sourceFilePath) || TextUtils.isEmpty(destFilePath)) {
+            return false;
+        }
+        
+        File sourceFile = new File(sourceFilePath);
+        if (!sourceFile.exists() || !sourceFile.isFile() || !sourceFile.canRead()) {
+            return false;
+        }
+        
         InputStream inputStream = null;
         try {
             inputStream = new FileInputStream(sourceFilePath);
+            // 检查文件大小，防止复制过大的文件
+            long fileSize = sourceFile.length();
+            if (fileSize <= 0) {
+                return false;
+            }
+            
+            // 确保目标目录存在
+            File destFile = new File(destFilePath);
+            File destDir = destFile.getParentFile();
+            if (destDir != null && !destDir.exists()) {
+                boolean created = destDir.mkdirs();
+                if (!created) {
+                    return false;
+                }
+            }
+            
+            return writeFile(destFilePath, inputStream);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("FileNotFoundException occurred. ", e);
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            closeQuietly(inputStream);
         }
-        return writeFile(destFilePath, inputStream);
     }
 
     public static boolean writeFile(String filePath, InputStream stream, boolean append) {

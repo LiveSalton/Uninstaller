@@ -44,6 +44,11 @@ import java.util.List;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.os.Environment;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import java.io.Serializable;
+import android.widget.ProgressBar;
 
 public class MainActivity extends AbsImmersionAtivity {
 
@@ -69,9 +74,9 @@ public class MainActivity extends AbsImmersionAtivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        
         XLog.i(this, "MainActivity onCreate");
-
+        
         // 初始化控件
         rootView = findViewById(R.id.rootView);
         titleText = findViewById(R.id.title_text);
@@ -92,25 +97,36 @@ public class MainActivity extends AbsImmersionAtivity {
     }
 
     private boolean checkAndRequestPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            String[] permissions = {
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-            };
+        ArrayList<String> permissionsList = new ArrayList<>();
 
-            boolean allGranted = true;
-            for (String permission : permissions) {
-                if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-                    allGranted = false;
-                    break;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Android 6.0及以上需要动态申请存储权限
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                permissionsList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
+            
+            // 如果是Android 10以下，还需要写入权限
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    permissionsList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
             }
 
-            if (!allGranted) {
-                requestPermissions(permissions, REQUEST_PERMISSIONS);
+            // Android 11及以上针对多媒体文件的权限
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                // 对于备份APK可能会使用到READ_MEDIA相关权限
+                if (checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+                    permissionsList.add(Manifest.permission.READ_MEDIA_IMAGES);
+                }
+            }
+            
+            if (!permissionsList.isEmpty()) {
+                requestPermissions(permissionsList.toArray(new String[0]), REQUEST_PERMISSIONS);
                 return false;
             }
         }
+        
+        // 权限已授予或Android 5.1及以下版本
         return true;
     }
 
@@ -125,7 +141,7 @@ public class MainActivity extends AbsImmersionAtivity {
                     break;
                 }
             }
-
+            
             if (allGranted) {
                 initUIAndData();
             } else {
@@ -477,33 +493,174 @@ public class MainActivity extends AbsImmersionAtivity {
     private void startBackupTask() {
         List<AppEntity> selectedApps = getSelectedApps();
         if (selectedApps.isEmpty()) {
-            Toast.makeText(this, getString(R.string.select_apps_first), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.backup_no_apps_selected), Toast.LENGTH_SHORT).show();
             return;
         }
-        BackupManager.toBackup(selectedApps, new BackupManager.IBackupProgress() {
+        
+        // 显示备份进度弹窗
+        showBackupProgressDialog(selectedApps);
+    }
+    
+    // 备份进度弹窗
+    private AlertDialog backupProgressDialog;
+    private ProgressBar progressBar;
+    private TextView progressText;
+    private TextView appNameText;
+    private TextView appPackageText;
+    private TextView backupStatusText;
+    private Button btnCancel;
+    private boolean isBackupComplete = false;
+    
+    private void showBackupProgressDialog(final List<AppEntity> appsToBackup) {
+        // 创建对话框
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_backup_progress, null);
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+        
+        // 初始化视图
+        progressBar = dialogView.findViewById(R.id.progress_bar);
+        progressText = dialogView.findViewById(R.id.progress_text);
+        appNameText = dialogView.findViewById(R.id.app_name_text);
+        appPackageText = dialogView.findViewById(R.id.app_package_text);
+        backupStatusText = dialogView.findViewById(R.id.backup_status_text);
+        btnCancel = dialogView.findViewById(R.id.btn_cancel);
+        
+        // 设置进度条初始状态
+        progressBar.setMax(appsToBackup.size());
+        progressBar.setProgress(0);
+        
+        // 创建并显示对话框
+        backupProgressDialog = builder.create();
+        backupProgressDialog.show();
+        
+        // 设置取消按钮
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onProgress(int current, int total, boolean isSuccess, String appName) {
+            public void onClick(View v) {
+                if (isBackupComplete) {
+                    backupProgressDialog.dismiss();
+                } else {
+                    showCancelBackupDialog();
+                }
+            }
+        });
+        
+        // 开始备份操作
+        isBackupComplete = false;
+        BackupManager.toBackup(appsToBackup, this, new BackupManager.IBackupProgress() {
+            @Override
+            public void onBackupPrepare(int totalApps) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        String status = isSuccess ? "成功" : "失败";
-                        XLog.i("MainActivity", "备份进度: " + current + "/" + total + " - " + appName + " " + status);
+                        progressText.setText(getString(R.string.backup_progress_preparing));
+                        backupStatusText.setText(getString(R.string.backup_progress_status, 0, totalApps));
                     }
                 });
             }
-
+            
             @Override
-            public void onBackupComplete(boolean success, String message) {
+            public void onBackupStart(AppEntity app, int current, int total) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        XLog.i("MainActivity", "备份完成: " + message);
-                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+                        appNameText.setText(app.mAppName);
+                        appPackageText.setText(app.packageName);
+                    }
+                });
+            }
+            
+            @Override
+            public void onProgress(int current, int total, boolean isSuccess, String appName, String packageName) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setProgress(current);
+                        String status = isSuccess ? getString(R.string.success) : getString(R.string.failed);
+                        progressText.setText(getString(R.string.backup_progress, current, total, appName + " " + status));
+                        backupStatusText.setText(getString(R.string.backup_progress_status, current, total));
+                    }
+                });
+            }
+            
+            @Override
+            public void onBackupComplete(boolean success, String message, int successCount, int failedCount) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        isBackupComplete = true;
+                        progressBar.setProgress(progressBar.getMax());
+                        
+                        String statusText = successCount > 0 ? 
+                                getString(R.string.backup_completed) : 
+                                getString(R.string.backup_failed);
+                        
+                        if (failedCount > 0) {
+                            statusText += " (" + getString(R.string.backup_failed_apps, failedCount) + ")";
+                        }
+                        
+                        backupStatusText.setText(statusText);
+                        btnCancel.setText(getString(R.string.complete));
+                        
+                        // 重置选择状态
                         onCheckAll(false);
+                        
+                        // 显示备份完成提示
+                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                        
+                        // 如果有成功备份的应用，更新对话框内容提供查看选项
+                        if (success && successCount > 0) {
+                            btnCancel.setText(getString(R.string.ok));
+                            
+                            // 添加"查看备份"按钮
+                            if (backupProgressDialog != null && backupProgressDialog.isShowing()) {
+                                backupProgressDialog.setButton(
+                                    DialogInterface.BUTTON_NEUTRAL, 
+                                    getString(R.string.backup_view_all),
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            openBackupManager();
+                                        }
+                                    }
+                                );
+                            }
+                            
+                            // 显示备份路径信息
+                            String backupPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() + 
+                                               File.separator + "UninstallerBackup";
+                            progressText.setText(getString(R.string.backup_storage_location, backupPath));
+                        }
                     }
                 });
             }
         });
+    }
+    
+    private void showCancelBackupDialog() {
+        new AlertDialog.Builder(this)
+            .setTitle(getString(R.string.backup_cancel_confirm_title))
+            .setMessage(getString(R.string.backup_cancel_confirm_message))
+            .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    cancelBackup();
+                }
+            })
+            .setNegativeButton(getString(R.string.cancel), null)
+            .show();
+    }
+    
+    private void cancelBackup() {
+        // 取消备份任务
+        BackupManager.cancelBackup();
+        
+        Toast.makeText(this, getString(R.string.backup_canceled), Toast.LENGTH_SHORT).show();
+        
+        if (backupProgressDialog != null && backupProgressDialog.isShowing()) {
+            backupProgressDialog.dismiss();
+        }
     }
 
     private void shareSelectedAppApk() {
