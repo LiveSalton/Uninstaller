@@ -760,8 +760,7 @@ public class MainActivity extends AbsImmersionAtivity {
                             }
 
                             // 显示备份路径信息
-                            String backupPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() +
-                                    File.separator + "UninstallerBackup";
+                            String backupPath = BackupManager.getBackupPath(MainActivity.this);
                             progressText.setText(getString(R.string.backup_storage_location, backupPath));
                         }
                     }

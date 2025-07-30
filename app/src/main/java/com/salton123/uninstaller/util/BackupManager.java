@@ -35,16 +35,14 @@ public class BackupManager {
     // 当前运行的备份任务
     private static final List<Future<?>> runningTasks = new ArrayList<>();
     
-    // 备份路径 - 使用公共下载目录
+    // 备份路径 - 始终使用应用专属外部存储目录，无需存储权限
     public static String getBackupPath(Context context) {
-        File backupDir;
+        // 使用应用专属外部存储目录，这不需要任何存储权限
+        File backupDir = new File(context.getExternalFilesDir(null), BACKUP_FOLDER_NAME);
         
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            // Android 10及以上使用应用专属外部存储目录
-            backupDir = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), BACKUP_FOLDER_NAME);
-        } else {
-            // Android 9及以下使用公共下载目录
-            backupDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), BACKUP_FOLDER_NAME);
+        // 确保目录存在
+        if (!backupDir.exists()) {
+            backupDir.mkdirs();
         }
         
         return backupDir.getAbsolutePath() + File.separator;
