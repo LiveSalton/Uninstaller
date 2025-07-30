@@ -13,6 +13,16 @@
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" 
         tools:ignore="QueryAllPackagesPermission" />
+    <!-- Package visibility for Android 11+ -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+        </intent>
+        <!-- Add more intents as needed for your app's functionality -->
+    </queries>
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
@@ -26,7 +36,7 @@
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.Uninstaller"
-        tools:targetApi="31">
+        tools:targetApi="35">
         
         <activity
             android:name=".MainActivity"

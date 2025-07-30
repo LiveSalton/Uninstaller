@@ -35,7 +35,13 @@ public enum PreloadCore {
                 List<AppEntity> pList = new ArrayList<>();// 获取所有的应用程序集合
                 
                 try {
-                    List<PackageInfo> installedPackages = pm.getInstalledPackages(0);
+                    List<PackageInfo> installedPackages;
+                    // Use PackageManager.MATCH_ALL flag for Android 15+
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                        installedPackages = pm.getInstalledPackages(PackageManager.GET_META_DATA | PackageManager.MATCH_ALL);
+                    } else {
+                        installedPackages = pm.getInstalledPackages(0);
+                    }
                     Log.i("PreloadCore", "获取到的安装包数量: " + installedPackages.size());
                     
                     for (PackageInfo item : installedPackages) {
