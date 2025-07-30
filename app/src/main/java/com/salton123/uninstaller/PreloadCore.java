@@ -1,7 +1,9 @@
 package com.salton123.uninstaller;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.util.Log;
 
 import com.salton123.uninstaller.entity.AppEntity;
@@ -35,14 +37,54 @@ public enum PreloadCore {
                 List<AppEntity> pList = new ArrayList<>();// 获取所有的应用程序集合
                 
                 try {
-                    List<PackageInfo> installedPackages;
-                    // Use PackageManager.MATCH_ALL flag for Android 15+
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                        installedPackages = pm.getInstalledPackages(PackageManager.GET_META_DATA | PackageManager.MATCH_ALL);
+                    List<PackageInfo> installedPackages = new ArrayList<>();
+                    
+                    // Android 15+ 专用方法 - 使用Intent查询方式获取应用列表
+                    if (android.os.Build.VERSION.SDK_INT >= 33) { // Android 13+
+                        Log.i("PreloadCore", "使用Intent查询方式获取应用列表");
+                        
+                        // 创建一个Intent来查询所有带启动器图标的应用
+                        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+                        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                        
+                        // 获取所有匹配的活动
+                        List<ResolveInfo> resolveInfos;
+                        if (android.os.Build.VERSION.SDK_INT >= 33) {
+                            resolveInfos = pm.queryIntentActivities(
+                                mainIntent, 
+                                PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_ALL)
+                            );
+                        } else {
+                            resolveInfos = pm.queryIntentActivities(mainIntent, PackageManager.MATCH_ALL);
+                        }
+                        
+                        // 转换ResolveInfo到PackageInfo
+                        for (ResolveInfo resolveInfo : resolveInfos) {
+                            String packageName = resolveInfo.activityInfo.packageName;
+                            try {
+                                PackageInfo packageInfo;
+                                if (android.os.Build.VERSION.SDK_INT >= 33) {
+                                    packageInfo = pm.getPackageInfo(
+                                        packageName, 
+                                        PackageManager.PackageInfoFlags.of(PackageManager.GET_META_DATA)
+                                    );
+                                } else {
+                                    packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_META_DATA);
+                                }
+                                installedPackages.add(packageInfo);
+                            } catch (Exception e) {
+                                Log.e("PreloadCore", "获取包信息失败: " + packageName, e);
+                            }
+                        }
                     } else {
-                        installedPackages = pm.getInstalledPackages(0);
+                        // 旧方法 - 直接使用getInstalledPackages
+                        int flags = PackageManager.GET_META_DATA | 
+                                    PackageManager.GET_ACTIVITIES;
+                        installedPackages = pm.getInstalledPackages(flags);
                     }
-                    Log.i("PreloadCore", "获取到的安装包数量: " + installedPackages.size());
+                    
+                    Log.i("PreloadCore", "Android版本: " + android.os.Build.VERSION.SDK_INT);
+                    Log.i("PreloadCore", "获取到的安装包数量: " + (installedPackages != null ? installedPackages.size() : 0));
                     
                     for (PackageInfo item : installedPackages) {
                         try {

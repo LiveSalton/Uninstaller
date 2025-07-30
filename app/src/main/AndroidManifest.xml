@@ -11,17 +11,38 @@
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" 
+    <uses-permission 
+        android:name="android.permission.QUERY_ALL_PACKAGES" 
+        android:required="true"
         tools:ignore="QueryAllPackagesPermission" />
     <!-- Package visibility for Android 11+ -->
     <queries>
+        <!-- 查询所有带启动器图标的应用 -->
         <intent>
             <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
         </intent>
+        <!-- 查询所有可安装的包 -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="package" />
+        </intent>
+        <!-- 通用查询 -->
         <intent>
             <action android:name="android.intent.action.VIEW" />
         </intent>
-        <!-- Add more intents as needed for your app's functionality -->
+        <!-- 查询所有已安装的应用，使用正确的声明方式 -->
+        <package android:name="android" />
+        <!-- 媒体预览和文件选择 -->
+        <intent>
+            <action android:name="android.intent.action.GET_CONTENT" />
+            <data android:mimeType="*/*" />
+        </intent>
+        <!-- 分享功能 -->
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="*/*" />
+        </intent>
     </queries>
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
@@ -37,6 +58,10 @@
         android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.Uninstaller"
         tools:targetApi="35">
+        <!-- 申明需要查询的包 -->
+        <property
+            android:name="android.permission.QUERY_ALL_PACKAGES_PERMISSION_REASON"
+            android:value="应用需要访问所有应用包信息以展示应用列表、执行备份和卸载操作" />
         
         <activity
             android:name=".MainActivity"
