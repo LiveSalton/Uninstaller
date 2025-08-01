@@ -83,7 +83,7 @@ public class MainActivity extends AbsImmersionAtivity {
     protected void onCreate(Bundle savedInstanceState) {
         // 应用主题设置
         ThemeHelper.initTheme(this);
-        
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         titleText = findViewById(R.id.title_text);
@@ -100,87 +100,7 @@ public class MainActivity extends AbsImmersionAtivity {
         // 初始化设置管理器
         settingsManager = new SettingsManager(this);
         // 权限检查
-        if (checkAndRequestPermissions()) {
-            initUIAndData();
-        }
-    }
-
-    private boolean checkAndRequestPermissions() {
-        ArrayList<String> permissionsList = new ArrayList<>();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Android 6.0及以上需要动态申请存储权限
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                // Android 14 (API 34) 及以上版本，READ_EXTERNAL_STORAGE权限已被废弃
-                // 我们只需要READ_MEDIA_IMAGES, READ_MEDIA_VIDEO, READ_MEDIA_AUDIO权限
-                if (checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
-                    permissionsList.add(Manifest.permission.READ_MEDIA_IMAGES);
-                }
-                if (checkSelfPermission(Manifest.permission.READ_MEDIA_VIDEO) != PackageManager.PERMISSION_GRANTED) {
-                    permissionsList.add(Manifest.permission.READ_MEDIA_VIDEO);
-                }
-                if (checkSelfPermission(Manifest.permission.READ_MEDIA_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                    permissionsList.add(Manifest.permission.READ_MEDIA_AUDIO);
-                }
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                // Android 13 (API 33) 及以上版本使用新的媒体权限
-                if (checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
-                    permissionsList.add(Manifest.permission.READ_MEDIA_IMAGES);
-                }
-                if (checkSelfPermission(Manifest.permission.READ_MEDIA_VIDEO) != PackageManager.PERMISSION_GRANTED) {
-                    permissionsList.add(Manifest.permission.READ_MEDIA_VIDEO);
-                }
-                if (checkSelfPermission(Manifest.permission.READ_MEDIA_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                    permissionsList.add(Manifest.permission.READ_MEDIA_AUDIO);
-                }
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                // Android 11 (API 30) 及以上版本
-                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    permissionsList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-                }
-            } else {
-                // Android 6.0 到 Android 10
-                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    permissionsList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-                }
-
-                // 如果是Android 10以下，还需要写入权限
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                    if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        permissionsList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                    }
-                }
-            }
-
-            if (!permissionsList.isEmpty()) {
-                requestPermissions(permissionsList.toArray(new String[0]), REQUEST_PERMISSIONS);
-                return false;
-            }
-        }
-
-        // 权限已授予或Android 5.1及以下版本
-        return true;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PERMISSIONS) {
-            boolean allGranted = true;
-            for (int result : grantResults) {
-                if (result != PackageManager.PERMISSION_GRANTED) {
-                    allGranted = false;
-                    break;
-                }
-            }
-
-            if (allGranted) {
-                initUIAndData();
-            } else {
-                XLog.e(this, "权限被拒绝");
-                Toast.makeText(this, "需要存储权限才能正常使用应用功能", Toast.LENGTH_LONG).show();
-            }
-        }
+        initUIAndData();
     }
 
     private void initUIAndData() {
@@ -248,10 +168,7 @@ public class MainActivity extends AbsImmersionAtivity {
     private void loadData() {
         mAdapter = new SpeedUpAdapter(this);
         if (settingsManager != null) {
-            mAdapter.setDisplayOptions(
-                    settingsManager.isShowTime(),
-                    settingsManager.isShowPackage()
-            );
+            mAdapter.setDisplayOptions(settingsManager.isShowTime(), settingsManager.isShowPackage());
             XLog.i("MainActivity", "Set initial display options on adapter");
         }
         appListView.setAdapter(mAdapter);
@@ -313,14 +230,14 @@ public class MainActivity extends AbsImmersionAtivity {
             btnBackup.setText(getString(R.string.main_backup));
         }
         if (summaryTotalText != null) {
-            summaryTotalText.setText(getString(R.string.main_total_and_selected_count, totalCount,selectedCount));
+            summaryTotalText.setText(getString(R.string.main_total_and_selected_count, totalCount, selectedCount));
         }
     }
 
     private void updateSummaryInfo(int totalCount, int selectedCount) {
         XLog.i("MainActivity", "updateSummaryInfo - 总数: " + totalCount + ", 已选择: " + selectedCount);
         if (summaryTotalText != null) {
-            summaryTotalText.setText(getString(R.string.main_total_and_selected_count, totalCount,selectedCount));
+            summaryTotalText.setText(getString(R.string.main_total_and_selected_count, totalCount, selectedCount));
         }
 
 
@@ -468,15 +385,15 @@ public class MainActivity extends AbsImmersionAtivity {
                     Toast.makeText(MainActivity.this, getString(R.string.select_apps_first), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                
+
                 // 如果选择了多个应用，只分享第一个
                 if (selectedApps.size() > 1) {
                     Toast.makeText(MainActivity.this, getString(R.string.share_single_app_only), Toast.LENGTH_SHORT).show();
                 }
-                
+
                 AppEntity appToShare = selectedApps.get(0);
                 shareAppDetails(appToShare);
-                
+
                 if (currentPopupWindow != null) {
                     currentPopupWindow.dismiss();
                 }
@@ -492,9 +409,7 @@ public class MainActivity extends AbsImmersionAtivity {
 
     private void applySettings() {
         if (settingsManager == null) return;
-        XLog.i("MainActivity", "Applying settings - Time: " + settingsManager.isShowTime() +
-                ", Package: " + settingsManager.isShowPackage() +
-                ", Search: " + settingsManager.isShowSearch());
+        XLog.i("MainActivity", "Applying settings - Time: " + settingsManager.isShowTime() + ", Package: " + settingsManager.isShowPackage() + ", Search: " + settingsManager.isShowSearch());
         int visibility = settingsManager.isShowSearch() ? View.VISIBLE : View.GONE;
         llSearch.setVisibility(visibility);
 
@@ -505,10 +420,7 @@ public class MainActivity extends AbsImmersionAtivity {
 
         // 应用显示设置
         if (mAdapter != null) {
-            mAdapter.setDisplayOptions(
-                    settingsManager.isShowTime(),
-                    settingsManager.isShowPackage()
-            );
+            mAdapter.setDisplayOptions(settingsManager.isShowTime(), settingsManager.isShowPackage());
             mAdapter.notifyDataSetChanged();
             XLog.i("MainActivity", "Adapter display options updated");
         }
@@ -584,10 +496,7 @@ public class MainActivity extends AbsImmersionAtivity {
             mAdapter.getList().addAll(entities);
         }
         // 设置显示选项
-        mAdapter.setDisplayOptions(
-                settingsManager.isShowTime(),
-                settingsManager.isShowPackage()
-        );
+        mAdapter.setDisplayOptions(settingsManager.isShowTime(), settingsManager.isShowPackage());
         // 设置选择状态变化监听器
         mAdapter.setOnSelectionChangeListener(new SpeedUpAdapter.OnSelectionChangeListener() {
             @Override
@@ -724,9 +633,7 @@ public class MainActivity extends AbsImmersionAtivity {
                         isBackupComplete = true;
                         progressBar.setProgress(progressBar.getMax());
 
-                        String statusText = successCount > 0 ?
-                                getString(R.string.backup_completed) :
-                                getString(R.string.backup_failed);
+                        String statusText = successCount > 0 ? getString(R.string.backup_completed) : getString(R.string.backup_failed);
 
                         if (failedCount > 0) {
                             statusText += " (" + getString(R.string.backup_failed_apps, failedCount) + ")";
@@ -747,16 +654,12 @@ public class MainActivity extends AbsImmersionAtivity {
 
                             // 添加"查看备份"按钮
                             if (backupProgressDialog != null && backupProgressDialog.isShowing()) {
-                                backupProgressDialog.setButton(
-                                        DialogInterface.BUTTON_NEUTRAL,
-                                        getString(R.string.backup_view_all),
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                openBackupManager();
-                                            }
-                                        }
-                                );
+                                backupProgressDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getString(R.string.backup_view_all), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        openBackupManager();
+                                    }
+                                });
                             }
 
                             // 显示备份路径信息
@@ -770,17 +673,12 @@ public class MainActivity extends AbsImmersionAtivity {
     }
 
     private void showCancelBackupDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.backup_cancel_confirm_title))
-                .setMessage(getString(R.string.backup_cancel_confirm_message))
-                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        cancelBackup();
-                    }
-                })
-                .setNegativeButton(getString(R.string.cancel), null)
-                .show();
+        new AlertDialog.Builder(this).setTitle(getString(R.string.backup_cancel_confirm_title)).setMessage(getString(R.string.backup_cancel_confirm_message)).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                cancelBackup();
+            }
+        }).setNegativeButton(getString(R.string.cancel), null).show();
     }
 
     private void cancelBackup() {
@@ -826,11 +724,11 @@ public class MainActivity extends AbsImmersionAtivity {
         if (app == null || app.appInfo == null) {
             return;
         }
-        
+
         try {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
-            
+
             StringBuilder sb = new StringBuilder();
             sb.append(getString(R.string.sharing_app, app.mAppName)).append("\n\n");
             sb.append("应用名称：").append(app.mAppName).append("\n");
@@ -839,10 +737,10 @@ public class MainActivity extends AbsImmersionAtivity {
             sb.append("安装时间：").append(Utils.getTime(app.appInfo.firstInstallTime)).append("\n");
             sb.append("大小：").append(app.getSizeString()).append("\n");
             sb.append("路径：").append(app.appInfo.applicationInfo.sourceDir);
-            
+
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, app.mAppName);
             shareIntent.putExtra(Intent.EXTRA_TEXT, sb.toString());
-            
+
             startActivity(Intent.createChooser(shareIntent, getString(R.string.share_app_details)));
             XLog.i("MainActivity", "已分享应用详情: " + app.mAppName);
         } catch (Exception e) {
