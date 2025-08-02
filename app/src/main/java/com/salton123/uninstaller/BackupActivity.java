@@ -319,4 +319,8 @@ public class BackupActivity extends Activity {
             TextView fileSizeText;
         }
     }
-} 
+    
+    public static void start(Activity activity) {
+        activity.startActivity(new android.content.Intent(activity, BackupActivity.class));
+    }
+}

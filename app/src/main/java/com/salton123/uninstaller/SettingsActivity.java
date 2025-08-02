@@ -28,6 +28,7 @@ public class SettingsActivity extends AbsImmersionAtivity implements View.OnClic
     private View itemFeedback;
     private View itemPrivacyPolicy;
     private View itemTermsOfServices;
+    private View itemBackupManage;
     
     private TextView tvLanguageValue;
     private TextView tvCacheSize;
@@ -50,6 +51,7 @@ public class SettingsActivity extends AbsImmersionAtivity implements View.OnClic
         itemFeedback = findViewById(R.id.item_feedback);
         itemPrivacyPolicy = findViewById(R.id.item_privacy_policy);
         itemTermsOfServices = findViewById(R.id.item_terms_of_services);
+        itemBackupManage = findViewById(R.id.item_backup_manage);
         
         tvLanguageValue = findViewById(R.id.tv_language_value);
         tvCacheSize = findViewById(R.id.tv_cache_size);
@@ -63,6 +65,7 @@ public class SettingsActivity extends AbsImmersionAtivity implements View.OnClic
         itemFeedback.setOnClickListener(this);
         itemPrivacyPolicy.setOnClickListener(this);
         itemTermsOfServices.setOnClickListener(this);
+        itemBackupManage.setOnClickListener(this);
     }
     
     private void updateSettingsInfo() {
@@ -109,7 +112,22 @@ public class SettingsActivity extends AbsImmersionAtivity implements View.OnClic
             protected void onPostExecute(Boolean success) {
                 progressDialog.dismiss();
                 if (success) {
-                    Toast.makeText(SettingsActivity.this, R.string.clear_cache_success, Toast.LENGTH_SHORT).show();
+                    // 使用ProgressDialog替换Toast，并在3秒后自动消失
+                    final ProgressDialog successDialog = new ProgressDialog(SettingsActivity.this);
+                    successDialog.setMessage(getString(R.string.clear_cache_success));
+                    successDialog.setCancelable(true);
+                    successDialog.show();
+                    
+                    // 3秒后自动关闭对话框
+                    new android.os.Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (successDialog.isShowing()) {
+                                successDialog.dismiss();
+                            }
+                        }
+                    }, 3000);
+                    
                     // 更新显示的缓存大小
                     updateSettingsInfo();
                 } else {
@@ -212,6 +230,9 @@ public class SettingsActivity extends AbsImmersionAtivity implements View.OnClic
         } else if (v == itemTermsOfServices) {
             // 打开使用条款页面
             openTermsOfServices();
+        } else if (v == itemBackupManage) {
+            // 跳转到备份管理页面
+            BackupActivity.start(this);
         }
     }
     
