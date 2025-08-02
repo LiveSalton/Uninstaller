@@ -31,20 +31,28 @@ import java.util.Locale;
  * 备份管理Activity
  * 显示所有备份文件，支持点击安装
  */
-public class BackupActivity extends Activity {
+public class BackupActivity extends AbsImmersionAtivity {
 
     private ListView backupListView;
     private BackupAdapter backupAdapter;
     private List<BackupManager.BackupInfo> backupList;
     private LinearLayout emptyView;
+    private ImageView btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_backup);
-        
-        // 设置标题
-        setTitle(getString(R.string.backup_manage_title));
+
+        btnBack = findViewById(R.id.btn_back);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+        }
 
         initViews();
         loadBackupList();
@@ -74,16 +82,16 @@ public class BackupActivity extends Activity {
             public void run() {
                 try {
                     final List<BackupManager.BackupInfo> newBackupList = BackupManager.getBackupList(BackupActivity.this);
-                    
+
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             backupList.clear();
                             backupList.addAll(newBackupList);
                             backupAdapter.notifyDataSetChanged();
-                            
+
                             updateEmptyView();
-                            
+
                             XLog.i("BackupActivity", "Loaded " + backupList.size() + " backup files");
                         }
                     });
@@ -122,7 +130,7 @@ public class BackupActivity extends Activity {
         intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        
+
         try {
             startActivity(intent);
         } catch (Exception e) {
@@ -154,10 +162,10 @@ public class BackupActivity extends Activity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
-            
+
             if (convertView == null) {
                 convertView = LayoutInflater.from(BackupActivity.this)
-                    .inflate(R.layout.item_backup_app, parent, false);
+                        .inflate(R.layout.item_backup_app, parent, false);
                 holder = new ViewHolder();
                 holder.appIcon = convertView.findViewById(R.id.app_icon);
                 holder.appNameText = convertView.findViewById(R.id.app_name);
@@ -170,7 +178,7 @@ public class BackupActivity extends Activity {
             }
 
             BackupManager.BackupInfo backupInfo = getItem(position);
-            
+
             // 应用名称
             if (backupInfo.appName != null && !backupInfo.appName.isEmpty()) {
                 holder.appNameText.setText(backupInfo.appName);
@@ -179,27 +187,27 @@ public class BackupActivity extends Activity {
             } else {
                 holder.appNameText.setText(getString(R.string.app_name));
             }
-            
+
             // 包名
             if (backupInfo.packageName != null) {
                 holder.packageNameText.setText(backupInfo.packageName);
             }
-            
+
             // 版本
             if (backupInfo.versionName != null) {
                 holder.versionText.setText(backupInfo.versionName);
             } else {
                 holder.versionText.setText(getString(R.string.backup_version_unknown));
             }
-            
+
             // 文件大小
             holder.appSizeText.setText(Utils.getSize2(backupInfo.fileSize));
-            
+
             // 尝试加载应用图标
             try {
                 PackageManager pm = getPackageManager();
-                PackageInfo packageInfo = pm.getPackageArchiveInfo(backupInfo.backupFile.getAbsolutePath(), 
-                    PackageManager.GET_ACTIVITIES);
+                PackageInfo packageInfo = pm.getPackageArchiveInfo(backupInfo.backupFile.getAbsolutePath(),
+                        PackageManager.GET_ACTIVITIES);
                 if (packageInfo != null) {
                     holder.appIcon.setImageDrawable(packageInfo.applicationInfo.loadIcon(pm));
                 }
@@ -218,7 +226,7 @@ public class BackupActivity extends Activity {
             TextView packageNameText;
         }
     }
-    
+
     public static void start(Activity activity) {
         activity.startActivity(new android.content.Intent(activity, BackupActivity.class));
     }
