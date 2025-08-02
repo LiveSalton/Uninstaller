@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Process;
 import android.text.TextUtils;
+import androidx.core.content.FileProvider;
 
 import com.salton123.uninstaller.entity.AppEntity;
 
@@ -281,4 +283,17 @@ public class Utils {
         }
     }
 
+    /**
+     * 获取文件的Uri，兼容Android 7.0及以上版本
+     * @param context 上下文
+     * @param file 文件
+     * @return 文件Uri
+     */
+    public static Uri getUriForFile(Context context, File file) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
+        } else {
+            return Uri.fromFile(file);
+        }
+    }
 }

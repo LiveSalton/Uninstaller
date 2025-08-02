@@ -1,16 +1,17 @@
 package com.salton123.uninstaller;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import com.salton123.log.XLog;
 import com.salton123.uninstaller.util.BackupManager;
 import com.salton123.uninstaller.util.Utils;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ import java.util.Locale;
 
 /**
  * 备份管理Activity
- * 显示所有备份文件，支持恢复和删除操作
+ * 显示所有备份文件，支持点击安装
  */
 public class BackupActivity extends Activity {
 
@@ -35,8 +37,6 @@ public class BackupActivity extends Activity {
     private BackupAdapter backupAdapter;
     private List<BackupManager.BackupInfo> backupList;
     private LinearLayout emptyView;
-    private Button btnRefresh;
-    private Button btnClearAll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,45 +53,17 @@ public class BackupActivity extends Activity {
     private void initViews() {
         backupListView = findViewById(R.id.backup_list_view);
         emptyView = findViewById(R.id.empty_view);
-        btnRefresh = findViewById(R.id.btn_refresh);
-        btnClearAll = findViewById(R.id.btn_clear_all);
 
         backupList = new ArrayList<>();
         backupAdapter = new BackupAdapter();
         backupListView.setAdapter(backupAdapter);
 
-        // 点击恢复应用
+        // 点击安装应用
         backupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BackupManager.BackupInfo backupInfo = backupList.get(position);
-                showRestoreDialog(backupInfo);
-            }
-        });
-
-        // 长按删除备份
-        backupListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                BackupManager.BackupInfo backupInfo = backupList.get(position);
-                showDeleteDialog(backupInfo);
-                return true;
-            }
-        });
-
-        // 刷新按钮
-        btnRefresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadBackupList();
-            }
-        });
-
-        // 清空所有备份按钮
-        btnClearAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showClearAllDialog();
+                installApp(backupInfo);
             }
         });
     }
@@ -111,7 +83,6 @@ public class BackupActivity extends Activity {
                             backupAdapter.notifyDataSetChanged();
                             
                             updateEmptyView();
-                            updateButtons();
                             
                             XLog.i("BackupActivity", "Loaded " + backupList.size() + " backup files");
                         }
@@ -139,109 +110,25 @@ public class BackupActivity extends Activity {
         }
     }
 
-    private void updateButtons() {
-        btnClearAll.setEnabled(!backupList.isEmpty());
-    }
+    private void installApp(BackupManager.BackupInfo backupInfo) {
+        File apkFile = backupInfo.backupFile;
+        if (!apkFile.exists()) {
+            Toast.makeText(this, getString(R.string.apk_file_not_found), Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-    private void showRestoreDialog(final BackupManager.BackupInfo backupInfo) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.backup_restore_title));
-        builder.setMessage(getString(R.string.backup_restore_confirm, backupInfo.appName != null ? backupInfo.appName : backupInfo.packageName));
-        builder.setPositiveButton(getString(R.string.backup_restore_title), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                restoreApp(backupInfo);
-            }
-        });
-        builder.setNegativeButton(getString(R.string.cancel), null);
-        builder.show();
-    }
-
-    private void showDeleteDialog(final BackupManager.BackupInfo backupInfo) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.backup_delete_title));
-        builder.setMessage(getString(R.string.backup_delete_confirm, backupInfo.backupFileName));
-        builder.setPositiveButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                deleteBackup(backupInfo);
-            }
-        });
-        builder.setNegativeButton(getString(R.string.cancel), null);
-        builder.show();
-    }
-
-    private void showClearAllDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.backup_clear_all_title));
-        builder.setMessage(getString(R.string.backup_clear_all_confirm));
-        builder.setPositiveButton(getString(R.string.backup_clear_all), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                clearAllBackups();
-            }
-        });
-        builder.setNegativeButton(getString(R.string.cancel), null);
-        builder.show();
-    }
-
-    private void restoreApp(BackupManager.BackupInfo backupInfo) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri apkUri = Utils.getUriForFile(this, apkFile);
+        intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        
         try {
-            BackupManager.restoreApp(this, backupInfo);
-            Toast.makeText(this, getString(R.string.backup_restore_start), Toast.LENGTH_LONG).show();
+            startActivity(intent);
         } catch (Exception e) {
-            XLog.e("BackupActivity", "Restore failed: " + e.getMessage());
+            XLog.e("BackupActivity", "Install failed: " + e.getMessage());
             Toast.makeText(this, getString(R.string.backup_restore_failed, e.getMessage()), Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void deleteBackup(final BackupManager.BackupInfo backupInfo) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean success = BackupManager.deleteBackup(backupInfo);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (success) {
-                            backupList.remove(backupInfo);
-                            backupAdapter.notifyDataSetChanged();
-                            updateEmptyView();
-                            updateButtons();
-                            Toast.makeText(BackupActivity.this, getString(R.string.backup_delete_success), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(BackupActivity.this, getString(R.string.backup_delete_failed), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        }).start();
-    }
-
-    private void clearAllBackups() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int deletedCount = 0;
-                List<BackupManager.BackupInfo> toDelete = new ArrayList<>(backupList);
-                
-                for (BackupManager.BackupInfo backupInfo : toDelete) {
-                    if (BackupManager.deleteBackup(backupInfo)) {
-                        deletedCount++;
-                    }
-                }
-                
-                final int finalDeletedCount = deletedCount;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadBackupList(); // 重新加载列表
-                        Toast.makeText(BackupActivity.this, 
-                            getString(R.string.deleted_backup_files, finalDeletedCount), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }).start();
     }
 
     /**
@@ -270,13 +157,13 @@ public class BackupActivity extends Activity {
             
             if (convertView == null) {
                 convertView = LayoutInflater.from(BackupActivity.this)
-                    .inflate(R.layout.adapter_backup_item, parent, false);
+                    .inflate(R.layout.item_backup_app, parent, false);
                 holder = new ViewHolder();
+                holder.appIcon = convertView.findViewById(R.id.app_icon);
                 holder.appNameText = convertView.findViewById(R.id.app_name);
-                holder.packageNameText = convertView.findViewById(R.id.package_name);
+                holder.appSizeText = convertView.findViewById(R.id.app_size);
                 holder.versionText = convertView.findViewById(R.id.version);
-                holder.backupTimeText = convertView.findViewById(R.id.backup_time);
-                holder.fileSizeText = convertView.findViewById(R.id.file_size);
+                holder.packageNameText = convertView.findViewById(R.id.app_package_name);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -287,36 +174,48 @@ public class BackupActivity extends Activity {
             // 应用名称
             if (backupInfo.appName != null && !backupInfo.appName.isEmpty()) {
                 holder.appNameText.setText(backupInfo.appName);
-            } else {
+            } else if (backupInfo.packageName != null) {
                 holder.appNameText.setText(backupInfo.packageName);
+            } else {
+                holder.appNameText.setText(getString(R.string.app_name));
             }
             
             // 包名
-            holder.packageNameText.setText(backupInfo.packageName);
+            if (backupInfo.packageName != null) {
+                holder.packageNameText.setText(backupInfo.packageName);
+            }
             
             // 版本
             if (backupInfo.versionName != null) {
-                holder.versionText.setText(getString(R.string.backup_version, backupInfo.versionName));
+                holder.versionText.setText(backupInfo.versionName);
             } else {
                 holder.versionText.setText(getString(R.string.backup_version_unknown));
             }
             
-            // 备份时间
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-            holder.backupTimeText.setText(getString(R.string.backup_time_label) + sdf.format(backupInfo.backupTime));
-            
             // 文件大小
-            holder.fileSizeText.setText(getString(R.string.backup_file_size, Utils.getSize2(backupInfo.fileSize)));
+            holder.appSizeText.setText(Utils.getSize2(backupInfo.fileSize));
+            
+            // 尝试加载应用图标
+            try {
+                PackageManager pm = getPackageManager();
+                PackageInfo packageInfo = pm.getPackageArchiveInfo(backupInfo.backupFile.getAbsolutePath(), 
+                    PackageManager.GET_ACTIVITIES);
+                if (packageInfo != null) {
+                    holder.appIcon.setImageDrawable(packageInfo.applicationInfo.loadIcon(pm));
+                }
+            } catch (Exception e) {
+                // 不设置默认图标，保持空状态
+            }
 
             return convertView;
         }
 
         private class ViewHolder {
+            ImageView appIcon;
             TextView appNameText;
-            TextView packageNameText;
+            TextView appSizeText;
             TextView versionText;
-            TextView backupTimeText;
-            TextView fileSizeText;
+            TextView packageNameText;
         }
     }
     

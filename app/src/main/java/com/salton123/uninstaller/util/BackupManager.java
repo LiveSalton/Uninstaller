@@ -205,6 +205,9 @@ public class BackupManager {
             String backupFileName = generateBackupFileName(app);
             String destPath = getBackupPath(context) + backupFileName;
             
+            // 检查是否已存在相同包名和版本的备份，如果存在则删除旧备份
+            deleteExistingBackup(app, context);
+            
             // 执行文件复制
             boolean result = Utils.copyFile(sourceFilePath, destPath);
             
@@ -221,6 +224,50 @@ public class BackupManager {
         } catch (Exception e) {
             XLog.e(TAG, "备份应用出错: " + app.mAppName + " - " + e.getMessage());
             return false;
+        }
+    }
+
+    /**
+     * 检查并删除已存在的相同包名和版本的备份
+     */
+    private static void deleteExistingBackup(AppEntity app, Context context) {
+        try {
+            File backupDir = new File(getBackupPath(context));
+            if (!backupDir.exists()) {
+                return;
+            }
+
+            File[] files = backupDir.listFiles();
+            if (files == null) {
+                return;
+            }
+
+            String packageName = app.appInfo.packageName;
+            String versionName = app.appInfo.versionName != null ? app.appInfo.versionName : "unknown";
+            
+            for (File file : files) {
+                if (file.isFile() && file.getName().endsWith(BACKUP_FILE_EXTENSION)) {
+                    // 解析文件名，检查包名和版本是否匹配
+                    String fileName = file.getName();
+                    // 文件名格式: appName_packageName_vversionName_timestamp.apk.backup
+                    if (fileName.contains(packageName + "_v" + versionName + "_")) {
+                        // 删除旧的备份文件
+                        if (file.delete()) {
+                            XLog.i(TAG, "删除旧备份文件: " + fileName);
+                            
+                            // 同时删除对应的info文件
+                            String infoFileName = fileName.replace(BACKUP_FILE_EXTENSION, ".info");
+                            File infoFile = new File(backupDir, infoFileName);
+                            if (infoFile.exists()) {
+                                infoFile.delete();
+                                XLog.i(TAG, "删除旧备份信息文件: " + infoFileName);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            XLog.e(TAG, "检查和删除旧备份时出错: " + e.getMessage());
         }
     }
 
