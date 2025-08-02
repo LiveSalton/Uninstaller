@@ -10,8 +10,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Process;
 import android.text.TextUtils;
+
 import androidx.core.content.FileProvider;
 
+import com.salton123.log.XLog;
 import com.salton123.uninstaller.entity.AppEntity;
 
 import java.io.Closeable;
@@ -122,18 +124,22 @@ public class Utils {
      * 格式转换应用大小 单位"B,KB,MB,GB"
      */
     public static String getSize2(float length) {
+        XLog.d("Utils", "getSize2 输入参数: " + length);
         long kb = 1024;
         long mb = 1024 * kb;
         long gb = 1024 * mb;
+        String result;
         if (length < kb) {
-            return String.format("%dB", (int) length);
+            result = String.format("%dB", (int) length);
         } else if (length < mb) {
-            return String.format("%.2fKB", length / kb);
+            result = String.format("%.2fKB", length / kb);
         } else if (length < gb) {
-            return String.format("%.2fMB", length / mb);
+            result = String.format("%.2fMB", length / mb);
         } else {
-            return String.format("%.2fGB", length / gb);
+            result = String.format("%.2fGB", length / gb);
         }
+        XLog.d("Utils", "getSize2 输出结果: " + result);
+        return result;
     }
 
     public static List<AppEntity> getSearchResult(List<AppEntity> list, String keyword) {
@@ -280,6 +286,36 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+    
+    /**
+     * 读取文件内容为字符串
+     */
+    public static String readFile(String filePath) {
+        try {
+            File file = new File(filePath);
+            if (!file.exists() || !file.isFile()) {
+                return null;
+            }
+            
+            java.io.FileInputStream fis = new java.io.FileInputStream(file);
+            java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
+            
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = fis.read(buffer)) != -1) {
+                bos.write(buffer, 0, length);
+            }
+            
+            fis.close();
+            byte[] data = bos.toByteArray();
+            bos.close();
+            
+            return new String(data, "UTF-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

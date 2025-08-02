@@ -58,12 +58,12 @@ public class BackupActivity extends Activity {
         backupAdapter = new BackupAdapter();
         backupListView.setAdapter(backupAdapter);
 
-        // 点击安装应用
+        // 点击查看APK详情
         backupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BackupManager.BackupInfo backupInfo = backupList.get(position);
-                installApp(backupInfo);
+                ApkInfoActivity.start(BackupActivity.this, backupInfo);
             }
         });
     }

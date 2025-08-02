@@ -12,6 +12,7 @@ import com.salton123.uninstaller.PreloadCore;
 import com.salton123.uninstaller.entity.AppEntity;
 
 import java.io.File;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -355,6 +356,7 @@ public class BackupManager {
      */
     private static BackupInfo parseBackupFile(File backupFile) {
         try {
+            XLog.d(TAG, "开始解析备份文件: " + backupFile.getAbsolutePath());
             String fileName = backupFile.getName();
             String infoFileName = fileName.replace(BACKUP_FILE_EXTENSION, ".info");
             File infoFile = new File(backupFile.getParent(), infoFileName);
@@ -365,25 +367,113 @@ public class BackupManager {
             info.backupTime = new Date(backupFile.lastModified());
             info.fileSize = backupFile.length();
             
-            // 尝试从文件名解析基本信息
-            if (fileName.contains("_v") && fileName.contains("_")) {
-                String[] parts = fileName.split("_");
-                if (parts.length >= 3) {
-                    info.packageName = parts[0];
-                    info.versionName = parts[1].substring(1); // 移除 'v' 前缀
-                }
-            }
+            XLog.d(TAG, "基础信息 - 文件名: " + fileName + ", 文件大小: " + info.fileSize + ", 修改时间: " + info.backupTime);
             
-            // 如果有信息文件，读取详细信息
+            // 从信息文件读取详细信息（如果存在）
             if (infoFile.exists()) {
-                // 这里可以读取详细的备份信息
-                info.hasDetailInfo = true;
+                XLog.d(TAG, "信息文件存在，开始解析: " + infoFile.getAbsolutePath());
+                parseBackupInfoFile(infoFile, info);
+            } else {
+                XLog.d(TAG, "信息文件不存在，从文件名解析基本信息: " + infoFileName);
+                // 尝试从文件名解析基本信息
+                parseInfoFromFileName(fileName, info);
             }
             
+            XLog.d(TAG, "解析完成: " + info.appName + ", " + info.packageName + ", " + info.versionName + ", " + info.fileSize);
             return info;
         } catch (Exception e) {
             XLog.e(TAG, "解析备份文件失败: " + e.getMessage());
             return null;
+        }
+    }
+
+    /**
+     * 从信息文件解析详细信息
+     */
+    private static void parseBackupInfoFile(File infoFile, BackupInfo info) {
+        try {
+            XLog.d(TAG, "开始解析备份信息文件: " + infoFile.getAbsolutePath());
+            String content = Utils.readFile(infoFile.getAbsolutePath());
+            XLog.d(TAG, "读取到的文件内容: " + content);
+            if (content != null && !content.isEmpty()) {
+                String[] lines = content.split("\n");
+                for (String line : lines) {
+                    XLog.d(TAG, "解析行内容: " + line);
+                    if (line.startsWith("应用名称: ")) {
+                        info.appName = line.substring("应用名称: ".length());
+                        XLog.d(TAG, "解析到应用名称: " + info.appName);
+                    } else if (line.startsWith("包名: ")) {
+                        info.packageName = line.substring("包名: ".length());
+                        XLog.d(TAG, "解析到包名: " + info.packageName);
+                    } else if (line.startsWith("版本名称: ")) {
+                        info.versionName = line.substring("版本名称: ".length());
+                        XLog.d(TAG, "解析到版本名称: " + info.versionName);
+                    } else if (line.startsWith("备份时间: ")) {
+                        String timeStr = line.substring("备份时间: ".length());
+                        XLog.d(TAG, "解析到备份时间字符串: " + timeStr);
+                        try {
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                            info.backupTime = sdf.parse(timeStr);
+                            XLog.d(TAG, "解析到备份时间: " + info.backupTime);
+                        } catch (Exception e) {
+                            // 使用文件修改时间
+                            info.backupTime = new Date(info.backupFile.lastModified());
+                            XLog.d(TAG, "使用文件修改时间: " + info.backupTime);
+                        }
+                    }
+                }
+                info.hasDetailInfo = true;
+                XLog.d(TAG, "信息文件解析完成");
+            }
+        } catch (Exception e) {
+            XLog.e(TAG, "解析备份信息文件失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 从文件名解析基本信息
+     */
+    private static void parseInfoFromFileName(String fileName, BackupInfo info) {
+        try {
+            XLog.d(TAG, "从文件名解析基本信息: " + fileName);
+            // 文件名格式: appName_packageName_vversionName_timestamp.apk.backup
+            // 移除扩展名
+            String nameWithoutExt = fileName.replace(BACKUP_FILE_EXTENSION, "");
+            XLog.d(TAG, "移除扩展名后: " + nameWithoutExt);
+            
+            // 按下划线分割
+            String[] parts = nameWithoutExt.split("_");
+            XLog.d(TAG, "分割后的部分数量: " + parts.length);
+            for (int i = 0; i < parts.length; i++) {
+                XLog.d(TAG, "部分[" + i + "]: " + parts[i]);
+            }
+            
+            if (parts.length >= 4) {
+                // 应用名称可能是多个部分组成，包名通常是倒数第三个，版本是倒数第二个
+                info.packageName = parts[parts.length - 3];
+                String versionPart = parts[parts.length - 2];
+                if (versionPart.startsWith("v")) {
+                    info.versionName = versionPart.substring(1);
+                } else {
+                    info.versionName = versionPart;
+                }
+                
+                // 尝试重构应用名称（除了包名和版本的部分）
+                StringBuilder appNameBuilder = new StringBuilder();
+                for (int i = 0; i < parts.length - 3; i++) {
+                    if (appNameBuilder.length() > 0) {
+                        appNameBuilder.append("_");
+                    }
+                    appNameBuilder.append(parts[i]);
+                }
+                info.appName = appNameBuilder.toString();
+                
+                XLog.d(TAG, "解析结果 - 应用名称: " + info.appName + ", 包名: " + info.packageName + ", 版本: " + info.versionName);
+            } else {
+                XLog.d(TAG, "文件名部分不足4个，无法解析");
+            }
+        } catch (Exception e) {
+            XLog.e(TAG, "从文件名解析信息失败: " + e.getMessage());
         }
     }
 
@@ -571,7 +661,7 @@ public class BackupManager {
     /**
      * 备份文件信息类
      */
-    public static class BackupInfo {
+    public static class BackupInfo implements Serializable {
         public File backupFile;
         public String backupFileName;
         public String packageName;

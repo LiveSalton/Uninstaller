@@ -77,6 +77,14 @@
             android:theme="@style/Theme.Uninstaller.WithActionBar"
             android:parentActivityName=".MainActivity"/>
             
+        <!-- APK详情Activity -->
+        <activity
+            android:name=".ApkInfoActivity"
+            android:exported="false"
+            android:label="@string/app_info_dialog_title"
+            android:theme="@style/Theme.Uninstaller.WithActionBar"
+            android:parentActivityName=".BackupActivity"/>
+            
         <!-- 设置页面Activity -->
         <activity
             android:name=".SettingsActivity"
