@@ -28,7 +28,7 @@ import java.util.Locale;
  * APK详情页面
  * 显示备份APK的详细信息
  */
-public class ApkInfoActivity extends Activity implements View.OnClickListener {
+public class ApkInfoActivity extends AbsImmersionAtivity implements View.OnClickListener {
 
     public static final String EXTRA_BACKUP_INFO = "backup_info";
 

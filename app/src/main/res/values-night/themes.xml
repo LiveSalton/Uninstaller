@@ -7,15 +7,6 @@
         <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
     </style>
 
-    <!-- 夜间模式的ActionBar主题 -->
-    <style name="Theme.Uninstaller.WithActionBar" parent="android:Theme.Material">
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
-        <item name="android:windowBackground">@color/background_primary</item>
-        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
-        <item name="android:actionBarStyle">@style/ActionBar.BlackWhite.Night</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
-
     <style name="ActionBar.BlackWhite.Night" parent="android:Widget.Material.ActionBar.Solid">
         <item name="android:background">@color/title_bar_background</item>
         <item name="android:titleTextStyle">@style/ActionBarTitle.BlackWhite.Night</item>

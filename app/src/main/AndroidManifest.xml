@@ -74,7 +74,7 @@
             android:name=".BackupActivity"
             android:exported="false"
             android:label="备份管理"
-            android:theme="@style/Theme.Uninstaller.WithActionBar"
+            android:theme="@style/Theme.Uninstaller"
             android:parentActivityName=".MainActivity"/>
             
         <!-- APK详情Activity -->
@@ -82,7 +82,7 @@
             android:name=".ApkInfoActivity"
             android:exported="false"
             android:label="@string/app_info_dialog_title"
-            android:theme="@style/Theme.Uninstaller.WithActionBar"
+            android:theme="@style/Theme.Uninstaller"
             android:parentActivityName=".BackupActivity"/>
             
         <!-- 设置页面Activity -->
