@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">极简卸载器</string>
-    
+
     <!-- 通用 -->
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
@@ -13,7 +13,7 @@
     <string name="failed">失败</string>
     <string name="privacy_policy">隐私政策</string>
     <string name="terms_of_services">使用条款</string>
-    
+
     <!-- 主界面硬编码迁移 -->
     <string name="main_title">应用管理</string>
     <string name="main_app_description">批量卸载 | 备份APK | 极简体积</string>
@@ -23,7 +23,7 @@
     <string name="main_select">选择</string>
     <string name="main_selected">选中</string>
     <string name="main_unselected">取消选中</string>
-    
+
     <!-- 设置页面相关 -->
     <string name="settings_title">设置</string>
     <string name="settings_clear_cache">清除缓存</string>
@@ -39,7 +39,7 @@
     <string name="settings_about">关于我们</string>
     <string name="settings_feedback">举报与反馈</string>
     <string name="settings_logout">退出当前账号</string>
-    
+
     <!-- 关于页面相关 -->
     <string name="about_title">关于我们</string>
     <string name="about_version">版本号：%s</string>
@@ -56,7 +56,7 @@
     <!-- 退出对话框相关 -->
     <string name="logout_confirm_title">退出确认</string>
     <string name="logout_confirm_message">确定要退出当前账号吗？</string>
-    
+
     <!-- 操作相关 -->
     <string name="select_all_apps">已全选 %d 个应用</string>
     <string name="unselect_all_apps">已取消全选</string>
@@ -64,25 +64,25 @@
     <string name="start_backup_apps">开始备份 %d 个应用，请稍候</string>
     <string name="backup_complete_apps">备份完成，共备份 %d 个应用</string>
     <string name="deleted_backup_files">已删除 %d 个备份文件</string>
-    
+
     <!-- 缓存相关 -->
     <string name="clear_cache_success">缓存清除成功</string>
     <string name="clear_cache_failed">缓存清除失败</string>
     <string name="cache_size_calculating">正在清除缓存…</string>
-    
+
     <!-- 更新相关 -->
     <string name="update_available">发现新版本</string>
     <string name="update_not_available">当前已是最新版本</string>
     <string name="update_checking">正在检查更新…</string>
     <string name="update_check_failed">检查更新失败</string>
     <string name="update_content">发现新版本 %1$s\n\n更新内容：\n%2$s</string>
-    
+
     <!-- 设置相关 -->
     <string name="settings_display_options">显示选项</string>
     <string name="settings_show_time">显示时间</string>
     <string name="settings_show_filename">显示文件名</string>
     <string name="settings_show_package">显示包名</string>
-    
+
     <string name="settings_sort_options">排序选项</string>
     <string name="settings_sort_by_name_asc">按名称升序</string>
     <string name="settings_sort_by_name_desc">按名称降序</string>
@@ -90,12 +90,12 @@
     <string name="settings_sort_by_size_desc">按大小降序</string>
     <string name="settings_sort_by_time_asc">按时间升序</string>
     <string name="settings_sort_by_time_desc">按时间降序</string>
-    
+
     <string name="settings_other_options">其他选项</string>
     <string name="settings_show_search">显示搜索框</string>
-    
+
     <string name="share_app">分享应用详情</string>
-    
+
     <!-- 备份管理硬编码迁移 -->
     <string name="backup_refresh">刷新</string>
     <string name="backup_clear_all">清空全部</string>
@@ -116,7 +116,7 @@
     <string name="backup_version_unknown">版本: 未知</string>
     <string name="backup_file_size">大小: %1$s</string>
     <string name="backup_time_label">备份时间: </string>
-    
+
     <!-- 新增备份功能相关 -->
     <string name="backup_progress">备份进度: %1$d/%2$d - %3$s</string>
     <string name="backup_success">备份成功</string>
@@ -132,7 +132,7 @@
     <string name="backup_view_all">查看全部备份</string>
     <string name="backup_no_apps_selected">请先选择要备份的应用</string>
     <string name="backup_invalid_file">无效的备份文件</string>
-    
+
     <!-- 备份进度页面 -->
     <string name="backup_progress_title">正在备份</string>
     <string name="backup_progress_preparing">正在准备备份...</string>
@@ -144,7 +144,7 @@
     <string name="backup_canceled">备份已取消</string>
     <string name="backup_completed">备份已完成</string>
     <string name="backup_failed_apps">%1$d个应用备份失败</string>
-    
+
     <!-- 时间格式化 -->
     <string name="time_prefix">安装: </string>
     <string name="package_prefix">包名: </string>
@@ -159,21 +159,21 @@
     <string name="friday">周五</string>
     <string name="saturday">周六</string>
     <string name="sunday">周日</string>
-    
+
     <!-- 权限相关 -->
     <string name="permission_storage_required">需要存储权限才能正常使用应用功能</string>
     <string name="permission_granted">权限授予成功</string>
-    
+
     <!-- 错误信息 -->
     <string name="error_no_apps_selected">请先选择要操作的应用</string>
     <string name="error_load_apps_failed">加载应用列表失败</string>
     <string name="error_backup_failed">备份失败</string>
     <string name="error_restore_failed">恢复失败</string>
-    
+
     <!-- 按钮状态 -->
     <string name="delete_with_count">删除(%d)</string>
     <string name="backup_with_count">备份(%d)</string>
-    
+
     <!-- 分享功能 -->
     <string name="share_single_app_only">一次只能分享一个应用</string>
     <string name="share_app_details">分享应用详情</string>
@@ -184,11 +184,23 @@
     <string name="backup_manage_title">备份管理</string>
     <string name="backup_load_failed">加载备份列表失败</string>
     <string name="share_app_apk">分享应用安装包</string>
-    <string name="auto_8607274809791025561">应用名称</string>    <string name="auto_2677392295785979481">版本: 1.0.0</string>    <string name="auto_4735679025662775451">大小: 10.5MB</string>    <string name="auto_6557016694683876325">点击恢复 | 长按删除</string>    <string name="auto_354826608356190889">总数: 0个</string>    <string name="auto_8839014975645868300">已选择: 0个</string>
+    <string name="auto_8607274809791025561">应用名称</string>
+    <string name="auto_2677392295785979481">版本: 1.0.0</string>
+    <string name="auto_4735679025662775451">大小: 10.5MB</string>
+    <string name="auto_6557016694683876325">点击恢复 | 长按删除</string>
+    <string name="auto_354826608356190889">总数: 0个</string>
+    <string name="auto_8839014975645868300">已选择: 0个</string>
     <string name="auto_2623667450802219676">应用管理</string>
     <string name="auto_7803433360898273987">卸载</string>
     <string name="auto_7611491949064207416">备份</string>
     <string name="auto_1015951795981143864">备份管理</string>
-    <string name="search_apps">Search apps</string>
+    <string name="search_apps">搜索应用</string>
     <string name="restart">重启应用以应用语言设置</string>
+    <string name="app_info_dialog_title">APK详情</string>
+    <string name="app_info_dialog_action_title">操作</string>
+    <string name="app_info_dialog_detail_size">文件大小</string>
+    <string name="app_info_dialog_detail_time">安装时间</string>
+    <string name="app_info_dialog_detail_source_dir">安装路径</string>
+    <string name="common_install">安装</string>
+    <string name="error_invalid_backup_info">无效的备份信息</string>
 </resources>

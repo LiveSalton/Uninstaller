@@ -48,12 +48,12 @@
     <string name="about_blog">Developer Blog</string>
 
     <!-- APK详情弹窗标题 -->
-    <string name="app_info_dialog_title">APK详情</string>
-    <string name="app_info_dialog_action_title">操作</string>
-    <string name="app_info_dialog_detail_size">文件大小</string>
-    <string name="app_info_dialog_detail_time">安装时间</string>
-    <string name="app_info_dialog_detail_source_dir">安装路径</string>
-    <string name="common_install">安装</string>
+    <string name="app_info_dialog_title">APK Info</string>
+    <string name="app_info_dialog_action_title">Action</string>
+    <string name="app_info_dialog_detail_size">File Size</string>
+    <string name="app_info_dialog_detail_time">Install Time</string>
+    <string name="app_info_dialog_detail_source_dir">Install Path</string>
+    <string name="common_install">Install</string>
 
     <!-- 主题设置页面相关 -->
     <string name="theme_title">Dark Mode</string>
@@ -177,7 +177,7 @@
     <string name="error_load_apps_failed">Failed to load app list</string>
     <string name="error_backup_failed">Backup failed</string>
     <string name="error_restore_failed">Restore failed</string>
-    <string name="error_invalid_backup_info">无效的备份信息</string>
+    <string name="error_invalid_backup_info">Invalid backup info</string>
 
     <!-- 按钮状态 -->
     <string name="delete_with_count">Delete(%d)</string>
