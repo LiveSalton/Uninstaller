@@ -1,123 +1,83 @@
 
-You are a Senior Java programmer with experience in the Android framework and a preference for clean programming and design patterns.
+Flutter 与 Android 高级开发规范
 
-Generate code, corrections, and refactorings that comply with the basic principles and nomenclature.
+一、核心原则
+- 所有代码和注释统一使用英文。
+- 所有变量和函数必须声明类型，避免使用 any 或 dynamic。
+- 不在函数体内留空行。
+- 每个文件仅导出一个模块（一个 export）。
+- 避免嵌套过深的逻辑，通过早返回和提取函数来优化可读性。
+- 使用 const 构造函数来优化 Flutter 构建性能。
+- 所有布尔变量使用动词前缀：isLoading、hasError、canSubmit 等。
+- 所有代码应当遵循 SOLID 原则，偏好组合优于继承。
 
-## Java General Guidelines
+二、命名规范
+- 类名使用 PascalCase。
+- 函数、变量、方法使用 camelCase。
+- 文件和目录名使用下划线命名法（snake_case）。
+- 环境变量使用全大写（UPPERCASE）。
+- 布尔变量使用动词，如 isConnected、hasPermission。
+- 避免缩写，除非是通用术语（如 API、URL、ctx、err、i、j 等）。
 
-### Basic Principles
+三、函数设计
+- 函数尽量短小，保持单一职责，推荐不超过 20 行。
+- 函数命名使用动词 + 描述。
+- 使用箭头函数（=>）书写简短函数。
+- 使用高阶函数（map、filter、reduce）减少嵌套。
+- 函数参数和返回值建议使用对象传递（RO-RO 模式）。
+- 函数首选返回类型明确，避免隐式返回。
 
-- Use English for all code and documentation.
-- Always declare the type of each variable and function (parameters and return value).
-  - Avoid using any.
-  - Create necessary types.
-- Don't leave blank lines within a function.
+四、Dart/Flutter 编程规范
+- 使用 freezed 定义不可变状态类及联合类型。
+- 使用 Riverpod 的 @riverpod 注解生成 Provider。
+- 避免使用 StateProvider、StateNotifierProvider 等旧方案。
+- UI 控件拆分为小组件，避免 Widget 树过深。
+- 所有异步状态使用 AsyncValue 管理 loading / error / data。
+- 错误提示使用 SelectableText.rich 显示红色错误信息。
+- 使用 LayoutBuilder 或 MediaQuery 实现响应式设计。
+- 使用 GoRouter 或 AutoRoute 实现页面跳转与深链支持。
+- 页面间传参使用 extras。
+- 使用 ThemeData 管理全局样式。
+- 所有 TextStyle 使用 Theme.of(context).textTheme。
+- 使用 build_runner 进行代码生成，如 freezed、json_serializable、riverpod 等。
+- 所有图片远程加载使用 cached_network_image，并实现 errorBuilder。
 
-### Nomenclature
+五、Flutter 架构推荐
+- 使用 Clean Architecture 分层结构：data → domain → presentation。
+- 每个 Feature 单独组织（Feature-first）。
+- 各层依赖方向必须从外向内。
+- domain 层仅包含 entity、use case、interface。
+- data 层包含 model、datasource、repository 实现。
+- presentation 层包含 UI、bloc/cubit、widget、page。
+- 使用 getIt 管理依赖注入，服务用 singleton，控制器用 lazy singleton，use case 用 factory。
 
-- Use PascalCase for classes.
-- Use camelCase for variables, functions, and methods.
-- Use underscores_case for file and directory names.
-- Use UPPERCASE for environment variables.
-  - Avoid magic numbers and define constants.
-- Start each function with a verb.
-- Use verbs for boolean variables. Example: isLoading, hasError, canDelete, etc.
-- Use complete words instead of abbreviations and correct spelling.
-  - Except for standard abbreviations like API, URL, etc.
-  - Except for well-known abbreviations:
-    - i, j for loops
-    - err for errors
-    - ctx for contexts
-    - req, res, next for middleware function parameters
+六、Bloc & Cubit 指南（废弃不使用）
+- 使用 Bloc 实现复杂状态逻辑，Cubit 实现简单状态逻辑。
+- Bloc 使用 Event + State 模式。
+- 所有状态使用 freezed 定义 union 类型（initial、loading、success、error）。
+- 逻辑代码尽量保持纯净，UI 中不做业务处理。
+- 使用 BlocBuilder 渲染状态，BlocListener 响应副作用（如导航、弹窗）。
 
-### Functions
+七、Android Kotlin 开发规范
+- 遵循 Clean Architecture：data/domain/presentation 层分离。
+- 使用 repository 模式管理数据持久化。
+- 使用 ViewModel + MVI 模式管理状态。
+- 页面导航使用 Jetpack Navigation Component。
+- 所有页面使用 ViewBinding 操作视图。
+- 状态流使用 Flow 或 LiveData。
+- 使用 Material 3 和 ConstraintLayout 设计 UI。
+- 避免业务逻辑出现在 Activity/Fragment，统一封装进 UseCase。
+- 数据类使用 data class，模型字段建议包括 createdAt、updatedAt、isDeleted。
 
-- In this context, what is understood as a function will also apply to a method.
-- Write short functions with a single purpose. Less than 20 instructions.
-- Name functions with a verb and something else.
-  - If it returns a boolean, use isX or hasX, canX, etc.
-  - If it doesn't return anything, use executeX or saveX, etc.
-- Avoid nesting blocks by:
-  - Early checks and returns.
-  - Extraction to utility functions.
-- Use higher-order functions (map, filter, reduce, etc.) to avoid function nesting.
-  - Use arrow functions for simple functions (less than 3 instructions).
-  - Use named functions for non-simple functions.
-- Use default parameter values instead of checking for null or undefined.
-- Reduce function parameters using RO-RO
-  - Use an object to pass multiple parameters.
-  - Use an object to return results.
-  - Declare necessary types for input arguments and output.
-- Use a single level of abstraction.
+九、错误处理规范
+- 避免 try-catch 滥用，尽可能使用 Either 类型函数式处理（推荐 Dartz）。
+- 创建 Failure 类型并通过 fold 显示错误或处理成功逻辑。
+- 对每一层的异常进行错误映射与转换（ServerException → ServerFailure）。
+- UI 层避免直接显示异常文本，应做友好提示。
+- 所有 Firebase/Supabase 操作需处理网络异常与错误码。
 
-### Data
-
-- Use data classes for data.
-- Don't abuse primitive types and encapsulate data in composite types.
-- Avoid data validations in functions and use classes with internal validation.
-- Prefer immutability for data.
-  - Use readonly for data that doesn't change.
-  - Use as val for literals that don't change.
-
-### Classes
-
-- Follow SOLID principles.
-- Prefer composition over inheritance.
-- Declare interfaces to define contracts.
-- Write small classes with a single purpose.
-  - Less than 200 instructions.
-  - Less than 10 public methods.
-  - Less than 10 properties.
-
-### Exceptions
-
-- Use exceptions to handle errors you don't expect.
-- If you catch an exception, it should be to:
-  - Fix an expected problem.
-  - Add context.
-  - Otherwise, use a global handler.
-
-### Testing
-
-- Follow the Arrange-Act-Assert convention for tests.
-- Name test variables clearly.
-  - Follow the convention: inputX, mockX, actualX, expectedX, etc.
-- Write unit tests for each public function.
-  - Use test doubles to simulate dependencies.
-    - Except for third-party dependencies that are not expensive to execute.
-- Write acceptance tests for each module.
-  - Follow the Given-When-Then convention.
-
-## Specific to Android
-
-### Basic Principles
-
-- Use clean architecture
-  - see repositories if you need to organize code into repositories
-- Use repository pattern for data persistence
-  - see cache if you need to cache data
-- Use MVI pattern to manage state and events in viewmodels and trigger and render them in activities / fragments
-  - see keepAlive if you need to keep the state alive
-- Use Auth Activity to manage authentication flow
-  - Splash Screen
-  - Login
-  - Register
-  - Forgot Password
-  - Verify Email
-- Use Navigation Component to manage navigation between activities/fragments
-- Use MainActivity to manage the main navigation
-  - Use BottomNavigationView to manage the bottom navigation
-  - Home
-  - Profile
-  - Settings
-  - Patients
-  - Appointments
-- Use ViewBinding to manage views
-- Use Flow / LiveData to manage UI state
-- Use xml and fragments instead of jetpack compose
-- Use Material 3 for the UI
-- Use ConstraintLayout for layouts
-### Testing
-
-- Use the standard widget testing for flutter
-- Use integration tests for each api module.   
+十、杂项约定
+- 使用 log 替代 print 进行调试输出。
+- 保持每行代码不超过 120 个字符。
+- 多参数函数调用末尾添加逗号，利于格式化。
+- 文档注释复杂逻辑和非直观实现细节。
